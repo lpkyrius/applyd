@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Application {
+  id                String   @id @default(cuid())
+  excelId           String?
+  name              String?
+  initiator         String?
+  feel              String?
+  status            String
+  company           String
+  recruiterCo       String?
+  role              String
+  link              String?
+  avgGrossSal       String?  // Keep as string for flexibility from Excel
+  avgNetSal         String?
+  jobType           String?
+  duration          String?
+  mainRecruiter     String?
+  recruiterContact  String?
+  dateFound         DateTime?
+  applicationDate   DateTime?
+  locationType      String?
+  currentStep       String?
+  stepDate          DateTime?
+  nextAction        String?
+  deadline          DateTime?
+  currentInterviewer String?
+  interviewType     String?
+  currentStepNotes  String?
+  notes             String?
+  finalFeedback     String?
+  steps             String   // JSON stringified: Array<{ type: 'STEP' | 'CONTACT', isStep: boolean, date: DateTime, description: string }>
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

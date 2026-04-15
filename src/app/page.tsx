@@ -12,25 +12,17 @@ export default async function ApplicationsPage() {
   return (
     <main className="min-h-screen bg-[#FDFDFD] text-slate-900 font-sans selection:bg-blue-100">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <header className="mb-10 flex justify-between items-end">
+        <header className="mb-10 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
               Applications
             </h1>
-            <p className="text-slate-500 font-medium">
-              Manage and track your active job opportunities
+            <p className="text-slate-500 font-medium text-lg">
+              Manage and track your active job opportunities.
             </p>
           </div>
-          <div className="text-right flex flex-col items-end gap-4">
-            <div>
-              <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest block mb-1">
-                Active Tracks
-              </span>
-              <span className="text-2xl font-bold text-slate-900">
-                {applications.length}
-              </span>
-            </div>
-            <ApplicationDialog mode="create" />
+          <div className="flex gap-3">
+             <ApplicationDialog mode="create" />
           </div>
         </header>
 

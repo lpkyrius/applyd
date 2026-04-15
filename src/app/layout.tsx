@@ -18,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 
+import { Sidebar } from "@/components/Sidebar";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +30,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased font-sans`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex overflow-hidden bg-slate-50/30">
+        <Sidebar />
+        <div className="flex-1 overflow-y-auto h-screen">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

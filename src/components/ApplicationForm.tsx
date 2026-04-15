@@ -18,6 +18,7 @@ const STATUS_OPTIONS = [
 const JOB_TYPE_OPTIONS = ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'];
 const LOCATION_OPTIONS = ['Remote', 'Hybrid', 'On-site'];
 const PERIOD_OPTIONS = ['hour', 'day', 'month', 'year'];
+const RANGE_SOURCE_OPTIONS = ['Company', 'Me', 'Research', 'Other'];
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -104,6 +105,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       avgGrossSal: initData?.avgGrossSal || '',
       avgNetSal: initData?.avgNetSal || '',
       salaryPeriod: initData?.salaryPeriod || 'month',
+      salaryRangeSource: initData?.salaryRangeSource || '',
       recruiterCo: initData?.recruiterCo || '',
       mainRecruiter: initData?.mainRecruiter || '',
       recruiterContact: initData?.recruiterContact || '',
@@ -167,6 +169,9 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           )} />
           <FormField control={form.control} name="salaryPeriod" render={({ field }) => (
             <FieldSelect field={field} label="Salary Period *" options={PERIOD_OPTIONS} />
+          )} />
+          <FormField control={form.control} name="salaryRangeSource" render={({ field }) => (
+            <FieldSelect field={field} label="Range informed by" options={RANGE_SOURCE_OPTIONS} />
           )} />
 
           <SectionTitle>Recruitment</SectionTitle>

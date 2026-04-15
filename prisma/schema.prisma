@@ -26,6 +26,7 @@ model Application {
   avgGrossSal       String?  // Keep as string for flexibility from Excel
   avgNetSal         String?
   salaryPeriod      String?  @default("month")
+  salaryRangeSource String?
   jobType           String?
   duration          String?
   mainRecruiter     String?

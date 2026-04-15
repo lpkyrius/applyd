@@ -8,6 +8,7 @@ export const applicationSchema = z.object({
   avgGrossSal: z.string().optional().nullable(),
   avgNetSal: z.string().optional().nullable(),
   salaryPeriod: z.string().optional().nullable(),
+  salaryRangeSource: z.string().optional().nullable(),
   recruiterCo: z.string().optional().nullable(),
   jobType: z.string().optional().nullable(),
   duration: z.string().optional().nullable(),

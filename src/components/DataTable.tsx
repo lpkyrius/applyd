@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { format, isValid } from 'date-fns'
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuCheckboxItem, DropdownMenuSeparator, DropdownMenuLabel, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -264,8 +264,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   // Filter & Sort states
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [typeFilter, setTypeFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState<string[]>([])
+  const [typeFilter, setTypeFilter] = useState<string[]>([])
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'latestActivityDate', direction: 'desc' })
 
   // Column Resizing state
@@ -318,8 +318,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       
-      const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
-      const matchesType = typeFilter === 'all' || app.jobType === typeFilter;
+      const matchesStatus = statusFilter.length === 0 || statusFilter.includes(app.status);
+      const matchesType = typeFilter.length === 0 || typeFilter.includes((app.jobType as string) || '');
 
       return matchesSearch && matchesStatus && matchesType;
     });
@@ -389,8 +389,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   const resetFilters = () => {
     setSearchQuery('')
-    setStatusFilter('all')
-    setTypeFilter('all')
+    setStatusFilter([])
+    setTypeFilter([])
     setSortConfig({ key: 'latestActivityDate', direction: 'desc' })
   }
 
@@ -408,6 +408,18 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     return sortConfig.direction === 'asc' ? <ArrowUp className="ml-2 h-3 w-3 text-blue-600" /> : <ArrowDown className="ml-2 h-3 w-3 text-blue-600" />;
   };
 
+  const toggleStatusFilter = (status: string) => {
+    setStatusFilter(prev => 
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    )
+  }
+
+  const toggleTypeFilter = (type: string) => {
+    setTypeFilter(prev => 
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+    )
+  }
+
   return (
     <div className="w-full space-y-4">
       {/* ─── Search & Filters ─── */}
@@ -423,28 +435,82 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         </div>
         
         <div className="flex gap-2 w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-40">
-                <Filter className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
-                <select 
-                    className="w-full h-9 pl-8 pr-3 rounded-md border border-slate-200 bg-slate-50/50 text-sm focus:outline-none focus:ring-1 focus:ring-slate-400 appearance-none"
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                    <option value="all">All Status</option>
-                    {STATUS_OPTIONS.map(status => <option key={status} value={status}>{status}</option>)}
-                </select>
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger render={
+                    <Button variant="outline" className="h-9 px-3 font-normal bg-slate-50/50 border-slate-200 text-slate-700 min-w-[130px] justify-between">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                            <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <span className="truncate">
+                                {statusFilter.length === 0 ? "All Status" : 
+                                 statusFilter.length === 1 ? statusFilter[0] : 
+                                 `${statusFilter.length} Status`}
+                            </span>
+                        </div>
+                    </Button>
+                } />
+                <DropdownMenuContent align="end" className="w-52">
+                    <DropdownMenuGroup>
+                        <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuCheckboxItem
+                        checked={statusFilter.length === 0}
+                        onCheckedChange={() => setStatusFilter([])}
+                    >
+                        All Status
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuSeparator />
+                    <div className="max-h-60 overflow-y-auto">
+                        {STATUS_OPTIONS.map(status => (
+                            <DropdownMenuCheckboxItem
+                                key={status}
+                                checked={statusFilter.includes(status)}
+                                onCheckedChange={() => toggleStatusFilter(status)}
+                                onSelect={(e) => e.preventDefault()}
+                            >
+                                {status}
+                            </DropdownMenuCheckboxItem>
+                        ))}
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
 
-            <div className="relative flex-1 sm:w-36">
-                <select 
-                    className="w-full h-9 px-3 rounded-md border border-slate-200 bg-slate-50/50 text-sm focus:outline-none focus:ring-1 focus:ring-slate-400 appearance-none text-center"
-                    value={typeFilter}
-                    onChange={(e) => setTypeFilter(e.target.value)}
-                >
-                    <option value="all">All Types</option>
-                    {JOB_TYPE_OPTIONS.map(type => <option key={type} value={type}>{type}</option>)}
-                </select>
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger render={
+                    <Button variant="outline" className="h-9 px-3 font-normal bg-slate-50/50 border-slate-200 text-slate-700 min-w-[120px] justify-between">
+                        <span className="truncate">
+                            {typeFilter.length === 0 ? "All Types" : 
+                             typeFilter.length === 1 ? typeFilter[0] : 
+                             `${typeFilter.length} Types`}
+                        </span>
+                    </Button>
+                } />
+                <DropdownMenuContent align="end" className="w-52">
+                    <DropdownMenuGroup>
+                        <DropdownMenuLabel>Filter by Job Type</DropdownMenuLabel>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuCheckboxItem
+                        checked={typeFilter.length === 0}
+                        onCheckedChange={() => setTypeFilter([])}
+                    >
+                        All Types
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuSeparator />
+                    <div className="max-h-60 overflow-y-auto">
+                        {JOB_TYPE_OPTIONS.map(type => (
+                            <DropdownMenuCheckboxItem
+                                key={type}
+                                checked={typeFilter.includes(type)}
+                                onCheckedChange={() => toggleTypeFilter(type)}
+                                onSelect={(e) => e.preventDefault()}
+                            >
+                                {type}
+                            </DropdownMenuCheckboxItem>
+                        ))}
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
 
             <Button 
                 variant="ghost" 
@@ -667,6 +733,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                           <div><span className="text-slate-500 block mb-0.5">Gross Salary</span><span className="font-medium text-slate-900">{selectedApp.avgGrossSal || '—'}{selectedApp.avgGrossSal && selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Net Salary</span><span className="font-medium text-slate-900">{selectedApp.avgNetSal || '—'}{selectedApp.avgNetSal && selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Duration</span><span className="font-medium text-slate-900">{selectedApp.duration || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Range informed by</span><span className="font-medium text-slate-900">{selectedApp.salaryRangeSource || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Interview Type</span><span className="font-medium text-slate-900">{selectedApp.interviewType || '—'}</span></div>
                         </div>
                       </section>

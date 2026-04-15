@@ -19,7 +19,9 @@ model Application {
   feel              String?
   status            String
   company           String
+  companyUrl        String?
   recruiterCo       String?
+  recruiterCoUrl    String?
   role              String
   link              String?
   grossSalFrom      Float?   @default(0)

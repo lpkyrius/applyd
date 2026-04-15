@@ -17,6 +17,7 @@ import {
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
   ArrowUpDown, ArrowUp, ArrowDown, Users
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { ApplicationDialog } from './ApplicationDialog'
 import { deleteApplication, addTimelineEntry, deleteTimelineEntry, updateTimelineEntry } from '@/lib/actions'
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -709,8 +710,21 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                     </button>
                   </div>
                 </div>
-                <SheetTitle className="text-3xl font-bold tracking-tight text-slate-900 mt-2 mb-2">
-                  {selectedApp.company}
+                <SheetTitle className="text-2xl font-bold flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-slate-900 group flex items-center gap-2">
+                        {selectedApp.company}
+                        {selectedApp.companyUrl && (
+                        <a href={selectedApp.companyUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-colors">
+                            <ExternalLink size={14} />
+                        </a>
+                        )}
+                    </span>
+                    <span className="text-slate-500 text-lg font-normal">{selectedApp.role}</span>
+                  </div>
+                  <Badge className={cn("px-4 py-1.5 rounded-full border shadow-sm self-start mt-1", getStatusColor(selectedApp.status))}>
+                    {selectedApp.status}
+                  </Badge>
                 </SheetTitle>
                 <SheetDescription render={<div className="flex flex-col gap-3 text-slate-600 mt-1 text-base" />}>
                   <div className="flex items-center gap-2 font-medium">
@@ -787,7 +801,17 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       <section>
                         <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Recruitment Contact</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
-                          <div><span className="text-slate-500 block mb-0.5">Recruiting Co.</span><span className="font-medium text-slate-900">{selectedApp.recruiterCo || '—'}</span></div>
+                          <div>
+                            <span className="text-slate-500 block mb-0.5">Recruiting Co.</span>
+                            <span className="font-medium text-slate-900 flex items-center gap-1.5">
+                              {selectedApp.recruiterCo || '—'}
+                              {selectedApp.recruiterCoUrl && (
+                                <a href={selectedApp.recruiterCoUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-colors">
+                                  <ExternalLink size={12} />
+                                </a>
+                              )}
+                            </span>
+                          </div>
                           <div><span className="text-slate-500 block mb-0.5">Main Recruiter</span><span className="font-medium text-slate-900">{selectedApp.mainRecruiter || '—'}</span></div>
                           <div className="col-span-2"><span className="text-slate-500 block mb-0.5">Contact</span><span className="font-medium text-slate-900">{selectedApp.recruiterContact || '—'}</span></div>
                         </div>

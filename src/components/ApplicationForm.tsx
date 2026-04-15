@@ -98,6 +98,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       company: initData?.company || '',
+      companyUrl: initData?.companyUrl || '',
       role: initData?.role || '',
       status: initData?.status || 'Applied',
       name: initData?.name || '',
@@ -115,6 +116,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       salaryPeriod: initData?.salaryPeriod || 'month',
       salaryRangeSource: initData?.salaryRangeSource || '',
       recruiterCo: initData?.recruiterCo || '',
+      recruiterCoUrl: initData?.recruiterCoUrl || '',
       mainRecruiter: initData?.mainRecruiter || '',
       recruiterContact: initData?.recruiterContact || '',
       applicationDate: initData?.applicationDate ? format(new Date(initData.applicationDate), 'yyyy-MM-dd') : '',
@@ -148,6 +150,9 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           <SectionTitle>Core Info</SectionTitle>
           <FormField control={form.control} name="company" render={({ field }) => (
             <FieldInput field={field} label="Company *" placeholder="Acme Corp" />
+          )} />
+          <FormField control={form.control} name="companyUrl" render={({ field }) => (
+            <FieldInput field={field} label="Company Website" placeholder="https://..." />
           )} />
           <FormField control={form.control} name="role" render={({ field }) => (
             <FieldInput field={field} label="Role *" placeholder="Senior Engineer" />
@@ -230,6 +235,9 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           <SectionTitle>Recruitment</SectionTitle>
           <FormField control={form.control} name="recruiterCo" render={({ field }) => (
             <FieldInput field={field} label="Recruiter Company" placeholder="Acme Recruitment" />
+          )} />
+          <FormField control={form.control} name="recruiterCoUrl" render={({ field }) => (
+            <FieldInput field={field} label="Recruiter Co. Website" placeholder="https://..." />
           )} />
           <FormField control={form.control} name="mainRecruiter" render={({ field }) => (
             <FieldInput field={field} label="Recruiter Name" placeholder="Jane Smith" />

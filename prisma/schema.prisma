@@ -23,8 +23,11 @@ model Application {
   recruiterCo       String?
   role              String
   link              String?
-  avgGrossSal       String?  // Keep as string for flexibility from Excel
-  avgNetSal         String?
+  grossSalFrom      Float?   @default(0)
+  grossSalTo        Float?   @default(0)
+  netSalFrom        Float?   @default(0)
+  netSalTo          Float?   @default(0)
+  salaryCurrency    String?  @default("EUR")
   salaryPeriod      String?  @default("month")
   salaryRangeSource String?
   jobType           String?

@@ -420,6 +420,23 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     )
   }
 
+  const formatSalary = (from: number | null, to: number | null, currency: string | null) => {
+    const f = from || 0;
+    const t = to || 0;
+    if (f === 0 && t === 0) return '—';
+    
+    const curr = currency || 'EUR';
+    const symbol = curr === 'EUR' ? '€' : curr === 'USD' ? '$' : curr === 'GBP' ? '£' : `${curr} `;
+
+    if (f === t || (f === 0 && t > 0)) {
+      return `${symbol}${t.toLocaleString()}`;
+    }
+    if (f > 0 && t === 0) {
+      return `${symbol}${f.toLocaleString()}`;
+    }
+    return `${symbol}${f.toLocaleString()} – ${symbol}${t.toLocaleString()}`;
+  }
+
   return (
     <div className="w-full space-y-4">
       {/* ─── Search & Filters ─── */}
@@ -730,11 +747,32 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       <section>
                         <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Job Specifications</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
-                          <div><span className="text-slate-500 block mb-0.5">Gross Salary</span><span className="font-medium text-slate-900">{selectedApp.avgGrossSal || '—'}{selectedApp.avgGrossSal && selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Net Salary</span><span className="font-medium text-slate-900">{selectedApp.avgNetSal || '—'}{selectedApp.avgNetSal && selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Location Type</span><span className="font-medium text-slate-900">{selectedApp.locationType || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Duration</span><span className="font-medium text-slate-900">{selectedApp.duration || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Initiator</span><span className="font-medium text-slate-900">{selectedApp.initiator || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Feel</span><span className="font-medium text-slate-900">{selectedApp.feel || '—'}</span></div>
+                        </div>
+                      </section>
+
+                      <section>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Compensation</h4>
+                        <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                          <div>
+                            <span className="text-slate-500 block mb-0.5">Gross Salary</span>
+                            <span className="font-medium text-slate-900">
+                              {formatSalary(selectedApp.grossSalFrom, selectedApp.grossSalTo, selectedApp.salaryCurrency)}
+                              {selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-500 block mb-0.5">Net Salary</span>
+                            <span className="font-medium text-slate-900">
+                              {formatSalary(selectedApp.netSalFrom, selectedApp.netSalTo, selectedApp.salaryCurrency)}
+                              {selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}
+                            </span>
+                          </div>
+                          <div><span className="text-slate-500 block mb-0.5">Salary Period</span><span className="font-medium text-slate-900">{selectedApp.salaryPeriod || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Range informed by</span><span className="font-medium text-slate-900">{selectedApp.salaryRangeSource || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Interview Type</span><span className="font-medium text-slate-900">{selectedApp.interviewType || '—'}</span></div>
                         </div>
                       </section>
 
@@ -748,7 +786,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       </section>
 
                       <section>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Dates & Next Steps</h4>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Dates & Progress</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
                           <div>
                             <span className="text-slate-500 block mb-0.5">Application Date</span>
@@ -762,12 +800,22 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                               {selectedApp.deadline ? format(new Date(selectedApp.deadline), 'MMM d, yyyy') : '—'}
                             </span>
                           </div>
-                          <div className="col-span-2">
-                            <span className="text-slate-500 block mb-0.5">Next Action</span>
-                            <span className="font-medium text-amber-800 bg-amber-50 px-2 py-1 rounded inline-block mt-0.5">
-                              {selectedApp.nextAction || '—'}
+                          <div>
+                            <span className="text-slate-500 block mb-0.5">Date Found</span>
+                            <span className="font-medium text-slate-900">
+                              {selectedApp.dateFound ? format(new Date(selectedApp.dateFound), 'MMM d, yyyy') : '—'}
                             </span>
                           </div>
+                          <div>
+                            <span className="text-slate-500 block mb-0.5">Step Date</span>
+                            <span className="font-medium text-slate-900">
+                              {selectedApp.stepDate ? format(new Date(selectedApp.stepDate), 'MMM d, yyyy') : '—'}
+                            </span>
+                          </div>
+                          <div><span className="text-slate-500 block mb-0.5">Current Step</span><span className="font-medium text-slate-900">{selectedApp.currentStep || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Next Action</span><span className="font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">{selectedApp.nextAction || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Interview Type</span><span className="font-medium text-slate-900">{selectedApp.interviewType || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Current Interviewer</span><span className="font-medium text-slate-900">{selectedApp.currentInterviewer || '—'}</span></div>
                         </div>
                       </section>
 
@@ -775,6 +823,12 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                         <section>
                           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Notes & Feedback</h4>
                           <div className="space-y-4 text-sm">
+                            {selectedApp.currentStepNotes && (
+                              <div>
+                                <span className="text-slate-500 block mb-1">Current Step Notes</span>
+                                <p className="text-slate-800 bg-slate-50 p-3 rounded-md border border-slate-100 whitespace-pre-wrap leading-relaxed">{selectedApp.currentStepNotes}</p>
+                              </div>
+                            )}
                             {selectedApp.notes && (
                               <div>
                                 <span className="text-slate-500 block mb-1">General Notes</span>
@@ -784,7 +838,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                             {selectedApp.finalFeedback && (
                               <div>
                                 <span className="text-slate-500 block mb-1">Final Feedback</span>
-                                <p className="text-slate-800 bg-slate-50 p-3 rounded-md border border-slate-100 whitespace-pre-wrap leading-relaxed">{selectedApp.finalFeedback}</p>
+                                <p className="text-slate-800 bg-slate-100 p-3 rounded-md border border-slate-200 whitespace-pre-wrap leading-relaxed font-medium">{selectedApp.finalFeedback}</p>
                               </div>
                             )}
                           </div>

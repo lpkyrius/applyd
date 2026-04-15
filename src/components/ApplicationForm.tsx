@@ -102,8 +102,11 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       locationType: initData?.locationType || '',
       jobType: initData?.jobType || '',
       duration: initData?.duration || '',
-      avgGrossSal: initData?.avgGrossSal || '',
-      avgNetSal: initData?.avgNetSal || '',
+      grossSalFrom: initData?.grossSalFrom || 0,
+      grossSalTo: initData?.grossSalTo || 0,
+      netSalFrom: initData?.netSalFrom || 0,
+      netSalTo: initData?.netSalTo || 0,
+      salaryCurrency: initData?.salaryCurrency || 'EUR',
       salaryPeriod: initData?.salaryPeriod || 'month',
       salaryRangeSource: initData?.salaryRangeSource || '',
       recruiterCo: initData?.recruiterCo || '',
@@ -161,12 +164,48 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           )} />
 
           <SectionTitle>Compensation</SectionTitle>
-          <FormField control={form.control} name="avgGrossSal" render={({ field }) => (
-            <FieldInput field={field} label="Avg. Gross Salary" placeholder="€70,000" />
+          <FormField control={form.control} name="salaryCurrency" render={({ field }) => (
+            <FieldInput field={field} label="Currency" placeholder="EUR, USD, GBP..." />
           )} />
-          <FormField control={form.control} name="avgNetSal" render={({ field }) => (
-            <FieldInput field={field} label="Avg. Net Salary" placeholder="€50,000" />
-          )} />
+          
+          <div className="grid grid-cols-2 gap-3">
+            <FormField control={form.control} name="grossSalFrom" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs text-slate-500 font-medium">Gross From</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                </FormControl>
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="grossSalTo" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs text-slate-500 font-medium">Gross To</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                </FormControl>
+              </FormItem>
+            )} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <FormField control={form.control} name="netSalFrom" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs text-slate-500 font-medium">Net From</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                </FormControl>
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="netSalTo" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs text-slate-500 font-medium">Net To</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                </FormControl>
+              </FormItem>
+            )} />
+          </div>
+
           <FormField control={form.control} name="salaryPeriod" render={({ field }) => (
             <FieldSelect field={field} label="Salary Period *" options={PERIOD_OPTIONS} />
           )} />

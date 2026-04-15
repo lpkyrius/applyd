@@ -15,10 +15,10 @@ import { Input } from '@/components/ui/input'
 import {
   Calendar, Briefcase, Building2, ExternalLink,
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
-  ArrowUpDown, ArrowUp, ArrowDown
+  ArrowUpDown, ArrowUp, ArrowDown, Users
 } from 'lucide-react'
 import { ApplicationDialog } from './ApplicationDialog'
-import { deleteApplication, addTimelineEntry, deleteTimelineEntry } from '@/lib/actions'
+import { deleteApplication, addTimelineEntry, deleteTimelineEntry, updateTimelineEntry } from '@/lib/actions'
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Step {
@@ -28,7 +28,7 @@ interface Step {
   description: string
 }
 
-type SortKey = 'company' | 'role' | 'status' | 'applicationDate' | 'latestActivityDate';
+type SortKey = 'company' | 'recruiterCo' | 'role' | 'status' | 'applicationDate' | 'latestActivityDate';
 type SortDirection = 'asc' | 'desc';
 
 interface SortConfig {
@@ -45,7 +45,12 @@ const JOB_TYPE_OPTIONS = ['Full-time', 'Part-time', 'Contract', 'Internship', 'F
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const parseSteps = (stepsJson: string): Step[] => {
-  try { return JSON.parse(stepsJson || '[]') } catch { return [] }
+  try {
+    const steps = JSON.parse(stepsJson || '[]') as Step[]
+    return steps.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  } catch {
+    return []
+  }
 }
 
 const getLatestStepDate = (stepsJson: string): Date | null => {
@@ -140,6 +145,118 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
   )
 }
 
+// ─── Timeline Item Component ───────────────────────────────────────────────
+function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Step; idx: number; onDelete: (idx: number) => void }) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [type, setType] = useState<'STEP' | 'CONTACT'>(step.type)
+  const [date, setDate] = useState(new Date(step.date).toISOString().substring(0, 10))
+  const [description, setDescription] = useState(step.description)
+  const [isPending, startTransition] = useTransition()
+
+  const handleUpdate = () => {
+    if (!description.trim()) return
+    startTransition(async () => {
+      const res = await updateTimelineEntry(appId, idx, { type, date, description })
+      if (res.success) {
+        setIsEditing(false)
+      }
+    })
+  }
+
+  if (isEditing) {
+    return (
+      <div className="bg-white p-4 rounded-xl border border-blue-200 shadow-sm space-y-3">
+        <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-semibold text-blue-700">Edit Entry</span>
+            <button onClick={() => setIsEditing(false)} className="text-slate-400 hover:text-slate-600">
+                <X size={16} />
+            </button>
+        </div>
+        <div className="flex gap-2">
+            <button
+                onClick={() => setType('STEP')}
+                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${type === 'STEP' ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
+            >
+                Interview Step
+            </button>
+            <button
+                onClick={() => setType('CONTACT')}
+                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${type === 'CONTACT' ? 'bg-slate-700 text-white border-slate-700' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
+            >
+                Contact / Note
+            </button>
+        </div>
+        <input
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        />
+        <textarea
+            placeholder="Describe what happened…"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            rows={3}
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+        />
+        <div className="flex gap-2">
+            <Button
+                onClick={handleUpdate}
+                disabled={isPending || !description.trim()}
+                size="sm"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+                {isPending ? 'Saving…' : 'Save Changes'}
+            </Button>
+            <Button
+                variant="outline"
+                onClick={() => setIsEditing(false)}
+                size="sm"
+                className="flex-1"
+            >
+                Cancel
+            </Button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative group/step">
+      <div className={`absolute -left-[23px] top-1.5 h-3 w-3 rounded-full border-[3px] shadow-sm z-10 ${step.type === 'STEP' ? 'bg-blue-500 border-white' : 'bg-slate-400 border-white'}`} />
+      <div className="bg-white p-4 rounded-xl border border-slate-200/70 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-colors">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              {format(new Date(step.date), 'MMM d, yyyy')}
+              <span className={`ml-2 px-1.5 py-0.5 rounded text-[10px] ${step.type === 'STEP' ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500'}`}>
+                {step.type === 'STEP' ? 'Interview Step' : 'Contact'}
+              </span>
+            </p>
+            <p className="text-sm text-slate-700 leading-relaxed break-words whitespace-pre-wrap">{step.description}</p>
+          </div>
+          <div className="flex items-center gap-1 opacity-0 group-hover/step:opacity-100 transition-opacity">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-slate-300 hover:text-blue-500 p-1 transition-colors"
+              title="Edit entry"
+            >
+              <Edit size={14} />
+            </button>
+            <button
+              onClick={() => onDelete(idx)}
+              className="text-slate-300 hover:text-red-400 p-1 transition-colors"
+              title="Remove entry"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Main component ──────────────────────────────────────────────────────────
 export function DataTable({ applications: initialApps }: { applications: any[] }) {
   const [selectedApp, setSelectedApp] = useState<any | null>(null)
@@ -149,7 +266,43 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'applicationDate', direction: 'desc' })
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'latestActivityDate', direction: 'desc' })
+
+  // Column Resizing state
+  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({
+    company: 200,
+    recruiterCo: 180,
+    role: 300,
+    status: 150,
+    applicationDate: 150,
+    latestActivityDate: 150,
+    _actions: 80, // Actions column
+  })
+
+  const [resizing, setResizing] = useState<string | null>(null)
+
+  const handleResizeStart = (e: React.MouseEvent, column: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const startX = e.pageX
+    const startWidth = columnWidths[column]
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const delta = moveEvent.pageX - startX
+      const newWidth = Math.max(80, startWidth + delta) // Min width 80px
+      setColumnWidths(prev => ({ ...prev, [column]: newWidth }))
+    }
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+      setResizing(null)
+    }
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+    setResizing(column)
+  }
 
   const filteredApplications = useMemo(() => {
     // 1. Calculate derived activity dates
@@ -162,7 +315,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     const filtered = withActivity.filter(app => {
       const matchesSearch = 
         (app.company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+        (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       
       const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
       const matchesType = typeFilter === 'all' || app.jobType === typeFilter;
@@ -237,7 +391,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     setSearchQuery('')
     setStatusFilter('all')
     setTypeFilter('all')
-    setSortConfig({ key: 'applicationDate', direction: 'desc' })
+    setSortConfig({ key: 'latestActivityDate', direction: 'desc' })
   }
 
   const getStatusColor = (status: string) => {
@@ -261,7 +415,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input 
-                placeholder="Search by company or role..." 
+                placeholder="Search by company, role or recruiter..." 
                 className="pl-9 bg-slate-50/50 border-slate-200"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -305,63 +459,102 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
       </div>
 
       {/* ─── Table ─── */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-x-auto">
-        <Table>
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-x-auto relative">
+        <Table className="table-fixed w-full min-w-max border-collapse">
           <TableHeader className="bg-slate-50 border-b border-slate-200">
             <TableRow className="hover:bg-transparent">
               <TableHead 
-                className="font-semibold text-slate-900 py-4 pl-6 cursor-pointer select-none hover:bg-slate-100/50 transition-colors"
+                style={{ width: columnWidths.recruiterCo }}
+                className="font-semibold text-slate-900 py-4 pl-6 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                onClick={() => handleSort('recruiterCo')}
+              >
+                <div className="flex items-center truncate">Recruiter Co. <SortIndicator column="recruiterCo" /></div>
+                <div
+                  onMouseDown={(e) => handleResizeStart(e, 'recruiterCo')}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'recruiterCo' ? 'bg-blue-500' : ''}`}
+                />
+              </TableHead>
+              <TableHead 
+                style={{ width: columnWidths.company }}
+                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('company')}
               >
-                <div className="flex items-center">Company <SortIndicator column="company" /></div>
+                <div className="flex items-center truncate">Company <SortIndicator column="company" /></div>
+                <div
+                  onMouseDown={(e) => handleResizeStart(e, 'company')}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'company' ? 'bg-blue-500' : ''}`}
+                />
               </TableHead>
               <TableHead 
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors max-w-[300px]"
+                style={{ width: columnWidths.role }}
+                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('role')}
               >
-                <div className="flex items-center">Role <SortIndicator column="role" /></div>
+                <div className="flex items-center truncate">Role <SortIndicator column="role" /></div>
+                <div
+                  onMouseDown={(e) => handleResizeStart(e, 'role')}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'role' ? 'bg-blue-500' : ''}`}
+                />
               </TableHead>
               <TableHead 
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors"
+                style={{ width: columnWidths.status }}
+                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('status')}
               >
-                <div className="flex items-center">Status <SortIndicator column="status" /></div>
+                <div className="flex items-center truncate">Status <SortIndicator column="status" /></div>
+                <div
+                  onMouseDown={(e) => handleResizeStart(e, 'status')}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'status' ? 'bg-blue-500' : ''}`}
+                />
               </TableHead>
               <TableHead 
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap"
+                style={{ width: columnWidths.applicationDate }}
+                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('applicationDate')}
               >
-                <div className="flex items-center">Date Applied <SortIndicator column="applicationDate" /></div>
+                <div className="flex items-center truncate">Date Applied <SortIndicator column="applicationDate" /></div>
+                <div
+                  onMouseDown={(e) => handleResizeStart(e, 'applicationDate')}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-blue-500' : ''}`}
+                />
               </TableHead>
               <TableHead 
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap"
+                style={{ width: columnWidths.latestActivityDate }}
+                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('latestActivityDate')}
               >
-                <div className="flex items-center">Latest Activity <SortIndicator column="latestActivityDate" /></div>
+                <div className="flex items-center truncate">Latest Activity <SortIndicator column="latestActivityDate" /></div>
+                <div
+                  onMouseDown={(e) => handleResizeStart(e, 'latestActivityDate')}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-blue-500' : ''}`}
+                />
               </TableHead>
-              <TableHead className="font-semibold text-slate-900 text-right pr-6">Actions</TableHead>
+              <TableHead style={{ width: columnWidths._actions }} className="font-semibold text-slate-900 text-right pr-6 relative">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredApplications.length > 0 ? (
               filteredApplications.map((app) => (
                 <TableRow key={app.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
-                  <TableCell className="font-medium text-slate-900 pl-6" onClick={() => setSelectedApp(app)}>{app.company}</TableCell>
-                  <TableCell className="text-slate-600 truncate max-w-[300px]" onClick={() => setSelectedApp(app)} title={app.role}>{app.role}</TableCell>
-                  <TableCell onClick={() => setSelectedApp(app)}>
-                    <Badge variant="outline" className={`${getStatusColor(app.status)} shadow-none font-medium`}>
+                  <TableCell style={{ width: columnWidths.recruiterCo }} className="font-medium text-slate-900 pl-6 truncate" onClick={() => setSelectedApp(app)}>{app.recruiterCo || '—'}</TableCell>
+                  <TableCell style={{ width: columnWidths.company }} className="text-slate-500 truncate" onClick={() => setSelectedApp(app)}>{app.company}</TableCell>
+                  <TableCell style={{ width: columnWidths.role }} className="text-slate-600 truncate" onClick={() => setSelectedApp(app)} title={app.role}>{app.role}</TableCell>
+                  <TableCell style={{ width: columnWidths.status }} className="truncate" onClick={() => setSelectedApp(app)}>
+                    <Badge variant="outline" className={`${getStatusColor(app.status)} shadow-none font-medium text-[10px]`}>
                       {app.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-slate-500 whitespace-nowrap" onClick={() => setSelectedApp(app)}>
+                  <TableCell style={{ width: columnWidths.applicationDate }} className="text-slate-500 whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
                     {app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'}
                   </TableCell>
-                  <TableCell className="text-slate-500 whitespace-nowrap" onClick={() => setSelectedApp(app)}>
+                  <TableCell style={{ width: columnWidths.latestActivityDate }} className="text-slate-500 whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
                     {app.latestActivityDate ? format(app.latestActivityDate, 'MMM d, yyyy') : (
                         app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'
                     )}
                   </TableCell>
-                  <TableCell className="text-right pr-6">
+                  <TableCell style={{ width: columnWidths._actions }} className="text-right pr-6">
                     <DropdownMenu>
                       <DropdownMenuTrigger render={
                         <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -392,7 +585,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               ))
             ) : (
                 <TableRow>
-                    <TableCell colSpan={6} className="h-32 text-center text-slate-500 italic">
+                    <TableCell colSpan={7} className="h-32 text-center text-slate-500 italic">
                         No applications found matching your criteria.
                     </TableCell>
                 </TableRow>
@@ -471,8 +664,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       <section>
                         <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Job Specifications</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
-                          <div><span className="text-slate-500 block mb-0.5">Gross Salary</span><span className="font-medium text-slate-900">{selectedApp.avgGrossSal || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Net Salary</span><span className="font-medium text-slate-900">{selectedApp.avgNetSal || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Gross Salary</span><span className="font-medium text-slate-900">{selectedApp.avgGrossSal || '—'}{selectedApp.avgGrossSal && selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Net Salary</span><span className="font-medium text-slate-900">{selectedApp.avgNetSal || '—'}{selectedApp.avgNetSal && selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Duration</span><span className="font-medium text-slate-900">{selectedApp.duration || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Interview Type</span><span className="font-medium text-slate-900">{selectedApp.interviewType || '—'}</span></div>
                         </div>
@@ -548,29 +741,13 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       <div className="relative pl-7 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-slate-200">
                         {parseSteps(selectedApp.steps).length > 0 ? (
                           parseSteps(selectedApp.steps).map((step, idx) => (
-                            <div key={idx} className="relative group/step">
-                              <div className={`absolute -left-[23px] top-1.5 h-3 w-3 rounded-full border-[3px] shadow-sm z-10 ${step.type === 'STEP' ? 'bg-blue-500 border-white' : 'bg-slate-400 border-white'}`} />
-                              <div className="bg-white p-4 rounded-xl border border-slate-200/70 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-colors">
-                                <div className="flex items-start justify-between gap-2">
-                                  <div>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                                      {format(new Date(step.date), 'MMM d, yyyy')}
-                                      <span className={`ml-2 px-1.5 py-0.5 rounded text-[10px] ${step.type === 'STEP' ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500'}`}>
-                                        {step.type === 'STEP' ? 'Interview Step' : 'Contact'}
-                                      </span>
-                                    </p>
-                                    <p className="text-sm text-slate-700 leading-relaxed">{step.description}</p>
-                                  </div>
-                                  <button
-                                    onClick={() => handleTimelineDelete(idx)}
-                                    className="opacity-0 group-hover/step:opacity-100 transition-opacity text-slate-300 hover:text-red-400 shrink-0 mt-0.5"
-                                    title="Remove entry"
-                                  >
-                                    <X size={14} />
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
+                            <TimelineItem 
+                                key={idx} 
+                                appId={selectedApp.id} 
+                                step={step} 
+                                idx={idx} 
+                                onDelete={handleTimelineDelete} 
+                            />
                           ))
                         ) : (
                           <p className="text-sm text-slate-500 italic bg-slate-50 p-4 rounded-lg text-center border border-slate-100">

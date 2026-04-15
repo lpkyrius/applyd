@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { applicationSchema, type ApplicationFormData } from '@/lib/schemas';
 import { saveApplication } from '@/lib/actions';
+import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -16,6 +17,7 @@ const STATUS_OPTIONS = [
 
 const JOB_TYPE_OPTIONS = ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'];
 const LOCATION_OPTIONS = ['Remote', 'Hybrid', 'On-site'];
+const PERIOD_OPTIONS = ['hour', 'day', 'month', 'year'];
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -101,10 +103,12 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       duration: initData?.duration || '',
       avgGrossSal: initData?.avgGrossSal || '',
       avgNetSal: initData?.avgNetSal || '',
+      salaryPeriod: initData?.salaryPeriod || 'month',
+      recruiterCo: initData?.recruiterCo || '',
       mainRecruiter: initData?.mainRecruiter || '',
       recruiterContact: initData?.recruiterContact || '',
-      applicationDate: initData?.applicationDate ? String(initData.applicationDate).substring(0, 10) : '',
-      deadline: initData?.deadline ? String(initData.deadline).substring(0, 10) : '',
+      applicationDate: initData?.applicationDate ? format(new Date(initData.applicationDate), 'yyyy-MM-dd') : '',
+      deadline: initData?.deadline ? format(new Date(initData.deadline), 'yyyy-MM-dd') : '',
       currentStep: initData?.currentStep || '',
       nextAction: initData?.nextAction || '',
       currentInterviewer: initData?.currentInterviewer || '',
@@ -161,8 +165,14 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           <FormField control={form.control} name="avgNetSal" render={({ field }) => (
             <FieldInput field={field} label="Avg. Net Salary" placeholder="€50,000" />
           )} />
+          <FormField control={form.control} name="salaryPeriod" render={({ field }) => (
+            <FieldSelect field={field} label="Salary Period *" options={PERIOD_OPTIONS} />
+          )} />
 
           <SectionTitle>Recruitment</SectionTitle>
+          <FormField control={form.control} name="recruiterCo" render={({ field }) => (
+            <FieldInput field={field} label="Recruiter Company" placeholder="Acme Recruitment" />
+          )} />
           <FormField control={form.control} name="mainRecruiter" render={({ field }) => (
             <FieldInput field={field} label="Recruiter Name" placeholder="Jane Smith" />
           )} />

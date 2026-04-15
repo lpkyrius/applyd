@@ -58,12 +58,18 @@ export async function addTimelineEntry(
     let steps: any[] = [];
     try { steps = JSON.parse(app.steps as string || '[]'); } catch {}
 
+    // Sort existing steps to ensure index consistency
+    steps.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
     steps.unshift({
       type: entry.type,
       isStep: entry.type === 'STEP',
       date: new Date(entry.date).toISOString(),
       description: entry.description,
     });
+
+    // Sort again after adding new entry
+    steps.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     await prisma.application.update({
       where: { id: appId },
@@ -85,7 +91,49 @@ export async function deleteTimelineEntry(appId: string, index: number) {
     let steps: any[] = [];
     try { steps = JSON.parse(app.steps as string || '[]'); } catch {}
 
+    // Ensure sorted order before deleting by index
+    steps.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
     steps.splice(index, 1);
+
+    await prisma.application.update({
+      where: { id: appId },
+      data: { steps: JSON.stringify(steps) }
+    });
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+export async function updateTimelineEntry(
+  appId: string,
+  index: number,
+  entry: { type: 'STEP' | 'CONTACT'; date: string; description: string }
+) {
+  try {
+    const app = await prisma.application.findUnique({ where: { id: appId } });
+    if (!app) return { success: false, error: 'Not found' };
+
+    let steps: any[] = [];
+    try { steps = JSON.parse(app.steps as string || '[]'); } catch {}
+
+    // Ensure sorted order before updating by index
+    steps.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    if (steps[index]) {
+      steps[index] = {
+        ...steps[index],
+        type: entry.type,
+        isStep: entry.type === 'STEP',
+        date: new Date(entry.date).toISOString(),
+        description: entry.description,
+      };
+    }
+    
+    // Re-sort in case date was changed
+    steps.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     await prisma.application.update({
       where: { id: appId },

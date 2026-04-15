@@ -5,28 +5,41 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, LineChart, Line
 } from 'recharts';
-import { 
-  TrendingUp, 
-  Users, 
-  Briefcase, 
-  CheckCircle2, 
-  Clock, 
-  AlertCircle,
-  Banknote,
-  Target
-} from 'lucide-react';
+import { AlertCircle, Banknote, Briefcase, Calendar, CheckCircle2, Clock, Target, TrendingUp, Users, Filter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const COLORS = ['#0F172A', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+const COLORS = ['#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#64748B'];
 
 export function DashboardOverview({ applications }: { applications: any[] }) {
-  const stats = useMemo(() => {
-    const total = applications.length;
-    const active = applications.filter(a => !['rejected', 'denied', 'closed', 'withdrawn'].some(s => a.status.toLowerCase().includes(s))).length;
-    const offers = applications.filter(a => ['offer', 'accepted'].some(s => a.status.toLowerCase().includes(s))).length;
+
+  const [startYear, setStartYear] = React.useState('2026');
+  const [startMonth, setStartMonth] = React.useState('Jan');
+  const [endYear, setEndYear] = React.useState('2026');
+  const [endMonth, setEndMonth] = React.useState('Feb');
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const years = ['2024', '2025', '2026', '2027'];
+
+  const filteredApps = useMemo(() => {
+    const sVal = parseInt(startYear) * 12 + months.indexOf(startMonth);
+    const eVal = parseInt(endYear) * 12 + months.indexOf(endMonth);
     
-    const statusCounts = applications.reduce((acc: any, app) => {
+    return applications.filter(app => {
+      if (!app.applicationDate) return false;
+      const d = new Date(app.applicationDate);
+      const currentVal = d.getFullYear() * 12 + d.getMonth();
+      return currentVal >= sVal && currentVal <= eVal;
+    });
+  }, [applications, startYear, startMonth, endYear, endMonth]);
+
+  const stats = useMemo(() => {
+    const total = filteredApps.length;
+    const active = filteredApps.filter(a => !['rejected', 'denied', 'closed', 'withdrawn'].some(s => a.status.toLowerCase().includes(s))).length;
+    const offers = filteredApps.filter(a => ['offer', 'accepted'].some(s => a.status.toLowerCase().includes(s))).length;
+    
+    const statusCounts = filteredApps.reduce((acc: any, app) => {
       const status = app.status;
       acc[status] = (acc[status] || 0) + 1;
       return acc;
@@ -34,28 +47,107 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
     const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
 
-    const salApps = applications.filter(a => a.grossSalTo > 0);
+    const salApps = filteredApps.filter(a => a.grossSalTo > 0);
     const avgGross = salApps.length > 0 
       ? salApps.reduce((acc, a) => acc + a.grossSalTo, 0) / salApps.length 
       : 0;
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const counts: any = {};
-    
-    applications.forEach(app => {
-      if (!app.applicationDate) return;
+    filteredApps.forEach(app => {
       const date = new Date(app.applicationDate);
-      const month = months[date.getMonth()];
-      counts[month] = (counts[month] || 0) + 1;
+      const label = `${months[date.getMonth()]} ${date.getFullYear()}`;
+      counts[label] = (counts[label] || 0) + 1;
     });
 
-    const activityData = months.map(name => ({ name, count: counts[name] || 0 }));
+    // Generate accurate activity data for the range
+    const activityData: any[] = [];
+    let currY = parseInt(startYear);
+    let currM = months.indexOf(startMonth);
+    const endY = parseInt(endYear);
+    const endM = months.indexOf(endMonth);
+
+    while (currY < endY || (currY === endY && currM <= endM)) {
+      const label = `${months[currM]} ${currY}`;
+      activityData.push({
+        name: label,
+        count: counts[label] || 0
+      });
+      currM++;
+      if (currM > 11) {
+        currM = 0;
+        currY++;
+      }
+    }
 
     return { total, active, offers, statusData, avgGross, activityData };
-  }, [applications]);
+  }, [filteredApps, startYear, startMonth, endYear, endMonth]);
 
   return (
     <div className="space-y-8">
+      {/* ── FILTERS ── */}
+      <div className="flex items-center gap-4 bg-white p-4 rounded-3xl border border-slate-200/60 shadow-sm">
+        <div className="p-2 rounded-xl bg-slate-900 text-white shrink-0">
+          <Filter size={18} />
+        </div>
+        <div className="flex-1 flex items-center gap-6">
+          {/* FROM SECTION */}
+          <div className="flex items-center gap-2">
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-slate-400 border-l-2 border-slate-900 pl-1.5 ml-1 uppercase tracking-widest block">From</span>
+              <div className="flex items-center gap-2">
+                <Select value={startYear} onValueChange={setStartYear}>
+                  <SelectTrigger className="h-9 w-[90px] rounded-lg border-slate-200">
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={startMonth} onValueChange={setStartMonth}>
+                  <SelectTrigger className="h-9 w-[100px] rounded-lg border-slate-200">
+                    <SelectValue placeholder="Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div className="h-8 w-px bg-slate-100 shrink-0" />
+
+          {/* TO SECTION */}
+          <div className="flex items-center gap-2">
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-slate-400 border-l-2 border-slate-400 pl-1.5 ml-1 uppercase tracking-widest block">To</span>
+              <div className="flex items-center gap-2">
+                <Select value={endYear} onValueChange={setEndYear}>
+                  <SelectTrigger className="h-9 w-[90px] rounded-lg border-slate-200">
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={endMonth} onValueChange={setEndMonth}>
+                  <SelectTrigger className="h-9 w-[100px] rounded-lg border-slate-200">
+                    <SelectValue placeholder="Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="text-xs font-semibold text-slate-400 flex items-center gap-2 pr-2">
+          <Calendar size={14} />
+          {filteredApps.length} records in range
+        </div>
+      </div>
+
       {/* ── METRICS GRID ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard 
@@ -142,7 +234,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     cursor={{ fill: '#f8fafc' }}
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                   />
-                  <Bar dataKey="count" fill="#0F172A" radius={[4, 4, 0, 0]} barSize={40} />
+                  <Bar dataKey="count" fill="#6366F1" radius={[4, 4, 0, 0]} barSize={40} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

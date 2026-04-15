@@ -19,6 +19,8 @@ const JOB_TYPE_OPTIONS = ['Full-time', 'Part-time', 'Contract', 'Internship', 'F
 const LOCATION_OPTIONS = ['Remote', 'Hybrid', 'On-site'];
 const PERIOD_OPTIONS = ['hour', 'day', 'month', 'year'];
 const RANGE_SOURCE_OPTIONS = ['Company', 'Me', 'Research', 'Other'];
+const INITIATOR_OPTIONS = ['Candidate', 'Recruiter', 'Company', 'Referral'];
+const FEEL_OPTIONS = ['😊', '😃', '😐', '🙁', '❌'];
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -98,6 +100,9 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       company: initData?.company || '',
       role: initData?.role || '',
       status: initData?.status || 'Applied',
+      name: initData?.name || '',
+      initiator: initData?.initiator || 'Candidate',
+      feel: initData?.feel || '😊',
       link: initData?.link || '',
       locationType: initData?.locationType || '',
       jobType: initData?.jobType || '',
@@ -149,6 +154,15 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           )} />
           <FormField control={form.control} name="status" render={({ field }) => (
             <FieldSelect field={field} label="Status *" options={STATUS_OPTIONS} />
+          )} />
+          <FormField control={form.control} name="name" render={({ field }) => (
+            <FieldInput field={field} label="Candidate Name" placeholder="Leandro" />
+          )} />
+          <FormField control={form.control} name="initiator" render={({ field }) => (
+            <FieldSelect field={field} label="Initiator" options={INITIATOR_OPTIONS} />
+          )} />
+          <FormField control={form.control} name="feel" render={({ field }) => (
+            <FieldSelect field={field} label="Feel / Mood" options={FEEL_OPTIONS} />
           )} />
           <FormField control={form.control} name="link" render={({ field }) => (
             <FieldInput field={field} label="Job Post URL" placeholder="https://..." />

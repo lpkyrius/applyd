@@ -396,11 +396,11 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   const getStatusColor = (status: string) => {
     const s = (status || '').toLowerCase()
-    if (s.includes('applied')) return 'bg-emerald-100 text-emerald-800 border-emerald-200'
-    if (s.includes('interview') || s.includes('screening')) return 'bg-blue-100 text-blue-800 border-blue-200'
-    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-slate-100 text-slate-800 border-slate-200'
-    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-amber-100 text-amber-800 border-amber-200'
-    return 'bg-gray-100 text-gray-800 border-gray-200'
+    if (s.includes('applied') || s.includes('prospec')) return 'bg-slate-100/80 text-slate-600 border-slate-200 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
+    if (s.includes('interview') || s.includes('screening') || s.includes('test')) return 'bg-indigo-50 text-indigo-700 border-indigo-100 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
+    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-red-50 text-red-600 border-red-100 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
+    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-emerald-50 text-emerald-700 border-emerald-100 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
+    return 'bg-slate-50 text-slate-500 border-slate-100 shadow-none'
   }
 
   const SortIndicator = ({ column }: { column: SortKey }) => {
@@ -747,6 +747,14 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       <section>
                         <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Job Specifications</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                          <div className="col-span-2 bg-slate-50 p-3 rounded-lg border border-slate-100 flex justify-between items-center mb-2">
+                             <div>
+                               <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Candidate</span>
+                               <span className="font-semibold text-slate-900 text-base">{selectedApp.name || '—'}</span>
+                             </div>
+                             <div className="text-2xl">{selectedApp.feel || '—'}</div>
+                          </div>
+                          <div><span className="text-slate-500 block mb-0.5">Job Type</span><span className="font-medium text-slate-900">{selectedApp.jobType || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Location Type</span><span className="font-medium text-slate-900">{selectedApp.locationType || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Duration</span><span className="font-medium text-slate-900">{selectedApp.duration || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Initiator</span><span className="font-medium text-slate-900">{selectedApp.initiator || '—'}</span></div>

@@ -14,7 +14,6 @@ datasource db {
 
 model Application {
   id                String   @id @default(cuid())
-  excelId           String?
   name              String?
   initiator         String?
   feel              String?

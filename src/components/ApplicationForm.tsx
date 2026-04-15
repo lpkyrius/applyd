@@ -97,12 +97,12 @@ export function ApplicationForm({ initData, id, onSuccess }: {
   const form = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
-      company: initData?.company || '',
+      company: initData?.company || '#NotInformed',
       companyUrl: initData?.companyUrl || '',
-      role: initData?.role || '',
+      role: initData?.role || '#NotInformed',
       status: initData?.status || 'Applied',
       name: initData?.name || '',
-      initiator: initData?.initiator || 'Candidate',
+      initiator: initData?.initiator || 'Recruiter',
       feel: initData?.feel || '😊',
       link: initData?.link || '',
       locationType: initData?.locationType || '',
@@ -119,7 +119,9 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       recruiterCoUrl: initData?.recruiterCoUrl || '',
       mainRecruiter: initData?.mainRecruiter || '',
       recruiterContact: initData?.recruiterContact || '',
-      applicationDate: initData?.applicationDate ? format(new Date(initData.applicationDate), 'yyyy-MM-dd') : '',
+      applicationDate: initData?.applicationDate 
+        ? format(new Date(initData.applicationDate), 'yyyy-MM-dd') 
+        : format(new Date(), 'yyyy-MM-dd'),
       deadline: initData?.deadline ? format(new Date(initData.deadline), 'yyyy-MM-dd') : '',
       currentStep: initData?.currentStep || '',
       nextAction: initData?.nextAction || '',

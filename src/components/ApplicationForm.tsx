@@ -108,6 +108,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       locationType: initData?.locationType || '',
       jobType: initData?.jobType || '',
       duration: initData?.duration || '',
+      companyLocation: initData?.companyLocation || '',
       grossSalFrom: initData?.grossSalFrom || 0,
       grossSalTo: initData?.grossSalTo || 0,
       netSalFrom: initData?.netSalFrom || 0,
@@ -182,6 +183,9 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           )} />
           <FormField control={form.control} name="duration" render={({ field }) => (
             <FieldInput field={field} label="Duration" placeholder="e.g. Permanent, 6 months" />
+          )} />
+          <FormField control={form.control} name="companyLocation" render={({ field }) => (
+            <FieldInput field={field} label="Company Location" placeholder="e.g. Amsterdam, Holland" />
           )} />
 
           <SectionTitle>Compensation</SectionTitle>

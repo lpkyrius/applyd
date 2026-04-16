@@ -317,7 +317,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
       const matchesSearch = 
         (app.company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+        (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (app.companyLocation?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       
       const matchesStatus = statusFilter.length === 0 || statusFilter.includes(app.status);
       const matchesType = typeFilter.length === 0 || typeFilter.includes((app.jobType as string) || '');
@@ -771,6 +772,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                           <div><span className="text-slate-500 block mb-0.5">Job Type</span><span className="font-medium text-slate-900">{selectedApp.jobType || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Location Type</span><span className="font-medium text-slate-900">{selectedApp.locationType || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Duration</span><span className="font-medium text-slate-900">{selectedApp.duration || '—'}</span></div>
+                          <div><span className="text-slate-500 block mb-0.5">Company Location</span><span className="font-medium text-slate-900">{selectedApp.companyLocation || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Initiator</span><span className="font-medium text-slate-900">{selectedApp.initiator || '—'}</span></div>
                           <div><span className="text-slate-500 block mb-0.5">Feel</span><span className="font-medium text-slate-900">{selectedApp.feel || '—'}</span></div>
                         </div>

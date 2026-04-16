@@ -38,6 +38,7 @@ model Application {
   dateFound         DateTime?
   applicationDate   DateTime?
   locationType      String?
+  companyLocation   String?
   currentStep       String?
   stepDate          DateTime?
   nextAction        String?

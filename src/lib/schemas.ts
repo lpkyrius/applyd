@@ -23,6 +23,7 @@ export const applicationSchema = z.object({
   mainRecruiter: z.string().optional().nullable(),
   recruiterContact: z.string().optional().nullable(),
   locationType: z.string().optional().nullable(),
+  companyLocation: z.string().optional().nullable(),
   currentStep: z.string().optional().nullable(),
   nextAction: z.string().optional().nullable(),
   currentInterviewer: z.string().optional().nullable(),

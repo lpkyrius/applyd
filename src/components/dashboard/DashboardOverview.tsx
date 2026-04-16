@@ -14,13 +14,26 @@ const COLORS = ['#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#64748B'
 
 export function DashboardOverview({ applications }: { applications: any[] }) {
 
-  const [startYear, setStartYear] = React.useState('2026');
-  const [startMonth, setStartMonth] = React.useState('Jan');
-  const [endYear, setEndYear] = React.useState('2026');
-  const [endMonth, setEndMonth] = React.useState('Feb');
-
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const years = ['2024', '2025', '2026', '2027'];
+  const years = ['2023', '2024', '2025', '2026', '2027'];
+
+  // Default to last 12 months
+  const defaultDates = useMemo(() => {
+    const now = new Date();
+    const endM = months[now.getMonth()];
+    const endY = now.getFullYear().toString();
+    
+    const start = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+    const startM = months[start.getMonth()];
+    const startY = start.getFullYear().toString();
+    
+    return { startM, startY, endM, endY };
+  }, []);
+
+  const [startYear, setStartYear] = React.useState(defaultDates.startY);
+  const [startMonth, setStartMonth] = React.useState(defaultDates.startM);
+  const [endYear, setEndYear] = React.useState(defaultDates.endY);
+  const [endMonth, setEndMonth] = React.useState(defaultDates.endM);
 
   const filteredApps = useMemo(() => {
     const sVal = parseInt(startYear) * 12 + months.indexOf(startMonth);

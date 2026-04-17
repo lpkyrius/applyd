@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-  { icon: ListTodo, label: 'Applications', href: '/' },
+  { icon: ListTodo, label: 'Applications', href: '/applications' },
 ];
 
 export function Sidebar() {
@@ -23,7 +23,7 @@ export function Sidebar() {
   return (
     <aside className="w-64 border-r border-slate-200 bg-white flex flex-col h-screen sticky top-0 shrink-0">
       <div className="p-6 border-b border-slate-100/50">
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="bg-slate-900 text-white p-2 rounded-xl group-hover:bg-blue-600 transition-colors">
             <BriefcaseBusiness size={20} />
           </div>

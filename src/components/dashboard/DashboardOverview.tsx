@@ -60,9 +60,18 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
     const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
 
+    // Normalize each salary to a yearly equivalent before averaging
+    const toYearly = (value: number, period: string | null | undefined): number => {
+      switch ((period || 'year').toLowerCase()) {
+        case 'hour':  return value * 8 * 220;   // 8h/day × 220 working days
+        case 'day':   return value * 220;        // 220 working days/year
+        case 'month': return value * 12;
+        default:      return value;              // 'year' or unknown → as-is
+      }
+    };
     const salApps = filteredApps.filter(a => a.grossSalTo > 0);
-    const avgGross = salApps.length > 0 
-      ? salApps.reduce((acc, a) => acc + a.grossSalTo, 0) / salApps.length 
+    const avgGross = salApps.length > 0
+      ? salApps.reduce((acc, a) => acc + toYearly(a.grossSalTo, a.salaryPeriod), 0) / salApps.length
       : 0;
 
     const counts: any = {};

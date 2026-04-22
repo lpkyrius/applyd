@@ -15,7 +15,8 @@ import { Input } from '@/components/ui/input'
 import {
   Calendar, Briefcase, Building2, ExternalLink,
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
-  ArrowUpDown, ArrowUp, ArrowDown, Users
+  ArrowUpDown, ArrowUp, ArrowDown, Users, Bell, Boxes, SlidersHorizontal, 
+  CheckCircle2, XCircle, PauseCircle
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ApplicationDialog } from './ApplicationDialog'
@@ -258,6 +259,33 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
   )
 }
 
+const renderStatusIcon = (status: string) => {
+  const s = (status || '').toLowerCase();
+  let icon = <Bell size={18} className="text-slate-600" />;
+  
+  if (s.includes('applied')) {
+    icon = <Bell size={18} className="text-slate-600" />;
+  } else if (s.includes('screening')) {
+    icon = <Search size={18} className="text-slate-600" />;
+  } else if (s.includes('interview')) {
+    icon = <Boxes size={18} className="text-slate-600" />;
+  } else if (s.includes('offer') || s.includes('negotiat')) {
+    icon = <SlidersHorizontal size={18} className="text-slate-600" />;
+  } else if (s.includes('accepted')) {
+    icon = <CheckCircle2 size={18} className="text-emerald-600" />;
+  } else if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) {
+    icon = <XCircle size={18} className="text-red-400" />;
+  } else if (s.includes('on hold')) {
+    icon = <PauseCircle size={18} className="text-amber-500" />;
+  }
+
+  return (
+    <div className="w-10 h-10 min-w-[40px] rounded-xl border border-slate-100 flex items-center justify-center bg-white shadow-[0_2px_10px_-4px_rgba(0,0,0,0.06)] group-hover:border-slate-200 transition-colors">
+      {icon}
+    </div>
+  );
+};
+
 // ─── Main component ──────────────────────────────────────────────────────────
 export function DataTable({ applications: initialApps }: { applications: any[] }) {
   const [selectedApp, setSelectedApp] = useState<any | null>(null)
@@ -271,8 +299,9 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   // Column Resizing state
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({
-    company: 200,
+    statusIcon: 80,
     recruiterCo: 180,
+    company: 200,
     role: 300,
     status: 150,
     applicationDate: 150,
@@ -549,8 +578,14 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
           <TableHeader className="bg-slate-50 border-b border-slate-200">
             <TableRow className="hover:bg-transparent">
               <TableHead 
+                style={{ width: columnWidths.statusIcon }}
+                className="py-4 pl-6 relative"
+              >
+                <div className="w-10" /> {/* Spacer for icon */}
+              </TableHead>
+              <TableHead 
                 style={{ width: columnWidths.recruiterCo }}
-                className="font-semibold text-slate-900 py-4 pl-6 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                className="font-semibold text-slate-900 py-4 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('recruiterCo')}
               >
                 <div className="flex items-center truncate">Recruiter Co. <SortIndicator column="recruiterCo" /></div>
@@ -623,7 +658,14 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
             {filteredApplications.length > 0 ? (
               filteredApplications.map((app) => (
                 <TableRow key={app.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
-                  <TableCell style={{ width: columnWidths.recruiterCo }} className="font-medium text-slate-900 pl-6 truncate" onClick={() => setSelectedApp(app)}>{app.recruiterCo || '—'}</TableCell>
+                  <TableCell 
+                    style={{ width: columnWidths.statusIcon }} 
+                    className="pl-6 py-3"
+                    onClick={() => setSelectedApp(app)}
+                  >
+                    {renderStatusIcon(app.status)}
+                  </TableCell>
+                  <TableCell style={{ width: columnWidths.recruiterCo }} className="font-medium text-slate-900 truncate" onClick={() => setSelectedApp(app)}>{app.recruiterCo || '—'}</TableCell>
                   <TableCell style={{ width: columnWidths.company }} className="text-slate-500 truncate" onClick={() => setSelectedApp(app)}>{app.company}</TableCell>
                   <TableCell style={{ width: columnWidths.role }} className="text-slate-600 truncate" onClick={() => setSelectedApp(app)} title={app.role}>{app.role}</TableCell>
                   <TableCell style={{ width: columnWidths.status }} className="truncate" onClick={() => setSelectedApp(app)}>
@@ -670,7 +712,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               ))
             ) : (
                 <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center text-slate-500 italic">
+                    <TableCell colSpan={8} className="h-32 text-center text-slate-500 italic">
                         No applications found matching your criteria.
                     </TableCell>
                 </TableRow>

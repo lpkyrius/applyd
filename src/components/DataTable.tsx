@@ -550,24 +550,24 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   return (
     <div className="w-full space-y-4">
       {/* ─── Search & Filters ─── */}
-      <div className="bg-white p-2 rounded-xl border border-slate-100 flex flex-col sm:flex-row gap-3 items-center shadow-sm">
+      <div className="bg-white p-2 rounded-xl border border-slate-100 flex flex-col md:flex-row gap-3 items-center shadow-sm">
         <div className="relative flex-1 w-full group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-[#8B5CF6] transition-colors" />
           <Input
             placeholder="Search applications..."
-            className="pl-11 h-11 bg-slate-50/30 border-transparent focus:bg-white focus:border-[#8B5CF6] transition-all rounded-md"
+            className="pl-11 h-11 bg-slate-50/30 border-transparent focus:bg-white focus:border-[#8B5CF6] transition-all rounded-md w-full"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        <div className="flex gap-2 w-full sm:w-auto px-1">
+        <div className="flex flex-wrap gap-2 w-full md:w-auto px-1">
           <DropdownMenu>
             <DropdownMenuTrigger render={
-              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 min-w-[130px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
+              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 flex-1 md:min-w-[130px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
                 <div className="flex items-center gap-2 overflow-hidden">
                   <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                  <span className="truncate">
+                  <span className="truncate text-[10px]">
                     {statusFilter.length === 0 ? "All Status" :
                       statusFilter.length === 1 ? statusFilter[0] :
                         `${statusFilter.length} Status`}
@@ -606,8 +606,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
           <DropdownMenu>
             <DropdownMenuTrigger render={
-              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 min-w-[120px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
-                <span className="truncate">
+              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 flex-1 md:min-w-[120px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
+                <span className="truncate text-[10px]">
                   {typeFilter.length === 0 ? "All Types" :
                     typeFilter.length === 1 ? typeFilter[0] :
                       `${typeFilter.length} Types`}
@@ -656,9 +656,10 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
       </div>
 
 
-      {/* ─── Table ─── */}
-      <div className="rounded-xl border-none bg-white premium-shadow overflow-hidden relative">
-        <Table className="table-fixed w-full min-w-max border-collapse">
+      {/* ─── Applications Table ─── */}
+      <div className="bg-white rounded-xl border border-slate-100 premium-shadow overflow-hidden group/table">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200">
+          <Table className="table-fixed w-full min-w-[1000px] border-collapse">
           <TableHeader className="bg-slate-50/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200">
             <TableRow className="hover:bg-transparent">
               <TableHead
@@ -813,6 +814,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
             )}
           </TableBody>
         </Table>
+      </div>
 
         {/* ─── Pagination ─── */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/30">

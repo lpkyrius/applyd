@@ -48,6 +48,11 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
   const [startYear, setStartYear] = React.useState(defaultDates.startY);
   const [startMonth, setStartMonth] = React.useState(defaultDates.startM);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const [endYear, setEndYear] = React.useState(defaultDates.endY);
   const [endMonth, setEndMonth] = React.useState(defaultDates.endM);
 
@@ -118,6 +123,10 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
     return { total, active, offers, statusData, avgGross, activityData };
   }, [filteredApps, startYear, startMonth, endYear, endMonth]);
 
+  if (!isMounted) {
+    return <div className="h-[70vh] flex items-center justify-center text-slate-300">Loading Dashboard...</div>;
+  }
+
   if (applications.length === 0) {
     return (
       <div className="h-[70vh] flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-700">
@@ -146,24 +155,28 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   }
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-1000 slide-in-from-bottom-4">
+    <div className="p-4 md:p-12 space-y-10 animate-in fade-in duration-1000 slide-in-from-bottom-4">
       {/* ── TOP NAV / FILTERS ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mt-16 lg:mt-0">
         <div className="space-y-1">
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">Dashboard</h1>
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">Recruit Intelligence Engine</p>
         </div>
         
-        <div className="bg-white p-2 rounded-xl border border-slate-100/80 flex items-center gap-4 pr-5 shadow-sm">
-          <div className="p-3 rounded-md bg-slate-950 text-white shrink-0 shadow-md shadow-slate-900/10">
-            <Filter size={18} />
+        <div className="bg-white p-2 rounded-xl border border-slate-100/80 flex flex-col md:flex-row md:items-center gap-4 pr-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-md bg-slate-950 text-white shrink-0 shadow-md shadow-slate-900/10">
+              <Filter size={18} />
+            </div>
+            <span className="md:hidden text-[10px] font-black text-slate-400 uppercase tracking-widest">Filter Data</span>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">From</span>
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-2 md:p-0">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">From</span>
               <div className="flex items-center gap-2">
                 <Select value={startYear} onValueChange={(v) => setStartYear(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-md p-1 border-slate-100">
@@ -171,7 +184,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                   </SelectContent>
                 </Select>
                 <Select value={startMonth} onValueChange={(v) => setStartMonth(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-md p-1 border-slate-100">
@@ -181,13 +194,13 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
               </div>
             </div>
 
-            <div className="h-5 w-px bg-slate-200" />
+            <div className="hidden sm:block h-5 w-px bg-slate-200" />
 
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">To</span>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">To</span>
               <div className="flex items-center gap-2">
                 <Select value={endYear} onValueChange={(v) => setEndYear(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-md p-1 border-slate-100">
@@ -195,7 +208,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                   </SelectContent>
                 </Select>
                 <Select value={endMonth} onValueChange={(v) => setEndMonth(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-md p-1 border-slate-100">
@@ -209,110 +222,123 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       </div>
 
       {/* ── BENTO GRID LAYOUT ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
         {/* Primary Metrics (Row 1) */}
-        <MetricCard 
-          title="Total Applications" 
-          value={stats.total} 
-          trend="+12%"
-          trendLabel="Volume trend"
-          color="bg-indigo-500"
-          gradient={['#8B5CF6', '#A78BFA', '#C4B5FD']}
-          data={[40, 60, 45, 90, 65, 80]}
-        />
-        <MetricCard 
-          title="Active Pipeline" 
-          value={stats.active} 
-          trend="+5.6%"
-          trendLabel="Last 30 days"
-          color="bg-blue-500"
-          gradient={['#3B82F6', '#60A5FA', '#93C5FD']}
-          data={[30, 45, 70, 50, 90, 100]}
-        />
-        <MetricCard 
-          title="Success Rate" 
-          value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
-          trend="+0.6%"
-          trendLabel="Applied → Offer"
-          color="bg-cyan-500"
-          gradient={['#06B6D4', '#22D3EE', '#67E8F9']}
-          data={[20, 40, 30, 60, 50, 75]}
-        />
-        <MetricCard 
-          title="Avg. Market Range" 
-          value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
-          trend="-0.4pts"
-          trendLabel="Gross yearly"
-          color="bg-slate-400"
-          gradient={['#94A3B8', '#CBD5E1', '#E2E8F0']}
-          data={[50, 40, 60, 45, 55, 40]}
-          isNegativeTrend
-        />
+        <div className="lg:col-span-3">
+          <MetricCard 
+            title="Total Applications" 
+            value={stats.total} 
+            trend="+12%"
+            trendLabel="Volume trend"
+            color="bg-indigo-500"
+            gradient={['#8B5CF6', '#A78BFA', '#C4B5FD']}
+            data={[40, 60, 45, 90, 65, 80]}
+          />
+        </div>
+        <div className="lg:col-span-3">
+          <MetricCard 
+            title="Active Pipeline" 
+            value={stats.active} 
+            trend="+5.6%"
+            trendLabel="Last 30 days"
+            color="bg-blue-500"
+            gradient={['#3B82F6', '#60A5FA', '#93C5FD']}
+            data={[30, 45, 70, 50, 90, 100]}
+          />
+        </div>
+        <div className="lg:col-span-3">
+          <MetricCard 
+            title="Success Rate" 
+            value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
+            trend="+0.6%"
+            trendLabel="Applied → Offer"
+            color="bg-cyan-500"
+            gradient={['#06B6D4', '#22D3EE', '#67E8F9']}
+            data={[20, 40, 30, 60, 50, 75]}
+          />
+        </div>
+        <div className="lg:col-span-3">
+          <MetricCard 
+            title="Avg. Market Range" 
+            value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
+            trend="-0.4pts"
+            trendLabel="Gross yearly"
+            color="bg-slate-400"
+            gradient={['#94A3B8', '#CBD5E1', '#E2E8F0']}
+            data={[50, 40, 60, 45, 55, 40]}
+            isNegativeTrend
+          />
+        </div>
 
         {/* Large Bento Sections (Row 2 & 3) */}
         
-        {/* Status Chart (1 Column) */}
-        <Card className="lg:col-span-1 bento-card">
-          <CardContent className="p-10">
-            <div className="flex items-center gap-2.5 mb-10">
+        {/* Status Chart (Increase to 5 columns out of 12) */}
+        <Card className="lg:col-span-5 bento-card overflow-hidden">
+          <CardContent className="p-6 md:p-10 h-[520px] flex flex-col">
+            <div className="flex items-center gap-2.5 mb-12">
                 <div className="w-1 h-5 bg-slate-900 rounded-full" />
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status Distribution</h3>
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status Analysis</h3>
             </div>
-            <div className="w-full relative" style={{ height: 400 }}>
-              <ResponsiveContainer width="99%" height={400}>
-                <PieChart>
-                  <Pie
-                    data={stats.statusData}
-                    cx="50%"
-                    cy="45%"
-                    innerRadius={70}
-                    outerRadius={100}
-                    paddingAngle={8}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {stats.statusData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={STATUS_COLORS[entry.name.toLowerCase()] || COLORS[index % COLORS.length]} 
-                        className="focus:outline-none" 
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '12px' }}
+            <div className="w-full mt-2">
+              <ResponsiveContainer width="99%" height={360}>
+                <BarChart 
+                  data={stats.statusData} 
+                  layout="vertical" 
+                  margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                >
+                  <XAxis type="number" hide />
+                  <YAxis 
+                    dataKey="name" 
+                    type="category" 
+                    width={100}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#64748B', fontSize: 9, fontWeight: 900, textAnchor: 'start' }}
+                    dx={-100}
                   />
-                  <Legend 
-                    verticalAlign="bottom" 
-                    content={(props) => {
-                      const { payload } = props;
-                      return (
-                        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-4 px-2">
-                          {payload?.map((entry: any, index: number) => (
-                            <div key={`item-${index}`} className="flex items-center gap-2">
-                              <div 
-                                className="w-2 h-2 rounded-full shrink-0" 
-                                style={{ backgroundColor: entry.color }} 
-                              />
-                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight truncate max-w-[100px]">
-                                {entry.value.toLowerCase().includes('prospec') ? 'Prospecting' : entry.value}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      );
+                  <Tooltip 
+                    cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-white/95 backdrop-blur-md border border-slate-100 px-3 py-2 rounded-lg shadow-xl z-[100]">
+                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{payload[0].payload.name}</p>
+                            <p className="text-sm font-black text-slate-900">{payload[0].value} Applications</p>
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
                   />
-                </PieChart>
+                  <Bar 
+                    dataKey="value" 
+                    radius={[0, 100, 100, 0]} 
+                    barSize={12}
+                  >
+                    {stats.statusData.map((entry, index) => {
+                      const shades = ['#1e1b4b', '#312e81', '#3730a3', '#4338ca', '#4f46e5', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'];
+                      return (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={shades[index % shades.length]} 
+                        />
+                      );
+                    })}
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
+            </div>
+            <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Volume</span>
+              <span className="text-xl font-black text-slate-900">{stats.total}</span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Momentum Chart (3 Columns) */}
-        <Card className="lg:col-span-3 bento-card">
-          <CardContent className="p-10">
-            <div className="flex items-center justify-between mb-10">
+        {/* Momentum Chart (Reduce to 7 columns out of 12) */}
+        <Card className="lg:col-span-7 bento-card overflow-hidden">
+          <CardContent className="p-6 md:p-10 h-[520px] flex flex-col">
+            <div className="flex items-center justify-between mb-12">
                 <div className="flex items-center gap-2.5">
                     <div className="w-1 h-5 bg-purple-600 rounded-full" />
                     <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Momentum</h3>
@@ -324,8 +350,8 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     </div>
                 </div>
             </div>
-            <div className="w-full relative" style={{ height: 400 }}>
-              <ResponsiveContainer width="99%" height={400}>
+            <div className="w-full mt-2">
+              <ResponsiveContainer width="99%" height={360}>
                 <BarChart data={stats.activityData}>
                   <defs>
                     <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">

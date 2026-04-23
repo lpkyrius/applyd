@@ -11,8 +11,8 @@ export default async function ApplicationsPage() {
   })
 
   return (
-    <main className="p-12 pb-24 max-w-[1600px] mx-auto space-y-12 animate-in fade-in duration-1000">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <main className="p-4 md:p-12 pb-24 max-w-[1600px] mx-auto space-y-8 md:space-y-12 animate-in fade-in duration-1000">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mt-16 md:mt-0">
         <div className="space-y-1">
           <div className="flex items-center gap-4">
             <h1 className="text-4xl font-black text-slate-900 tracking-tight">Applications</h1>
@@ -27,7 +27,7 @@ export default async function ApplicationsPage() {
           <ApplicationDialog 
             mode="create" 
             trigger={
-                <button className="bg-slate-950 text-white px-6 py-3 rounded-md font-bold text-sm hover:bg-[#8B5CF6] transition-all hover:scale-[1.02] active:scale-95 border border-slate-900 flex items-center gap-2 group shadow-sm">
+                <button className="bg-slate-950 text-white px-6 py-3 rounded-md font-bold text-sm hover:bg-[#8B5CF6] transition-all hover:scale-[1.02] active:scale-95 border border-slate-900 flex items-center gap-2 group shadow-sm cursor-pointer">
                    <Plus size={18} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
                    New Application
                 </button>

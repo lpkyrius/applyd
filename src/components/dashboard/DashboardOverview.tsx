@@ -114,7 +114,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             <div className="space-y-1.5">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block ml-1">Range Start</span>
               <div className="flex items-center gap-2">
-                <Select value={startYear} onValueChange={setStartYear}>
+                <Select value={startYear} onValueChange={(v) => setStartYear(v ?? "")}>
                   <SelectTrigger className="h-10 w-[100px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
@@ -122,7 +122,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                <Select value={startMonth} onValueChange={setStartMonth}>
+                <Select value={startMonth} onValueChange={(v) => setStartMonth(v ?? "")}>
                   <SelectTrigger className="h-10 w-[110px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Month" />
                   </SelectTrigger>
@@ -140,7 +140,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             <div className="space-y-1.5">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block ml-1">Range End</span>
               <div className="flex items-center gap-2">
-                <Select value={endYear} onValueChange={setEndYear}>
+                <Select value={endYear} onValueChange={(v) => setEndYear(v ?? "")}>
                   <SelectTrigger className="h-10 w-[100px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
@@ -148,7 +148,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                <Select value={endMonth} onValueChange={setEndMonth}>
+                <Select value={endMonth} onValueChange={(v) => setEndMonth(v ?? "")}>
                   <SelectTrigger className="h-10 w-[110px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Month" />
                   </SelectTrigger>
@@ -210,7 +210,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           <CardContent className="p-8">
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Status Distribution</h3>
             <div className="w-full relative" style={{ height: 400 }}>
-              <ResponsiveContainer width="99%" height="400">
+              <ResponsiveContainer width="99%" height={400}>
                 <PieChart>
                   <Pie
                     data={stats.statusData}

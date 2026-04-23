@@ -17,7 +17,7 @@ import {
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
   ArrowUpDown, ArrowUp, ArrowDown, Users, Bell, Boxes, SlidersHorizontal, 
   CheckCircle2, XCircle, PauseCircle, ChevronLeft, ChevronRight, 
-  ChevronsLeft, ChevronsRight
+  ChevronsLeft, ChevronsRight, FileText, MessageSquare, History
 } from 'lucide-react'
 import {
   Select,
@@ -99,58 +99,69 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors bg-slate-50 hover:bg-slate-100 border border-dashed border-slate-200 hover:border-slate-300 rounded-xl px-4 py-3 w-full mb-6"
+        className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-indigo-600 transition-all bg-slate-50/50 hover:bg-white border border-dashed border-slate-200 hover:border-indigo-200 rounded-[1.5rem] px-6 py-5 w-full mb-8 group premium-shadow-sm hover:premium-shadow"
       >
-        <Plus size={15} /> Add Timeline Entry
+        <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center border border-slate-100 group-hover:border-indigo-100 transition-colors">
+            <Plus size={14} className="group-hover:scale-125 transition-transform" />
+        </div>
+        Add New Activity Entry
       </button>
     )
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm space-y-3">
+    <div className="bg-white border border-slate-200 rounded-[2rem] p-6 mb-8 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-semibold text-slate-700">New Entry</span>
-        <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-600">
+        <div className="flex items-center gap-2">
+            <div className="w-1.5 h-4 bg-indigo-600 rounded-full" />
+            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">New Journal Entry</span>
+        </div>
+        <button onClick={() => setOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
           <X size={16} />
         </button>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <button
           onClick={() => setType('STEP')}
-          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${type === 'STEP' ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-slate-950 text-white border-slate-950 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
         >
-          Interview Step
+          <FileText size={14} /> Interview Step
         </button>
         <button
           onClick={() => setType('CONTACT')}
-          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${type === 'CONTACT' ? 'bg-slate-700 text-white border-slate-700' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'CONTACT' ? 'bg-slate-950 text-white border-slate-950 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
         >
-          Contact / Note
+          <MessageSquare size={14} /> Contact / Note
         </button>
       </div>
-      <input
-        type="date"
-        value={date}
-        onChange={e => setDate(e.target.value)}
-        className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-      />
-      <textarea
-        placeholder="Describe what happened…"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-        rows={3}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
-      />
-      <div className="flex gap-2">
-        <Button
-            onClick={handleSave}
-            disabled={isPending || !description.trim()}
-            size="sm"
-            className="flex-1 bg-slate-900 hover:bg-slate-800 text-white"
-        >
-            {isPending ? 'Saving…' : 'Save Entry'}
-        </Button>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
+            <input
+                type="date"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                className="w-full h-11 rounded-xl border border-slate-100 bg-slate-50/50 px-4 text-sm font-bold focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+            />
+        </div>
       </div>
+      <div className="space-y-1.5">
+        <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Entry Details</label>
+        <textarea
+            placeholder="What happened? Share the highlights…"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            rows={3}
+            className="w-full rounded-[1.25rem] border border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
+        />
+      </div>
+      <Button
+        onClick={handleSave}
+        disabled={isPending || !description.trim()}
+        className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-indigo-100 transition-all"
+      >
+        {isPending ? 'Logging Entry…' : 'Log Activity'}
+      </Button>
     </div>
   )
 }
@@ -175,54 +186,63 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
 
   if (isEditing) {
     return (
-      <div className="bg-white p-4 rounded-xl border border-blue-200 shadow-sm space-y-3">
+      <div className="bg-white border border-indigo-200 rounded-[2rem] p-6 mb-8 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
         <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-semibold text-blue-700">Edit Entry</span>
-            <button onClick={() => setIsEditing(false)} className="text-slate-400 hover:text-slate-600">
-                <X size={16} />
-            </button>
+          <div className="flex items-center gap-2">
+              <div className="w-1.5 h-4 bg-indigo-600 rounded-full" />
+              <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Edit Journal Entry</span>
+          </div>
+          <button onClick={() => setIsEditing(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
+            <X size={16} />
+          </button>
         </div>
-        <div className="flex gap-2">
-            <button
-                onClick={() => setType('STEP')}
-                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${type === 'STEP' ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
-            >
-                Interview Step
-            </button>
-            <button
-                onClick={() => setType('CONTACT')}
-                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${type === 'CONTACT' ? 'bg-slate-700 text-white border-slate-700' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
-            >
-                Contact / Note
-            </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setType('STEP')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+          >
+            <FileText size={14} /> Interview Step
+          </button>
+          <button
+            onClick={() => setType('CONTACT')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'CONTACT' ? 'bg-slate-900 text-white border-slate-900 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+          >
+            <MessageSquare size={14} /> Contact / Note
+          </button>
         </div>
-        <input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-        />
-        <textarea
-            placeholder="Describe what happened…"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            rows={3}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
-        />
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+              <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
+              <input
+                  type="date"
+                  value={date}
+                  onChange={e => setDate(e.target.value)}
+                  className="w-full h-11 rounded-xl border border-slate-100 bg-slate-50/50 px-4 text-sm font-bold focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+              />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Entry Details</label>
+          <textarea
+              placeholder="What happened? Share the highlights…"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              rows={3}
+              className="w-full rounded-[1.25rem] border border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
+          />
+        </div>
+        <div className="flex gap-3">
             <Button
                 onClick={handleUpdate}
                 disabled={isPending || !description.trim()}
-                size="sm"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                className="flex-1 h-11 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-indigo-100 transition-all"
             >
-                {isPending ? 'Saving…' : 'Save Changes'}
+                {isPending ? 'Updating…' : 'Update Entry'}
             </Button>
             <Button
                 variant="outline"
                 onClick={() => setIsEditing(false)}
-                size="sm"
-                className="flex-1"
+                className="flex-1 h-11 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] border-slate-200 text-slate-500 hover:bg-slate-50"
             >
                 Cancel
             </Button>
@@ -231,21 +251,42 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
     )
   }
 
+  const isStep = step.type === 'STEP'
+
   return (
-    <div className="relative group/step">
-      <div className={`absolute -left-[23px] top-1.5 h-3 w-3 rounded-full border-[3px] shadow-sm z-10 ${step.type === 'STEP' ? 'bg-blue-500 border-white' : 'bg-slate-400 border-white'}`} />
-      <div className="bg-white p-4 rounded-xl border border-slate-200/70 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-colors">
-        <div className="flex items-start justify-between gap-2">
+    <div className="relative group/step pl-14 pb-10 last:pb-0">
+      {/* Timeline line connector */}
+      <div className="absolute left-[23px] top-[40px] bottom-0 w-px bg-slate-200 group-last/step:hidden" />
+      
+      {/* Icon Node */}
+      <div className={cn(
+          "absolute left-0 top-0 w-12 h-12 rounded-2xl flex items-center justify-center border-4 border-white premium-shadow transition-transform group-hover/step:scale-110 duration-500 z-10",
+          isStep ? "bg-indigo-600 text-white" : "bg-slate-900 text-white"
+      )}>
+        {isStep ? <FileText size={18} strokeWidth={2.5} /> : <MessageSquare size={18} strokeWidth={2.5} />}
+      </div>
+
+      <div className="bg-white p-6 rounded-[2rem] border border-slate-200/60 premium-shadow-sm group-hover/step:premium-shadow group-hover/step:border-indigo-100 transition-all duration-500 relative">
+        <div className="flex items-start justify-between gap-4 mb-4">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-              {format(new Date(step.date), 'MMM d, yyyy')}
-              <span className={`ml-2 px-1.5 py-0.5 rounded text-[10px] ${step.type === 'STEP' ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500'}`}>
-                {step.type === 'STEP' ? 'Interview Step' : 'Contact'}
-              </span>
+            <div className="flex items-center gap-3 mb-1">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                    {format(new Date(step.date), 'MMMM d, yyyy')}
+                </span>
+                <div className="w-1 h-1 rounded-full bg-slate-200" />
+                <span className={cn(
+                    "text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg",
+                    isStep ? "bg-indigo-50 text-indigo-600" : "bg-slate-100 text-slate-500"
+                )}>
+                    {isStep ? 'Interview' : 'Log'}
+                </span>
+            </div>
+            <p className="text-base text-slate-900 font-bold leading-relaxed break-words whitespace-pre-wrap tracking-tight">
+                {step.description}
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed break-words whitespace-pre-wrap">{step.description}</p>
           </div>
-          <div className="flex items-center gap-1 opacity-0 group-hover/step:opacity-100 transition-opacity">
+          
+          <div className="flex items-center gap-1 opacity-0 group-hover/step:opacity-100 transition-all duration-300">
             <button
               onClick={() => setIsEditing(true)}
               className="text-slate-300 hover:text-blue-500 p-1 transition-colors"
@@ -1050,18 +1091,17 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
                     {/* ── TIMELINE ── */}
                     <TabsContent value="timeline">
-                      {/* Activity history */}
-                      <h3 className="text-sm font-semibold text-slate-900 mb-5 flex items-center gap-2">
-                        <Calendar size={17} className="text-slate-400" />
-                        Activity History
-                      </h3>
+                      <div className="flex items-center gap-3 mb-8">
+                         <div className="w-1.5 h-6 bg-slate-900 rounded-full" />
+                         <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Journal</h3>
+                      </div>
 
                       <AddTimelineEntry
                         appId={selectedApp.id}
                         onSaved={() => {/* revalidation handles update */}}
                       />
 
-                      <div className="relative pl-7 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-slate-200">
+                      <div className="space-y-2">
                         {parseSteps(selectedApp.steps).length > 0 ? (
                           parseSteps(selectedApp.steps).map((step, idx) => (
                             <TimelineItem 
@@ -1073,9 +1113,12 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                             />
                           ))
                         ) : (
-                          <p className="text-sm text-slate-500 italic bg-slate-50 p-4 rounded-lg text-center border border-slate-100">
-                            No timeline entries yet. Add one above!
-                          </p>
+                          <div className="flex flex-col items-center justify-center py-12 px-6 bg-slate-50/50 rounded-[2.5rem] border border-dashed border-slate-200">
+                             <History size={32} className="text-slate-300 mb-4" />
+                             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">
+                                No activity logged yet
+                             </p>
+                          </div>
                         )}
                       </div>
                     </TabsContent>

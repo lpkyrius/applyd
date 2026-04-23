@@ -9,8 +9,24 @@ import { AlertCircle, Banknote, Briefcase, Calendar, CheckCircle2, Clock, Target
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ApplicationDialog } from '../ApplicationDialog';
+import { ChevronRight } from 'lucide-react';
 
-const COLORS = ['#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#64748B'];
+const COLORS = ['#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#64748B', '#8B5CF6', '#F43F5E', '#1E293B'];
+
+const STATUS_COLORS: Record<string, string> = {
+  'applied': '#10B981',
+  'interviewing': '#3B82F6',
+  'screening': '#6366F1',
+  'technical interview': '#F59E0B',
+  'offer': '#8B5CF6',
+  'accepted': '#10B981',
+  'rejected': '#1E293B',
+  'closed': '#F43F5E',
+  'withdrawn': '#64748B',
+  'on hold': '#94A3B8',
+  'prospecting': '#14B8A6',
+};
 
 export function DashboardOverview({ applications }: { applications: any[] }) {
   // ... existing memo logic ...
@@ -102,29 +118,61 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
     return { total, active, offers, statusData, avgGross, activityData };
   }, [filteredApps, startYear, startMonth, endYear, endMonth]);
 
-  return (
-    <div className="space-y-10">
-      {/* ── FILTERS ── */}
-      <div className="glass-card p-3 rounded-3xl border-white/60 flex items-center gap-4 premium-shadow-sm">
-        <div className="p-3 rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-200 shrink-0">
-          <Filter size={20} />
+  if (applications.length === 0) {
+    return (
+      <div className="h-[70vh] flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-700">
+        <div className="w-24 h-24 bg-slate-100 rounded-[2.5rem] flex items-center justify-center mb-4 premium-shadow-sm border border-white">
+          <Briefcase size={40} className="text-slate-300" />
         </div>
-        <div className="flex-1 flex items-center gap-8">
-          <div className="flex items-center gap-4">
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block ml-1">Range Start</span>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-black text-slate-900 tracking-tight">No applications yet</h3>
+          <p className="text-slate-500 max-w-xs mx-auto text-sm leading-relaxed">
+            Your career dashboard is waiting for its first entry. Start tracking your journey today!
+          </p>
+        </div>
+        <div className="pt-4">
+            <ApplicationDialog 
+              mode="create" 
+              trigger={
+                <button className="bg-slate-950 text-white px-8 py-4 rounded-[1.5rem] font-bold text-sm hover:bg-indigo-600 transition-all hover:scale-105 active:scale-95 premium-shadow flex items-center gap-2 group">
+                   Create your first application
+                   <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              } 
+            />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-10 animate-in fade-in duration-1000 slide-in-from-bottom-4">
+      {/* ── TOP NAV / FILTERS ── */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Dashboard</h1>
+          <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">Recruit Intelligence Engine</p>
+        </div>
+        
+        <div className="glass-card p-2 rounded-[2rem] border-white/60 flex items-center gap-4 premium-shadow-sm pr-4">
+          <div className="p-3 rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-200 shrink-0">
+            <Filter size={18} />
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">From</span>
               <div className="flex items-center gap-2">
                 <Select value={startYear} onValueChange={(v) => setStartYear(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[100px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
-                    <SelectValue placeholder="Year" />
+                  <SelectTrigger className="h-9 w-[90px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
                     {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={startMonth} onValueChange={(v) => setStartMonth(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[110px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
-                    <SelectValue placeholder="Month" />
+                  <SelectTrigger className="h-9 w-[100px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
                     {months.map(m => <SelectItem key={m} value={m} className="rounded-lg">{m}</SelectItem>)}
@@ -132,25 +180,23 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                 </Select>
               </div>
             </div>
-          </div>
 
-          <div className="h-10 w-px bg-slate-200/60 shrink-0" />
+            <div className="h-6 w-px bg-slate-200/60 shrink-0" />
 
-          <div className="flex items-center gap-4">
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block ml-1">Range End</span>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">To</span>
               <div className="flex items-center gap-2">
                 <Select value={endYear} onValueChange={(v) => setEndYear(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[100px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
-                    <SelectValue placeholder="Year" />
+                  <SelectTrigger className="h-9 w-[90px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
                     {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={endMonth} onValueChange={(v) => setEndMonth(v ?? "")}>
-                  <SelectTrigger className="h-10 w-[110px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
-                    <SelectValue placeholder="Month" />
+                  <SelectTrigger className="h-9 w-[100px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
                     {months.map(m => <SelectItem key={m} value={m} className="rounded-lg">{m}</SelectItem>)}
@@ -160,21 +206,16 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             </div>
           </div>
         </div>
-        <div className="bg-indigo-50/50 px-4 py-2 rounded-2xl border border-indigo-100/50 flex items-center gap-2 pr-4 shrink-0">
-          <Calendar size={14} className="text-indigo-500" />
-          <span className="text-xs font-bold text-indigo-600 uppercase tracking-tight">
-            {filteredApps.length} Applications Found
-          </span>
-        </div>
       </div>
 
-      {/* ── METRICS GRID ── */}
+      {/* ── BENTO GRID LAYOUT ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Primary Metrics (Row 1) */}
         <MetricCard 
           title="Total Volume" 
           value={stats.total} 
           icon={Briefcase}
-          trend="+12% activity"
+          trend="+12% growth"
           color="bg-indigo-600"
           glowColor="rgba(79, 70, 229, 0.2)"
         />
@@ -182,9 +223,9 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           title="In Progress" 
           value={stats.active} 
           icon={Target}
-          trend="Currently active"
-          color="bg-slate-900"
-          glowColor="rgba(15, 23, 42, 0.2)"
+          trend="Active pipeline"
+          color="bg-blue-600"
+          glowColor="rgba(37, 99, 235, 0.2)"
         />
         <MetricCard 
           title="Success Rate" 
@@ -202,13 +243,16 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           color="bg-amber-500"
           glowColor="rgba(245, 158, 11, 0.2)"
         />
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* ── STATUS DISTRIBUTION ── */}
-        <Card className="lg:col-span-1 rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white overflow-hidden premium-shadow-sm border-white/60">
+        {/* Large Bento Sections (Row 2 & 3) */}
+        
+        {/* Status Chart (1 Column) */}
+        <Card className="lg:col-span-1 bento-card">
           <CardContent className="p-8">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Status Distribution</h3>
+            <div className="flex items-center gap-2 mb-8">
+                <div className="w-1.5 h-6 bg-slate-900 rounded-full" />
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status Distribution</h3>
+            </div>
             <div className="w-full relative" style={{ height: 400 }}>
               <ResponsiveContainer width="99%" height={400}>
                 <PieChart>
@@ -223,7 +267,11 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     stroke="none"
                   >
                     {stats.statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="focus:outline-none" />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={STATUS_COLORS[entry.name.toLowerCase()] || COLORS[index % COLORS.length]} 
+                        className="focus:outline-none" 
+                      />
                     ))}
                   </Pie>
                   <Tooltip 
@@ -256,37 +304,48 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           </CardContent>
         </Card>
 
-        {/* ── MONTHLY ACTIVITY ── */}
-        <Card className="lg:col-span-2 rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white overflow-hidden premium-shadow-sm border-white/60">
+        {/* Momentum Chart (3 Columns) */}
+        <Card className="lg:col-span-3 bento-card">
           <CardContent className="p-8">
             <div className="flex items-center justify-between mb-8">
-                <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Application Momentum</h3>
                 <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-indigo-500" />
-                    <span className="text-xs font-bold text-slate-700">Submissions</span>
+                    <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Momentum</h3>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Submissions</span>
+                    </div>
                 </div>
             </div>
-            <div className="w-full relative" style={{ height: 320 }}>
-              <ResponsiveContainer width="99%" height={320}>
+            <div className="w-full relative" style={{ height: 400 }}>
+              <ResponsiveContainer width="99%" height={400}>
                 <BarChart data={stats.activityData}>
+                  <defs>
+                    <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#6366F1" stopOpacity={1} />
+                      <stop offset="100%" stopColor="#818CF8" stopOpacity={0.8} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="8 8" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
                     dataKey="name" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} 
+                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} 
+                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
                   />
                   <Tooltip 
-                    cursor={{ fill: '#f8fafc', radius: 12 }}
-                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '12px' }}
+                    cursor={{ fill: '#f8fafc', radius: 16 }}
+                    contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '16px' }}
                   />
-                  <Bar dataKey="count" fill="#6366F1" radius={[8, 8, 8, 8]} barSize={32} />
+                  <Bar dataKey="count" fill="url(#barGradient)" radius={[12, 12, 12, 12]} barSize={40} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

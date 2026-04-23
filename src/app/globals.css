@@ -139,11 +139,15 @@
   }
 
   .premium-shadow {
-    @apply shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)];
+    @apply shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)];
   }
 
   .premium-shadow-sm {
-    @apply shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)];
+    @apply shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)];
+  }
+
+  .bento-card {
+    @apply bg-white rounded-[2.5rem] border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden;
   }
   
   .text-glow {

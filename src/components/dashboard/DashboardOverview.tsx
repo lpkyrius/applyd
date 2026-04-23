@@ -103,7 +103,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   }, [filteredApps, startYear, startMonth, endYear, endMonth]);
 
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10">
       {/* ── FILTERS ── */}
       <div className="glass-card p-3 rounded-3xl border-white/60 flex items-center gap-4 premium-shadow-sm">
         <div className="p-3 rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-200 shrink-0">
@@ -209,13 +209,13 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
         <Card className="lg:col-span-1 rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white overflow-hidden premium-shadow-sm border-white/60">
           <CardContent className="p-8">
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Status Distribution</h3>
-            <div className="h-[320px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="w-full relative" style={{ height: 400 }}>
+              <ResponsiveContainer width="99%" height="400">
                 <PieChart>
                   <Pie
                     data={stats.statusData}
                     cx="50%"
-                    cy="50%"
+                    cy="45%"
                     innerRadius={70}
                     outerRadius={100}
                     paddingAngle={8}
@@ -229,7 +229,27 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                   <Tooltip 
                     contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '12px' }}
                   />
-                  <Legend verticalAlign="bottom" height={40} iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    content={(props) => {
+                      const { payload } = props;
+                      return (
+                        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-4 px-2">
+                          {payload?.map((entry: any, index: number) => (
+                            <div key={`item-${index}`} className="flex items-center gap-2">
+                              <div 
+                                className="w-2 h-2 rounded-full shrink-0" 
+                                style={{ backgroundColor: entry.color }} 
+                              />
+                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight truncate max-w-[100px]">
+                                {entry.value.toLowerCase().includes('prospec') ? 'Prospecting' : entry.value}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -246,8 +266,8 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     <span className="text-xs font-bold text-slate-700">Submissions</span>
                 </div>
             </div>
-            <div className="h-[320px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="w-full relative" style={{ height: 320 }}>
+              <ResponsiveContainer width="99%" height={320}>
                 <BarChart data={stats.activityData}>
                   <CartesianGrid strokeDasharray="8 8" vertical={false} stroke="#f1f5f9" />
                   <XAxis 

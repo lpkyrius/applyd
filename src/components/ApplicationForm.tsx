@@ -24,7 +24,7 @@ const FEEL_OPTIONS = ['😊', '😃', '😐', '🙁', '❌'];
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-2 mb-1 col-span-2">
+    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-6 mb-2 col-span-2 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">
       {children}
     </h3>
   );
@@ -32,15 +32,15 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 function FieldInput({ field, label, placeholder, type = 'text' }: any) {
   return (
-    <FormItem>
-      <FormLabel className="text-xs text-slate-500 font-medium">{label}</FormLabel>
+    <FormItem className="space-y-1.5">
+      <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">{label}</FormLabel>
       <FormControl>
         <Input
           {...field}
           type={type}
           placeholder={placeholder}
           value={field.value ?? ''}
-          className="h-9 text-sm"
+          className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 transition-all bg-white/50 focus:bg-white"
         />
       </FormControl>
       <FormMessage />
@@ -50,13 +50,13 @@ function FieldInput({ field, label, placeholder, type = 'text' }: any) {
 
 function FieldSelect({ field, label, options }: any) {
   return (
-    <FormItem>
-      <FormLabel className="text-xs text-slate-500 font-medium">{label}</FormLabel>
+    <FormItem className="space-y-1.5">
+      <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">{label}</FormLabel>
       <FormControl>
         <select
           {...field}
           value={field.value ?? ''}
-          className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white/50 px-3 py-1 text-sm shadow-sm transition-all focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 appearance-none focus:bg-white"
         >
           <option value="">— Select —</option>
           {options.map((o: string) => (
@@ -71,15 +71,15 @@ function FieldSelect({ field, label, options }: any) {
 
 function FieldTextarea({ field, label, placeholder }: any) {
   return (
-    <FormItem className="col-span-2">
-      <FormLabel className="text-xs text-slate-500 font-medium">{label}</FormLabel>
+    <FormItem className="col-span-2 space-y-1.5">
+      <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">{label}</FormLabel>
       <FormControl>
         <textarea
           {...field}
           placeholder={placeholder}
           value={field.value ?? ''}
           rows={3}
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+          className="w-full rounded-xl border border-slate-200 bg-white/50 px-3 py-2 text-sm shadow-sm transition-all focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 resize-none focus:bg-white"
         />
       </FormControl>
       <FormMessage />
@@ -195,18 +195,18 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           
           <div className="grid grid-cols-2 gap-3">
             <FormField control={form.control} name="grossSalFrom" render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs text-slate-500 font-medium">Gross From</FormLabel>
+              <FormItem className="space-y-1.5">
+                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gross From</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
             <FormField control={form.control} name="grossSalTo" render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs text-slate-500 font-medium">Gross To</FormLabel>
+              <FormItem className="space-y-1.5">
+                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gross To</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -214,18 +214,18 @@ export function ApplicationForm({ initData, id, onSuccess }: {
 
           <div className="grid grid-cols-2 gap-3">
             <FormField control={form.control} name="netSalFrom" render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs text-slate-500 font-medium">Net From</FormLabel>
+              <FormItem className="space-y-1.5">
+                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Net From</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
             <FormField control={form.control} name="netSalTo" render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs text-slate-500 font-medium">Net To</FormLabel>
+              <FormItem className="space-y-1.5">
+                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Net To</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-9 text-sm" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -287,7 +287,11 @@ export function ApplicationForm({ initData, id, onSuccess }: {
 
         </div>
 
-        <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white" disabled={isPending}>
+        <Button 
+          type="submit" 
+          className="w-full h-12 bg-slate-950 hover:bg-indigo-600 text-white rounded-xl font-bold transition-all duration-300 premium-shadow hover:scale-[1.01] active:scale-[0.99] mt-8" 
+          disabled={isPending}
+        >
           {isPending ? 'Saving…' : id ? 'Update Application' : 'Create Application'}
         </Button>
       </form>

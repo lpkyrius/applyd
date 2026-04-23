@@ -11,21 +11,24 @@ export function ApplicationDialog({
   mode = 'create', 
   initData, 
   id,
-  trigger 
+  trigger,
+  nativeButton 
 }: { 
   mode?: 'create' | 'edit', 
   initData?: Partial<ApplicationFormData>, 
   id?: string,
-  trigger?: React.ReactElement 
+  trigger?: React.ReactElement,
+  nativeButton?: boolean
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger 
+        nativeButton={nativeButton}
         render={trigger || (
-          <Button className="bg-slate-900 text-white hover:bg-slate-800">
-            <Plus className="mr-2 h-4 w-4" /> Add Application
+          <Button className="bg-slate-950 text-white hover:bg-indigo-600 px-6 h-11 rounded-xl font-bold transition-all duration-300 premium-shadow hover:scale-[1.02] active:scale-[0.98]">
+            <Plus className="mr-2 h-5 w-5" strokeWidth={3} /> Add Application
           </Button>
         )}
       />

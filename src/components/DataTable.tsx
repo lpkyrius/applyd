@@ -269,30 +269,42 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
 
 const renderStatusIcon = (status: string) => {
   const s = (status || '').toLowerCase();
-  let icon = <Bell size={18} className="text-slate-600" />;
+  let icon = <Bell size={12} />;
+  let bgColor = "bg-slate-100 text-slate-600 border-slate-200";
   
   if (s.includes('applied')) {
-    icon = <Bell size={18} className="text-slate-600" />;
+    icon = <Bell size={12} />;
+    bgColor = "bg-slate-100 text-slate-600 border-slate-200";
   } else if (s.includes('screening')) {
-    icon = <Search size={18} className="text-slate-600" />;
+    icon = <Search size={12} />;
+    bgColor = "bg-indigo-100 text-indigo-600 border-indigo-200";
   } else if (s.includes('interview')) {
-    icon = <Boxes size={18} className="text-slate-600" />;
+    icon = <Boxes size={12} />;
+    bgColor = "bg-blue-100 text-blue-600 border-blue-200";
   } else if (s.includes('offer') || s.includes('negotiat')) {
-    icon = <SlidersHorizontal size={18} className="text-slate-600" />;
+    icon = <SlidersHorizontal size={12} />;
+    bgColor = "bg-emerald-100 text-emerald-600 border-emerald-200";
   } else if (s.includes('accepted')) {
-    icon = <CheckCircle2 size={18} className="text-emerald-600" />;
+    icon = <CheckCircle2 size={12} />;
+    bgColor = "bg-emerald-500 text-white border-emerald-600 shadow-emerald-200";
   } else if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) {
-    icon = <XCircle size={18} className="text-red-400" />;
+    icon = <XCircle size={12} />;
+    bgColor = "bg-red-100 text-red-600 border-red-200";
   } else if (s.includes('on hold')) {
-    icon = <PauseCircle size={18} className="text-amber-500" />;
+    icon = <PauseCircle size={12} />;
+    bgColor = "bg-amber-100 text-amber-600 border-amber-200";
   }
 
   return (
-    <div className="w-10 h-10 min-w-[40px] rounded-xl border border-slate-100 flex items-center justify-center bg-white shadow-[0_2px_10px_-4px_rgba(0,0,0,0.06)] group-hover:border-slate-200 transition-colors">
+    <div className={cn(
+      "w-7 h-7 min-w-[28px] rounded-lg border flex items-center justify-center shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:premium-shadow",
+      bgColor
+    )}>
       {icon}
     </div>
   );
 };
+
 
 // ─── Main component ──────────────────────────────────────────────────────────
 export function DataTable({ applications: initialApps }: { applications: any[] }) {
@@ -311,7 +323,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   // Column Resizing state
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({
-    statusIcon: 80,
+    statusIcon: 60,
     recruiterCo: 180,
     company: 200,
     role: 300,
@@ -449,12 +461,13 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   const getStatusColor = (status: string) => {
     const s = (status || '').toLowerCase()
-    if (s.includes('applied') || s.includes('prospec')) return 'bg-slate-100/80 text-slate-600 border-slate-200 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
-    if (s.includes('interview') || s.includes('screening') || s.includes('test')) return 'bg-indigo-50 text-indigo-700 border-indigo-100 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
-    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-red-50 text-red-600 border-red-100 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
-    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-emerald-50 text-emerald-700 border-emerald-100 uppercase text-[10px] font-bold tracking-wider px-2 shadow-none'
-    return 'bg-slate-50 text-slate-500 border-slate-100 shadow-none'
+    if (s.includes('applied') || s.includes('prospec')) return 'bg-slate-100/50 text-slate-500 border-slate-200 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
+    if (s.includes('interview') || s.includes('screening') || s.includes('test')) return 'bg-indigo-50 text-indigo-600 border-indigo-100/60 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
+    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-red-50 text-red-500 border-red-100/60 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
+    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-emerald-50 text-emerald-600 border-emerald-100/60 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
+    return 'bg-slate-50 text-slate-400 border-slate-100 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
   }
+
 
   const SortIndicator = ({ column }: { column: SortKey }) => {
     if (sortConfig.key !== column) return <ArrowUpDown className="ml-2 h-3 w-3 opacity-30" />;
@@ -493,21 +506,21 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   return (
     <div className="w-full space-y-4">
       {/* ─── Search & Filters ─── */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+      <div className="glass-card p-2 rounded-2xl flex flex-col sm:flex-row gap-2 items-center premium-shadow-sm border-white/60">
+        <div className="relative flex-1 w-full group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
             <Input 
                 placeholder="Search by company, role or recruiter..." 
-                className="pl-9 bg-slate-50/50 border-slate-200"
+                className="pl-11 h-12 bg-white/50 border-transparent focus:bg-white focus:border-indigo-200 transition-all rounded-xl"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
         </div>
         
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex gap-2 w-full sm:w-auto px-1">
             <DropdownMenu>
                 <DropdownMenuTrigger render={
-                    <Button variant="outline" className="h-9 px-3 font-normal bg-slate-50/50 border-slate-200 text-slate-700 min-w-[130px] justify-between">
+                    <button className="h-12 px-4 font-semibold bg-white/50 border border-slate-100 text-slate-700 min-w-[140px] flex items-center justify-between rounded-xl hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
                         <div className="flex items-center gap-2 overflow-hidden">
                             <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                             <span className="truncate">
@@ -516,27 +529,29 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                                  `${statusFilter.length} Status`}
                             </span>
                         </div>
-                    </Button>
+                    </button>
                 } />
-                <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuContent align="end" className="w-52 rounded-2xl p-2 premium-shadow">
                     <DropdownMenuGroup>
-                        <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+                        <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Filter Status</DropdownMenuLabel>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="opacity-50" />
                     <DropdownMenuCheckboxItem
                         checked={statusFilter.length === 0}
                         onCheckedChange={() => setStatusFilter([])}
+                        className="rounded-lg"
                     >
                         All Status
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuSeparator />
-                    <div className="max-h-60 overflow-y-auto">
+                    <DropdownMenuSeparator className="opacity-50" />
+                    <div className="max-h-60 overflow-y-auto space-y-1">
                         {STATUS_OPTIONS.map(status => (
                             <DropdownMenuCheckboxItem
                                 key={status}
                                 checked={statusFilter.includes(status)}
                                 onCheckedChange={() => toggleStatusFilter(status)}
                                 onSelect={(e) => e.preventDefault()}
+                                className="rounded-lg"
                             >
                                 {status}
                             </DropdownMenuCheckboxItem>
@@ -547,33 +562,35 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
             <DropdownMenu>
                 <DropdownMenuTrigger render={
-                    <Button variant="outline" className="h-9 px-3 font-normal bg-slate-50/50 border-slate-200 text-slate-700 min-w-[120px] justify-between">
+                    <button className="h-12 px-4 font-semibold bg-white/50 border border-slate-100 text-slate-700 min-w-[130px] flex items-center justify-between rounded-xl hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
                         <span className="truncate">
                             {typeFilter.length === 0 ? "All Types" : 
                              typeFilter.length === 1 ? typeFilter[0] : 
                              `${typeFilter.length} Types`}
                         </span>
-                    </Button>
+                    </button>
                 } />
-                <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuContent align="end" className="w-52 rounded-2xl p-2 premium-shadow">
                     <DropdownMenuGroup>
-                        <DropdownMenuLabel>Filter by Job Type</DropdownMenuLabel>
+                        <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Job Type</DropdownMenuLabel>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="opacity-50" />
                     <DropdownMenuCheckboxItem
                         checked={typeFilter.length === 0}
                         onCheckedChange={() => setTypeFilter([])}
+                        className="rounded-lg"
                     >
                         All Types
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuSeparator />
-                    <div className="max-h-60 overflow-y-auto">
+                    <DropdownMenuSeparator className="opacity-50" />
+                    <div className="max-h-60 overflow-y-auto space-y-1">
                         {JOB_TYPE_OPTIONS.map(type => (
                             <DropdownMenuCheckboxItem
                                 key={type}
                                 checked={typeFilter.includes(type)}
                                 onCheckedChange={() => toggleTypeFilter(type)}
                                 onSelect={(e) => e.preventDefault()}
+                                className="rounded-lg"
                             >
                                 {type}
                             </DropdownMenuCheckboxItem>
@@ -585,7 +602,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
             <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-9 w-9 text-slate-400 hover:text-slate-600"
+                className="h-12 w-12 text-slate-400 hover:text-indigo-600 hover:bg-white transition-all rounded-xl"
                 onClick={resetFilters}
                 title="Reset filters & sort"
             >
@@ -594,23 +611,25 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         </div>
       </div>
 
+
       {/* ─── Table ─── */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-x-auto relative">
+      <div className="rounded-3xl border border-slate-200 bg-white premium-shadow-sm overflow-hidden relative">
         <Table className="table-fixed w-full min-w-max border-collapse">
-          <TableHeader className="bg-slate-50 border-b border-slate-200">
+          <TableHeader className="bg-slate-50/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200">
             <TableRow className="hover:bg-transparent">
               <TableHead 
                 style={{ width: columnWidths.statusIcon }}
-                className="py-4 pl-6 relative"
+                className="py-5 pl-8 relative"
               >
-                <div className="w-10" /> {/* Spacer for icon */}
+                <div className="w-11" /> {/* Spacer for icon */}
               </TableHead>
               <TableHead 
                 style={{ width: columnWidths.recruiterCo }}
-                className="font-semibold text-slate-900 py-4 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('recruiterCo')}
               >
                 <div className="flex items-center truncate">Recruiter Co. <SortIndicator column="recruiterCo" /></div>
+
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'recruiterCo')}
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'recruiterCo' ? 'bg-blue-500' : ''}`}
@@ -624,62 +643,63 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 <div className="flex items-center truncate">Company <SortIndicator column="company" /></div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'company')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'company' ? 'bg-blue-500' : ''}`}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'company' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
               <TableHead 
                 style={{ width: columnWidths.role }}
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('role')}
               >
                 <div className="flex items-center truncate">Role <SortIndicator column="role" /></div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'role')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'role' ? 'bg-blue-500' : ''}`}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'role' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
               <TableHead 
                 style={{ width: columnWidths.status }}
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('status')}
               >
                 <div className="flex items-center truncate">Status <SortIndicator column="status" /></div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'status')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'status' ? 'bg-blue-500' : ''}`}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'status' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
               <TableHead 
                 style={{ width: columnWidths.applicationDate }}
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
+                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('applicationDate')}
               >
                 <div className="flex items-center truncate">Date Applied <SortIndicator column="applicationDate" /></div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'applicationDate')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-blue-500' : ''}`}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
               <TableHead 
                 style={{ width: columnWidths.latestActivityDate }}
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
+                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('latestActivityDate')}
               >
                 <div className="flex items-center truncate">Latest Activity <SortIndicator column="latestActivityDate" /></div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'latestActivityDate')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-blue-500' : ''}`}
+                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
-              <TableHead style={{ width: columnWidths._actions }} className="font-semibold text-slate-900 text-right pr-6 relative">
+              <TableHead style={{ width: columnWidths._actions }} className="font-bold text-slate-500 uppercase tracking-widest text-[10px] text-right pr-8 relative">
                 Actions
               </TableHead>
+
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedApplications.length > 0 ? (
               paginatedApplications.map((app) => (
-                <TableRow key={app.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
+                <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 last:border-0 relative overflow-hidden">
                   <TableCell 
                     style={{ width: columnWidths.statusIcon }} 
                     className="pl-6 py-3"
@@ -687,34 +707,42 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   >
                     {renderStatusIcon(app.status)}
                   </TableCell>
-                  <TableCell style={{ width: columnWidths.recruiterCo }} className="font-medium text-slate-900 truncate" onClick={() => setSelectedApp(app)}>{app.recruiterCo || '—'}</TableCell>
-                  <TableCell style={{ width: columnWidths.company }} className="text-slate-500 truncate" onClick={() => setSelectedApp(app)}>{app.company}</TableCell>
-                  <TableCell style={{ width: columnWidths.role }} className="text-slate-600 truncate" onClick={() => setSelectedApp(app)} title={app.role}>{app.role}</TableCell>
+                  <TableCell style={{ width: columnWidths.recruiterCo }} className="text-sm font-medium text-slate-600 truncate" onClick={() => setSelectedApp(app)}>
+                    {app.recruiterCo && app.recruiterCo !== '#NotInformed' ? app.recruiterCo : <span className="text-slate-300 font-medium italic">Not specified</span>}
+                  </TableCell>
+                  <TableCell style={{ width: columnWidths.company }} className="text-sm text-slate-400 font-medium truncate" onClick={() => setSelectedApp(app)}>
+                    {app.company && app.company !== '#NotInformed' ? app.company : <span className="text-slate-300 italic">Not specified</span>}
+                  </TableCell>
+                  <TableCell style={{ width: columnWidths.role }} className="text-sm text-slate-600 font-medium truncate" onClick={() => setSelectedApp(app)} title={app.role}>
+                    {app.role && app.role !== '#NotInformed' ? app.role : <span className="text-slate-300 font-medium italic">Not specified</span>}
+                  </TableCell>
                   <TableCell style={{ width: columnWidths.status }} className="truncate" onClick={() => setSelectedApp(app)}>
-                    <Badge variant="outline" className={`${getStatusColor(app.status)} shadow-none font-medium text-[10px]`}>
+                    <Badge variant="outline" className={cn(getStatusColor(app.status), "shadow-sm text-[10px] py-0 h-5")}>
                       {app.status}
                     </Badge>
                   </TableCell>
-                  <TableCell style={{ width: columnWidths.applicationDate }} className="text-slate-500 whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
+                  <TableCell style={{ width: columnWidths.applicationDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
                     {app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'}
                   </TableCell>
-                  <TableCell style={{ width: columnWidths.latestActivityDate }} className="text-slate-500 whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
+                  <TableCell style={{ width: columnWidths.latestActivityDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
                     {app.latestActivityDate ? format(app.latestActivityDate, 'MMM d, yyyy') : (
                         app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'
                     )}
                   </TableCell>
-                  <TableCell style={{ width: columnWidths._actions }} className="text-right pr-6">
+                  <TableCell style={{ width: columnWidths._actions }} className="text-right pr-8">
                     <DropdownMenu>
                       <DropdownMenuTrigger render={
-                        <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        <button className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-all bg-white border border-slate-200 rounded-lg premium-shadow-sm flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
+                          <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
+                        </button>
                       } />
+
                       <DropdownMenuContent align="end" className="w-40">
                         <ApplicationDialog
                           mode="edit"
                           id={app.id}
                           initData={app}
+                          nativeButton={false}
                           trigger={
                             <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer">
                               <Edit className="mr-2 h-4 w-4" /> Edit
@@ -824,45 +852,46 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
           {selectedApp && (
             <>
               {/* Header */}
-              <div className="p-8 pb-6 border-b border-slate-100 bg-slate-50/50 shrink-0">
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-medium tracking-wide uppercase">
-                    <Building2 size={14} />
+              <div className="p-8 pb-8 border-b border-slate-100 bg-slate-50/30 shrink-0 backdrop-blur-xl sticky top-0 z-10">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-slate-400 text-[10px] font-bold tracking-[0.1em] uppercase">
+                    <Building2 size={12} className="text-indigo-500" />
                     {selectedApp.locationType || 'General'}
                   </div>
                   {/* Edit + Delete quick actions */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <ApplicationDialog
                       mode="edit"
                       id={selectedApp.id}
                       initData={selectedApp}
+                      nativeButton={true}
                       trigger={
-                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 px-2.5 py-1 rounded-lg transition-colors">
-                          <Edit size={13} /> Edit
+                        <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 px-3 py-1.5 rounded-xl transition-all premium-shadow-sm hover:scale-105 active:scale-95">
+                          <Edit size={12} strokeWidth={2.5} /> Edit
                         </button>
                       }
                     />
                     <button
                       onClick={() => deleteApp(selectedApp.id)}
-                      className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 bg-white border border-slate-200 hover:border-red-200 px-2.5 py-1 rounded-lg transition-colors"
+                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-red-400 hover:text-red-600 bg-white border border-slate-200 hover:border-red-100 px-3 py-1.5 rounded-xl transition-all premium-shadow-sm hover:scale-105 active:scale-95"
                     >
-                      <Trash2 size={13} /> Delete
+                      <Trash2 size={12} strokeWidth={2.5} /> Delete
                     </button>
                   </div>
                 </div>
-                <SheetTitle className="text-2xl font-bold flex items-center justify-between">
+                <SheetTitle className="flex items-start justify-between gap-4">
                   <div className="flex flex-col">
-                    <span className="text-slate-900 group flex items-center gap-2">
+                    <span className="text-3xl font-black text-slate-900 tracking-tight leading-none group flex items-center gap-2 mb-2">
                         {selectedApp.company}
                         {selectedApp.companyUrl && (
-                        <a href={selectedApp.companyUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-colors">
-                            <ExternalLink size={14} />
+                        <a href={selectedApp.companyUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-indigo-600 transition-all hover:scale-110">
+                            <ExternalLink size={18} strokeWidth={2.5} />
                         </a>
                         )}
                     </span>
-                    <span className="text-slate-500 text-lg font-normal">{selectedApp.role}</span>
+                    <span className="text-slate-400 text-lg font-bold tracking-tight">{selectedApp.role}</span>
                   </div>
-                  <Badge className={cn("px-4 py-1.5 rounded-full border shadow-sm self-start mt-1", getStatusColor(selectedApp.status))}>
+                  <Badge className={cn("px-5 py-2 rounded-2xl border-white/40 shadow-lg text-xs font-bold uppercase tracking-wider self-start mt-1", getStatusColor(selectedApp.status))}>
                     {selectedApp.status}
                   </Badge>
                 </SheetTitle>
@@ -890,30 +919,30 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               <ScrollArea className="flex-1 min-h-0">
                 <div className="p-8 pt-6 pb-20">
                   <Tabs defaultValue="details" className="w-full">
-                    <TabsList className="mb-6 bg-slate-100/80 p-1 w-full justify-start h-11 rounded-lg">
-                      <TabsTrigger value="details" className="px-6 data-[state=active]:shadow-sm rounded-md">Details</TabsTrigger>
-                      <TabsTrigger value="timeline" className="px-6 data-[state=active]:shadow-sm rounded-md">Timeline</TabsTrigger>
+                    <TabsList className="mb-8 bg-slate-100/50 p-1.5 w-full justify-start h-12 rounded-[1rem] border border-slate-200/40">
+                      <TabsTrigger value="details" className="px-8 h-9 data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-md rounded-[0.75rem] text-[10px] font-bold uppercase tracking-widest transition-all">Details</TabsTrigger>
+                      <TabsTrigger value="timeline" className="px-8 h-9 data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-md rounded-[0.75rem] text-[10px] font-bold uppercase tracking-widest transition-all">Timeline</TabsTrigger>
                     </TabsList>
 
                     {/* ── DETAILS ── */}
                     <TabsContent value="details" className="space-y-8">
 
                       <section>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Job Specifications</h4>
-                        <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
-                          <div className="col-span-2 bg-slate-50 p-3 rounded-lg border border-slate-100 flex justify-between items-center mb-2">
-                             <div>
-                               <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Candidate</span>
-                               <span className="font-semibold text-slate-900 text-base">{selectedApp.name || '—'}</span>
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">Job Specifications</h4>
+                        <div className="grid grid-cols-2 gap-y-6 gap-x-10 text-sm">
+                          <div className="col-span-2 bg-slate-50/50 p-5 rounded-2xl border border-slate-100/60 flex justify-between items-center mb-2">
+                             <div className="space-y-1">
+                               <span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Candidate</span>
+                               <span className="font-bold text-slate-900 text-lg">{selectedApp.name || '—'}</span>
                              </div>
-                             <div className="text-2xl">{selectedApp.feel || '—'}</div>
+                             <div className="text-3xl bg-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm border border-slate-100">{selectedApp.feel || '—'}</div>
                           </div>
-                          <div><span className="text-slate-500 block mb-0.5">Job Type</span><span className="font-medium text-slate-900">{selectedApp.jobType || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Location Type</span><span className="font-medium text-slate-900">{selectedApp.locationType || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Duration</span><span className="font-medium text-slate-900">{selectedApp.duration || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Company Location</span><span className="font-medium text-slate-900">{selectedApp.companyLocation || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Initiator</span><span className="font-medium text-slate-900">{selectedApp.initiator || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Feel</span><span className="font-medium text-slate-900">{selectedApp.feel || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Job Type</span><span className="font-bold text-slate-700">{selectedApp.jobType || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Location Type</span><span className="font-bold text-slate-700">{selectedApp.locationType || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Duration</span><span className="font-bold text-slate-700">{selectedApp.duration || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Company Location</span><span className="font-bold text-slate-700">{selectedApp.companyLocation || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Initiator</span><span className="font-bold text-slate-700">{selectedApp.initiator || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Feel</span><span className="font-bold text-slate-700">{selectedApp.feel || '—'}</span></div>
                         </div>
                       </section>
 

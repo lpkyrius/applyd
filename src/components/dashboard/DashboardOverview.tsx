@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const COLORS = ['#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#64748B'];
 
 export function DashboardOverview({ applications }: { applications: any[] }) {
-
+  // ... existing memo logic ...
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const years = ['2023', '2024', '2025', '2026', '2027'];
 
@@ -60,13 +60,12 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
     const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
 
-    // Normalize each salary to a yearly equivalent before averaging
     const toYearly = (value: number, period: string | null | undefined): number => {
       switch ((period || 'year').toLowerCase()) {
-        case 'hour':  return value * 8 * 220;   // 8h/day × 220 working days
-        case 'day':   return value * 220;        // 220 working days/year
+        case 'hour':  return value * 8 * 220;
+        case 'day':   return value * 220;
         case 'month': return value * 12;
-        default:      return value;              // 'year' or unknown → as-is
+        default:      return value;
       }
     };
     const salApps = filteredApps.filter(a => a.grossSalTo > 0);
@@ -81,7 +80,6 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       counts[label] = (counts[label] || 0) + 1;
     });
 
-    // Generate accurate activity data for the range
     const activityData: any[] = [];
     let currY = parseInt(startYear);
     let currM = months.indexOf(startMonth);
@@ -105,128 +103,133 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   }, [filteredApps, startYear, startMonth, endYear, endMonth]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* ── FILTERS ── */}
-      <div className="flex items-center gap-4 bg-white p-4 rounded-3xl border border-slate-200/60 shadow-sm">
-        <div className="p-2 rounded-xl bg-slate-900 text-white shrink-0">
-          <Filter size={18} />
+      <div className="glass-card p-3 rounded-3xl border-white/60 flex items-center gap-4 premium-shadow-sm">
+        <div className="p-3 rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-200 shrink-0">
+          <Filter size={20} />
         </div>
-        <div className="flex-1 flex items-center gap-6">
-          {/* FROM SECTION */}
-          <div className="flex items-center gap-2">
-            <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 border-l-2 border-slate-900 pl-1.5 ml-1 uppercase tracking-widest block">From</span>
+        <div className="flex-1 flex items-center gap-8">
+          <div className="flex items-center gap-4">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block ml-1">Range Start</span>
               <div className="flex items-center gap-2">
                 <Select value={startYear} onValueChange={setStartYear}>
-                  <SelectTrigger className="h-9 w-[90px] rounded-lg border-slate-200">
+                  <SelectTrigger className="h-10 w-[100px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
+                    {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={startMonth} onValueChange={setStartMonth}>
-                  <SelectTrigger className="h-9 w-[100px] rounded-lg border-slate-200">
+                  <SelectTrigger className="h-10 w-[110px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Month" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {months.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
+                    {months.map(m => <SelectItem key={m} value={m} className="rounded-lg">{m}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
             </div>
           </div>
 
-          <div className="h-8 w-px bg-slate-100 shrink-0" />
+          <div className="h-10 w-px bg-slate-200/60 shrink-0" />
 
-          {/* TO SECTION */}
-          <div className="flex items-center gap-2">
-            <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 border-l-2 border-slate-400 pl-1.5 ml-1 uppercase tracking-widest block">To</span>
+          <div className="flex items-center gap-4">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block ml-1">Range End</span>
               <div className="flex items-center gap-2">
                 <Select value={endYear} onValueChange={setEndYear}>
-                  <SelectTrigger className="h-9 w-[90px] rounded-lg border-slate-200">
+                  <SelectTrigger className="h-10 w-[100px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
+                    {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={endMonth} onValueChange={setEndMonth}>
-                  <SelectTrigger className="h-9 w-[100px] rounded-lg border-slate-200">
+                  <SelectTrigger className="h-10 w-[110px] rounded-xl border-slate-200/60 bg-white/50 focus:bg-white transition-all">
                     <SelectValue placeholder="Month" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {months.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
+                    {months.map(m => <SelectItem key={m} value={m} className="rounded-lg">{m}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
             </div>
           </div>
         </div>
-        <div className="text-xs font-semibold text-slate-400 flex items-center gap-2 pr-2">
-          <Calendar size={14} />
-          {filteredApps.length} records in range
+        <div className="bg-indigo-50/50 px-4 py-2 rounded-2xl border border-indigo-100/50 flex items-center gap-2 pr-4 shrink-0">
+          <Calendar size={14} className="text-indigo-500" />
+          <span className="text-xs font-bold text-indigo-600 uppercase tracking-tight">
+            {filteredApps.length} Applications Found
+          </span>
         </div>
       </div>
 
       {/* ── METRICS GRID ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard 
-          title="Total Applications" 
+          title="Total Volume" 
           value={stats.total} 
           icon={Briefcase}
-          trend="+12% from last month"
-          color="bg-blue-500"
+          trend="+12% activity"
+          color="bg-indigo-600"
+          glowColor="rgba(79, 70, 229, 0.2)"
         />
         <MetricCard 
-          title="Active Tracks" 
+          title="In Progress" 
           value={stats.active} 
           icon={Target}
-          trend="Moving forward"
+          trend="Currently active"
           color="bg-slate-900"
+          glowColor="rgba(15, 23, 42, 0.2)"
         />
         <MetricCard 
-          title="Offers Received" 
-          value={stats.offers} 
+          title="Success Rate" 
+          value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
           icon={CheckCircle2}
-          trend={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}% success rate`}
+          trend={`${stats.offers} offers secured`}
           color="bg-emerald-500"
+          glowColor="rgba(16, 185, 129, 0.2)"
         />
         <MetricCard 
-          title="Avg. Market Value" 
+          title="Avg. Market Range" 
           value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
           icon={Banknote}
-          trend="Based on your top ranges"
+          trend="Gross yearly"
           color="bg-amber-500"
+          glowColor="rgba(245, 158, 11, 0.2)"
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* ── STATUS DISTRIBUTION ── */}
-        <Card className="lg:col-span-1 rounded-3xl border-slate-200/60 shadow-sm bg-white overflow-hidden">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Status Breakdown</h3>
-            <div className="h-[300px] w-full">
+        <Card className="lg:col-span-1 rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white overflow-hidden premium-shadow-sm border-white/60">
+          <CardContent className="p-8">
+            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Status Distribution</h3>
+            <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={stats.statusData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
+                    innerRadius={70}
+                    outerRadius={100}
+                    paddingAngle={8}
                     dataKey="value"
+                    stroke="none"
                   >
                     {stats.statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="focus:outline-none" />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '12px' }}
                   />
-                  <Legend verticalAlign="bottom" height={36}/>
+                  <Legend verticalAlign="bottom" height={40} iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -234,29 +237,36 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
         </Card>
 
         {/* ── MONTHLY ACTIVITY ── */}
-        <Card className="lg:col-span-2 rounded-3xl border-slate-200/60 shadow-sm bg-white overflow-hidden">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Application Momentum</h3>
-            <div className="h-[300px] w-full">
+        <Card className="lg:col-span-2 rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white overflow-hidden premium-shadow-sm border-white/60">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between mb-8">
+                <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Application Momentum</h3>
+                <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-indigo-500" />
+                    <span className="text-xs font-bold text-slate-700">Submissions</span>
+                </div>
+            </div>
+            <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.activityData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="8 8" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
                     dataKey="name" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: '#94a3b8', fontSize: 12 }} 
+                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} 
+                    dy={10}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: '#94a3b8', fontSize: 12 }} 
+                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} 
                   />
                   <Tooltip 
-                    cursor={{ fill: '#f8fafc' }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                    cursor={{ fill: '#f8fafc', radius: 12 }}
+                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '12px' }}
                   />
-                  <Bar dataKey="count" fill="#6366F1" radius={[4, 4, 0, 0]} barSize={40} />
+                  <Bar dataKey="count" fill="#6366F1" radius={[8, 8, 8, 8]} barSize={32} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -267,23 +277,24 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   );
 }
 
-function MetricCard({ title, value, icon: Icon, trend, color }: any) {
+function MetricCard({ title, value, icon: Icon, trend, color, glowColor }: any) {
   return (
-    <Card className="rounded-3xl border-slate-200/60 shadow-sm bg-white hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className={cn("p-2 rounded-xl text-white", color)}>
-            <Icon size={20} />
+    <Card className="rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white hover:premium-shadow transition-all duration-300 border-white/60 group">
+      <CardContent className="p-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className={cn("p-3 rounded-2xl text-white shadow-lg transition-transform group-hover:scale-110 duration-300", color)} style={{ boxShadow: `0 8px 20px ${glowColor}` }}>
+            <Icon size={24} strokeWidth={2.5} />
           </div>
         </div>
         <div>
-          <h4 className="text-slate-500 font-medium text-sm mb-1">{title}</h4>
-          <div className="text-3xl font-extrabold text-slate-900 leading-tight">
+          <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">{title}</h4>
+          <div className="text-4xl font-black text-slate-900 leading-tight tracking-tight">
             {value}
           </div>
           {trend && (
-            <div className="flex items-center gap-1 mt-2 text-xs font-semibold text-slate-400 tracking-tight">
-              {trend}
+            <div className="flex items-center gap-1.5 mt-4">
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{trend}</span>
             </div>
           )}
         </div>
@@ -291,5 +302,6 @@ function MetricCard({ title, value, icon: Icon, trend, color }: any) {
     </Card>
   );
 }
+
 
 

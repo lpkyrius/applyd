@@ -15,8 +15,8 @@ import { Input } from '@/components/ui/input'
 import {
   Calendar, Briefcase, Building2, ExternalLink,
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
-  ArrowUpDown, ArrowUp, ArrowDown, Users, Bell, Boxes, SlidersHorizontal, 
-  CheckCircle2, XCircle, PauseCircle, ChevronLeft, ChevronRight, 
+  ArrowUpDown, ArrowUp, ArrowDown, Users, Bell, Boxes, SlidersHorizontal,
+  CheckCircle2, XCircle, PauseCircle, ChevronLeft, ChevronRight,
   ChevronsLeft, ChevronsRight, FileText, MessageSquare, History
 } from 'lucide-react'
 import {
@@ -69,7 +69,7 @@ const getLatestStepDate = (stepsJson: string): Date | null => {
   const dates = steps
     .map(s => new Date(s.date))
     .filter(d => isValid(d))
-  
+
   if (dates.length === 0) return null
   return new Date(Math.max(...dates.map(d => d.getTime())))
 }
@@ -99,10 +99,10 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-indigo-600 transition-all bg-slate-50/50 hover:bg-white border border-dashed border-slate-200 hover:border-indigo-200 rounded-[1.5rem] px-6 py-5 w-full mb-8 group premium-shadow-sm hover:premium-shadow"
+        className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.15em] text-[#8B5CF6] hover:text-white transition-all bg-[#8B5CF6]/5 hover:bg-[#8B5CF6] border border-[#8B5CF6]/10 rounded-md px-4 py-2.5 w-full mb-8 group shadow-sm"
       >
-        <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center border border-slate-100 group-hover:border-indigo-100 transition-colors">
-            <Plus size={14} className="group-hover:scale-125 transition-transform" />
+        <div className="w-6 h-6 rounded-md bg-white/80 flex items-center justify-center border border-purple-100 group-hover:bg-white transition-colors">
+          <Plus size={12} className="text-[#8B5CF6]" />
         </div>
         Add New Activity Entry
       </button>
@@ -110,55 +110,58 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-[2rem] p-6 mb-8 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
+    <div className="bg-white border-none rounded-xl p-8 mb-10 premium-shadow space-y-6 animate-in fade-in zoom-in duration-300">
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-            <div className="w-1.5 h-4 bg-indigo-600 rounded-full" />
-            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">New Journal Entry</span>
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-3.5 bg-[#8B5CF6] rounded-full" />
+          <span className="text-[11px] font-black text-slate-900 uppercase tracking-widest">New Journal Entry</span>
         </div>
-        <button onClick={() => setOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-          <X size={16} />
+        <button
+          onClick={() => setOpen(false)}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50 border border-transparent hover:border-slate-100 text-slate-400 hover:text-slate-900 transition-all shadow-sm hover:shadow-md"
+        >
+          <X size={18} strokeWidth={3} />
         </button>
       </div>
       <div className="flex gap-3">
         <button
           onClick={() => setType('STEP')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-slate-950 text-white border-slate-950 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-slate-950 text-white border-slate-950 shadow-sm' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50'}`}
         >
           <FileText size={14} /> Interview Step
         </button>
         <button
           onClick={() => setType('CONTACT')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'CONTACT' ? 'bg-slate-950 text-white border-slate-950 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'CONTACT' ? 'bg-slate-950 text-white border-slate-950 shadow-sm' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50'}`}
         >
           <MessageSquare size={14} /> Contact / Note
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
-            <input
-                type="date"
-                value={date}
-                onChange={e => setDate(e.target.value)}
-                className="w-full h-11 rounded-xl border border-slate-100 bg-slate-50/50 px-4 text-sm font-bold focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
-            />
+          <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm font-bold focus:bg-white focus:border-[#8B5CF6] focus:outline-none transition-all"
+          />
         </div>
       </div>
       <div className="space-y-1.5">
         <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Entry Details</label>
         <textarea
-            placeholder="What happened? Share the highlights…"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            rows={3}
-            className="w-full rounded-[1.25rem] border border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
+          placeholder="What happened? Share the highlights…"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          rows={3}
+          className="w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-medium focus:bg-white focus:border-[#8B5CF6] focus:outline-none transition-all resize-none min-h-[80px]"
         />
       </div>
       <Button
         onClick={handleSave}
         disabled={isPending || !description.trim()}
-        className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-indigo-100 transition-all"
+        className="w-full h-11 bg-[#8B5CF6] hover:bg-[#7C3AED] text-white rounded-md font-black text-[10px] uppercase tracking-[0.2em] shadow-sm transition-all"
       >
         {isPending ? 'Logging Entry…' : 'Log Activity'}
       </Button>
@@ -189,8 +192,8 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
       <div className="bg-white border border-indigo-200 rounded-[2rem] p-6 mb-8 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-              <div className="w-1.5 h-4 bg-indigo-600 rounded-full" />
-              <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Edit Journal Entry</span>
+            <div className="w-1.5 h-4 bg-[#8B5CF6] rounded-full" />
+            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Edit Journal Entry</span>
           </div>
           <button onClick={() => setIsEditing(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
             <X size={16} />
@@ -199,7 +202,7 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
         <div className="flex gap-3">
           <button
             onClick={() => setType('STEP')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-[#8B5CF6] text-white border-[#8B5CF6] shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
           >
             <FileText size={14} /> Interview Step
           </button>
@@ -212,40 +215,40 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
-              <input
-                  type="date"
-                  value={date}
-                  onChange={e => setDate(e.target.value)}
-                  className="w-full h-11 rounded-xl border border-slate-100 bg-slate-50/50 px-4 text-sm font-bold focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
-              />
+            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
+            <input
+              type="date"
+              value={date}
+              onChange={e => setDate(e.target.value)}
+              className="w-full h-11 rounded-xl border border-slate-100 bg-slate-50/50 px-4 text-sm font-bold focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+            />
           </div>
         </div>
         <div className="space-y-1.5">
           <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Entry Details</label>
           <textarea
-              placeholder="What happened? Share the highlights…"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              rows={3}
-              className="w-full rounded-[1.25rem] border border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
+            placeholder="What happened? Share the highlights…"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            rows={3}
+            className="w-full rounded-[1.25rem] border border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
           />
         </div>
         <div className="flex gap-3">
-            <Button
-                onClick={handleUpdate}
-                disabled={isPending || !description.trim()}
-                className="flex-1 h-11 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-indigo-100 transition-all"
-            >
-                {isPending ? 'Updating…' : 'Update Entry'}
-            </Button>
-            <Button
-                variant="outline"
-                onClick={() => setIsEditing(false)}
-                className="flex-1 h-11 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] border-slate-200 text-slate-500 hover:bg-slate-50"
-            >
-                Cancel
-            </Button>
+          <Button
+            onClick={handleUpdate}
+            disabled={isPending || !description.trim()}
+            className="flex-1 h-11 bg-[#8B5CF6] hover:bg-[#7C3AED] text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-purple-100 transition-all"
+          >
+            {isPending ? 'Updating…' : 'Update Entry'}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setIsEditing(false)}
+            className="flex-1 h-11 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] border-slate-200 text-slate-500 hover:bg-slate-50"
+          >
+            Cancel
+          </Button>
         </div>
       </div>
     )
@@ -254,38 +257,38 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
   const isStep = step.type === 'STEP'
 
   return (
-    <div className="relative group/step pl-14 pb-10 last:pb-0">
+    <div className="relative group/step pl-10 pb-8 last:pb-0">
       {/* Timeline line connector */}
-      <div className="absolute left-[23px] top-[40px] bottom-0 w-px bg-slate-200 group-last/step:hidden" />
-      
+      <div className="absolute left-[15px] top-[32px] bottom-0 w-px bg-slate-100 group-last/step:hidden" />
+
       {/* Icon Node */}
       <div className={cn(
-          "absolute left-0 top-0 w-12 h-12 rounded-2xl flex items-center justify-center border-4 border-white premium-shadow transition-transform group-hover/step:scale-110 duration-500 z-10",
-          isStep ? "bg-indigo-600 text-white" : "bg-slate-900 text-white"
+        "absolute left-0 top-0 w-8 h-8 rounded-md flex items-center justify-center border border-white shadow-sm transition-transform group-hover/step:scale-110 duration-500 z-10",
+        isStep ? "bg-[#8B5CF6] text-white" : "bg-slate-900 text-white"
       )}>
-        {isStep ? <FileText size={18} strokeWidth={2.5} /> : <MessageSquare size={18} strokeWidth={2.5} />}
+        {isStep ? <FileText size={14} strokeWidth={2.5} /> : <MessageSquare size={14} strokeWidth={2.5} />}
       </div>
 
-      <div className="bg-white p-6 rounded-[2rem] border border-slate-200/60 premium-shadow-sm group-hover/step:premium-shadow group-hover/step:border-indigo-100 transition-all duration-500 relative">
-        <div className="flex items-start justify-between gap-4 mb-4">
+      <div className="bg-white p-5 rounded-xl border border-slate-50 shadow-[0_4px_12px_rgba(0,0,0,0.02)] group-hover/step:border-purple-100/30 transition-all duration-300 relative">
+        <div className="flex items-start justify-between gap-5 mb-4">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-3 mb-1">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
-                    {format(new Date(step.date), 'MMMM d, yyyy')}
-                </span>
-                <div className="w-1 h-1 rounded-full bg-slate-200" />
-                <span className={cn(
-                    "text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg",
-                    isStep ? "bg-indigo-50 text-indigo-600" : "bg-slate-100 text-slate-500"
-                )}>
-                    {isStep ? 'Interview' : 'Log'}
-                </span>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="text-[11px] font-bold text-slate-500">
+                {format(new Date(step.date), 'MMMM d, yyyy')}
+              </span>
+              <div className="w-1 h-1 rounded-full bg-slate-100" />
+              <span className={cn(
+                "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded",
+                isStep ? "bg-purple-50 text-[#8B5CF6]" : "bg-slate-50 text-slate-500"
+              )}>
+                {isStep ? 'Interview' : 'Log'}
+              </span>
             </div>
-            <p className="text-base text-slate-900 font-bold leading-relaxed break-words whitespace-pre-wrap tracking-tight">
-                {step.description}
+            <p className="text-[13px] text-slate-400 font-medium leading-relaxed break-words whitespace-pre-wrap tracking-tight">
+              {step.description}
             </p>
           </div>
-          
+
           <div className="flex items-center gap-1 opacity-0 group-hover/step:opacity-100 transition-all duration-300">
             <button
               onClick={() => setIsEditing(true)}
@@ -312,7 +315,7 @@ const renderStatusIcon = (status: string) => {
   const s = (status || '').toLowerCase();
   let icon = <Bell size={12} />;
   let bgColor = "bg-slate-100 text-slate-600 border-slate-200";
-  
+
   if (s.includes('applied')) {
     icon = <Bell size={12} />;
     bgColor = "bg-slate-100 text-slate-600 border-slate-200";
@@ -408,12 +411,12 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
     // 2. Filter
     const filtered = withActivity.filter(app => {
-      const matchesSearch = 
+      const matchesSearch =
         (app.company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.companyLocation?.toLowerCase() || '').includes(searchQuery.toLowerCase());
-      
+
       const matchesStatus = statusFilter.length === 0 || statusFilter.includes(app.status);
       const matchesType = typeFilter.length === 0 || typeFilter.includes((app.jobType as string) || '');
 
@@ -502,11 +505,11 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   const getStatusColor = (status: string) => {
     const s = (status || '').toLowerCase()
-    if (s.includes('applied') || s.includes('prospec')) return 'bg-slate-100/50 text-slate-500 border-slate-200 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
-    if (s.includes('interview') || s.includes('screening') || s.includes('test')) return 'bg-indigo-50 text-indigo-600 border-indigo-100/60 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
-    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-red-50 text-red-500 border-red-100/60 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
-    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-emerald-50 text-emerald-600 border-emerald-100/60 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
-    return 'bg-slate-50 text-slate-400 border-slate-100 font-bold tracking-tight px-2.5 py-0.5 rounded-lg'
+    if (s.includes('applied') || s.includes('prospec')) return 'bg-slate-50 text-slate-500 border-slate-100 font-bold tracking-tight px-3 py-1 rounded-md'
+    if (s.includes('interview') || s.includes('screening') || s.includes('test')) return 'bg-purple-50/50 text-[#8B5CF6] border-purple-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
+    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-red-50/50 text-red-500 border-red-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
+    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-emerald-50/50 text-emerald-600 border-emerald-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
+    return 'bg-slate-50/50 text-slate-400 border-slate-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
   }
 
 
@@ -516,13 +519,13 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   };
 
   const toggleStatusFilter = (status: string) => {
-    setStatusFilter(prev => 
+    setStatusFilter(prev =>
       prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
     )
   }
 
   const toggleTypeFilter = (type: string) => {
-    setTypeFilter(prev => 
+    setTypeFilter(prev =>
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     )
   }
@@ -531,7 +534,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     const f = from || 0;
     const t = to || 0;
     if (f === 0 && t === 0) return '—';
-    
+
     const curr = currency || 'EUR';
     const symbol = curr === 'EUR' ? '€' : curr === 'USD' ? '$' : curr === 'GBP' ? '£' : `${curr} `;
 
@@ -547,124 +550,124 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   return (
     <div className="w-full space-y-4">
       {/* ─── Search & Filters ─── */}
-      <div className="glass-card p-2 rounded-2xl flex flex-col sm:flex-row gap-2 items-center premium-shadow-sm border-white/60">
+      <div className="bg-white p-2 rounded-xl border border-slate-100 flex flex-col sm:flex-row gap-3 items-center shadow-sm">
         <div className="relative flex-1 w-full group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-            <Input 
-                placeholder="Search by company, role or recruiter..." 
-                className="pl-11 h-12 bg-white/50 border-transparent focus:bg-white focus:border-indigo-200 transition-all rounded-xl"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-[#8B5CF6] transition-colors" />
+          <Input
+            placeholder="Search applications..."
+            className="pl-11 h-11 bg-slate-50/30 border-transparent focus:bg-white focus:border-[#8B5CF6] transition-all rounded-md"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
-        
+
         <div className="flex gap-2 w-full sm:w-auto px-1">
-            <DropdownMenu>
-                <DropdownMenuTrigger render={
-                    <button className="h-12 px-4 font-semibold bg-white/50 border border-slate-100 text-slate-700 min-w-[140px] flex items-center justify-between rounded-xl hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
-                        <div className="flex items-center gap-2 overflow-hidden">
-                            <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                            <span className="truncate">
-                                {statusFilter.length === 0 ? "All Status" : 
-                                 statusFilter.length === 1 ? statusFilter[0] : 
-                                 `${statusFilter.length} Status`}
-                            </span>
-                        </div>
-                    </button>
-                } />
-                <DropdownMenuContent align="end" className="w-52 rounded-2xl p-2 premium-shadow">
-                    <DropdownMenuGroup>
-                        <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Filter Status</DropdownMenuLabel>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator className="opacity-50" />
-                    <DropdownMenuCheckboxItem
-                        checked={statusFilter.length === 0}
-                        onCheckedChange={() => setStatusFilter([])}
-                        className="rounded-lg"
-                    >
-                        All Status
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuSeparator className="opacity-50" />
-                    <div className="max-h-60 overflow-y-auto space-y-1">
-                        {STATUS_OPTIONS.map(status => (
-                            <DropdownMenuCheckboxItem
-                                key={status}
-                                checked={statusFilter.includes(status)}
-                                onCheckedChange={() => toggleStatusFilter(status)}
-                                onSelect={(e) => e.preventDefault()}
-                                className="rounded-lg"
-                            >
-                                {status}
-                            </DropdownMenuCheckboxItem>
-                        ))}
-                    </div>
-                </DropdownMenuContent>
-            </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger render={
+              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 min-w-[130px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                  <span className="truncate">
+                    {statusFilter.length === 0 ? "All Status" :
+                      statusFilter.length === 1 ? statusFilter[0] :
+                        `${statusFilter.length} Status`}
+                  </span>
+                </div>
+              </button>
+            } />
+            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 premium-shadow border-slate-100">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Filter Status</DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator className="opacity-50" />
+              <DropdownMenuCheckboxItem
+                checked={statusFilter.length === 0}
+                onCheckedChange={() => setStatusFilter([])}
+                className="rounded-md"
+              >
+                All Status
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuSeparator className="opacity-50" />
+              <div className="max-h-60 overflow-y-auto space-y-1">
+                {STATUS_OPTIONS.map(status => (
+                  <DropdownMenuCheckboxItem
+                    key={status}
+                    checked={statusFilter.includes(status)}
+                    onCheckedChange={() => toggleStatusFilter(status)}
+                    onSelect={(e) => e.preventDefault()}
+                    className="rounded-md"
+                  >
+                    {status}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-            <DropdownMenu>
-                <DropdownMenuTrigger render={
-                    <button className="h-12 px-4 font-semibold bg-white/50 border border-slate-100 text-slate-700 min-w-[130px] flex items-center justify-between rounded-xl hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
-                        <span className="truncate">
-                            {typeFilter.length === 0 ? "All Types" : 
-                             typeFilter.length === 1 ? typeFilter[0] : 
-                             `${typeFilter.length} Types`}
-                        </span>
-                    </button>
-                } />
-                <DropdownMenuContent align="end" className="w-52 rounded-2xl p-2 premium-shadow">
-                    <DropdownMenuGroup>
-                        <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Job Type</DropdownMenuLabel>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator className="opacity-50" />
-                    <DropdownMenuCheckboxItem
-                        checked={typeFilter.length === 0}
-                        onCheckedChange={() => setTypeFilter([])}
-                        className="rounded-lg"
-                    >
-                        All Types
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuSeparator className="opacity-50" />
-                    <div className="max-h-60 overflow-y-auto space-y-1">
-                        {JOB_TYPE_OPTIONS.map(type => (
-                            <DropdownMenuCheckboxItem
-                                key={type}
-                                checked={typeFilter.includes(type)}
-                                onCheckedChange={() => toggleTypeFilter(type)}
-                                onSelect={(e) => e.preventDefault()}
-                                className="rounded-lg"
-                            >
-                                {type}
-                            </DropdownMenuCheckboxItem>
-                        ))}
-                    </div>
-                </DropdownMenuContent>
-            </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger render={
+              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 min-w-[120px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
+                <span className="truncate">
+                  {typeFilter.length === 0 ? "All Types" :
+                    typeFilter.length === 1 ? typeFilter[0] :
+                      `${typeFilter.length} Types`}
+                </span>
+              </button>
+            } />
+            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 premium-shadow border-slate-100">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Job Type</DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator className="opacity-50" />
+              <DropdownMenuCheckboxItem
+                checked={typeFilter.length === 0}
+                onCheckedChange={() => setTypeFilter([])}
+                className="rounded-md"
+              >
+                All Types
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuSeparator className="opacity-50" />
+              <div className="max-h-60 overflow-y-auto space-y-1">
+                {JOB_TYPE_OPTIONS.map(type => (
+                  <DropdownMenuCheckboxItem
+                    key={type}
+                    checked={typeFilter.includes(type)}
+                    onCheckedChange={() => toggleTypeFilter(type)}
+                    onSelect={(e) => e.preventDefault()}
+                    className="rounded-md"
+                  >
+                    {type}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-            <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-12 w-12 text-slate-400 hover:text-indigo-600 hover:bg-white transition-all rounded-xl"
-                onClick={resetFilters}
-                title="Reset filters & sort"
-            >
-                <RotateCcw className="h-4 w-4" />
-            </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11 text-slate-400 hover:text-[#8B5CF6] hover:bg-slate-50 transition-all rounded-md"
+            onClick={resetFilters}
+            title="Reset filters & sort"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
 
       {/* ─── Table ─── */}
-      <div className="rounded-3xl border border-slate-200 bg-white premium-shadow-sm overflow-hidden relative">
+      <div className="rounded-xl border-none bg-white premium-shadow overflow-hidden relative">
         <Table className="table-fixed w-full min-w-max border-collapse">
           <TableHeader className="bg-slate-50/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200">
             <TableRow className="hover:bg-transparent">
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.statusIcon }}
                 className="py-5 pl-8 relative"
               >
                 <div className="w-11" /> {/* Spacer for icon */}
               </TableHead>
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.recruiterCo }}
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('recruiterCo')}
@@ -676,7 +679,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'recruiterCo' ? 'bg-blue-500' : ''}`}
                 />
               </TableHead>
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.company }}
                 className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('company')}
@@ -687,7 +690,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'company' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.role }}
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('role')}
@@ -698,7 +701,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'role' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.status }}
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('status')}
@@ -709,7 +712,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'status' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.applicationDate }}
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('applicationDate')}
@@ -720,7 +723,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-indigo-500' : ''}`}
                 />
               </TableHead>
-              <TableHead 
+              <TableHead
                 style={{ width: columnWidths.latestActivityDate }}
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('latestActivityDate')}
@@ -741,8 +744,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
             {paginatedApplications.length > 0 ? (
               paginatedApplications.map((app) => (
                 <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 last:border-0 relative overflow-hidden">
-                  <TableCell 
-                    style={{ width: columnWidths.statusIcon }} 
+                  <TableCell
+                    style={{ width: columnWidths.statusIcon }}
                     className="pl-6 py-3"
                     onClick={() => setSelectedApp(app)}
                   >
@@ -767,7 +770,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   </TableCell>
                   <TableCell style={{ width: columnWidths.latestActivityDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
                     {app.latestActivityDate ? format(app.latestActivityDate, 'MMM d, yyyy') : (
-                        app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'
+                      app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'
                     )}
                   </TableCell>
                   <TableCell style={{ width: columnWidths._actions }} className="text-right pr-8">
@@ -802,11 +805,11 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableRow>
               ))
             ) : (
-                <TableRow>
-                    <TableCell colSpan={8} className="h-32 text-center text-slate-500 italic">
-                        No applications found matching your criteria.
-                    </TableCell>
-                </TableRow>
+              <TableRow>
+                <TableCell colSpan={8} className="h-32 text-center text-slate-500 italic">
+                  No applications found matching your criteria.
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
@@ -923,12 +926,12 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 <SheetTitle className="flex items-start justify-between gap-4">
                   <div className="flex flex-col">
                     <span className="text-3xl font-black text-slate-900 tracking-tight leading-none group flex items-center gap-2 mb-2">
-                        {selectedApp.company}
-                        {selectedApp.companyUrl && (
+                      {selectedApp.company}
+                      {selectedApp.companyUrl && (
                         <a href={selectedApp.companyUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-indigo-600 transition-all hover:scale-110">
-                            <ExternalLink size={18} strokeWidth={2.5} />
+                          <ExternalLink size={18} strokeWidth={2.5} />
                         </a>
-                        )}
+                      )}
                     </span>
                     <span className="text-slate-400 text-lg font-bold tracking-tight">{selectedApp.role}</span>
                   </div>
@@ -960,9 +963,9 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               <ScrollArea className="flex-1 min-h-0">
                 <div className="p-8 pt-6 pb-20">
                   <Tabs defaultValue="details" className="w-full">
-                    <TabsList className="mb-8 bg-slate-100/50 p-1.5 w-full justify-start h-12 rounded-[1rem] border border-slate-200/40">
-                      <TabsTrigger value="details" className="px-8 h-9 data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-md rounded-[0.75rem] text-[10px] font-bold uppercase tracking-widest transition-all">Details</TabsTrigger>
-                      <TabsTrigger value="timeline" className="px-8 h-9 data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-md rounded-[0.75rem] text-[10px] font-bold uppercase tracking-widest transition-all">Timeline</TabsTrigger>
+                    <TabsList className="mb-10 bg-slate-100/40 p-1 w-full justify-start h-11 rounded-md border-none">
+                      <TabsTrigger value="details" className="px-10 h-9 data-[state=active]:bg-white data-[state=active]:text-[#8B5CF6] data-[state=active]:shadow-sm rounded-md text-[10px] font-black uppercase tracking-widest transition-all">Details</TabsTrigger>
+                      <TabsTrigger value="timeline" className="px-10 h-9 data-[state=active]:bg-white data-[state=active]:text-[#8B5CF6] data-[state=active]:shadow-sm rounded-md text-[10px] font-black uppercase tracking-widest transition-all">Timeline</TabsTrigger>
                     </TabsList>
 
                     {/* ── DETAILS ── */}
@@ -972,11 +975,11 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                         <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">Job Specifications</h4>
                         <div className="grid grid-cols-2 gap-y-6 gap-x-10 text-sm">
                           <div className="col-span-2 bg-slate-50/50 p-5 rounded-2xl border border-slate-100/60 flex justify-between items-center mb-2">
-                             <div className="space-y-1">
-                               <span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Candidate</span>
-                               <span className="font-bold text-slate-900 text-lg">{selectedApp.name || '—'}</span>
-                             </div>
-                             <div className="text-3xl bg-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm border border-slate-100">{selectedApp.feel || '—'}</div>
+                            <div className="space-y-1">
+                              <span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Candidate</span>
+                              <span className="font-bold text-slate-900 text-lg">{selectedApp.name || '—'}</span>
+                            </div>
+                            <div className="text-3xl bg-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm border border-slate-100">{selectedApp.feel || '—'}</div>
                           </div>
                           <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Job Type</span><span className="font-bold text-slate-700">{selectedApp.jobType || '—'}</span></div>
                           <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Location Type</span><span className="font-bold text-slate-700">{selectedApp.locationType || '—'}</span></div>
@@ -1092,32 +1095,32 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                     {/* ── TIMELINE ── */}
                     <TabsContent value="timeline">
                       <div className="flex items-center gap-3 mb-8">
-                         <div className="w-1.5 h-6 bg-slate-900 rounded-full" />
-                         <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Journal</h3>
+                        <div className="w-1.5 h-6 bg-slate-900 rounded-full" />
+                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Journal</h3>
                       </div>
 
                       <AddTimelineEntry
                         appId={selectedApp.id}
-                        onSaved={() => {/* revalidation handles update */}}
+                        onSaved={() => {/* revalidation handles update */ }}
                       />
 
                       <div className="space-y-2">
                         {parseSteps(selectedApp.steps).length > 0 ? (
                           parseSteps(selectedApp.steps).map((step, idx) => (
-                            <TimelineItem 
-                                key={idx} 
-                                appId={selectedApp.id} 
-                                step={step} 
-                                idx={idx} 
-                                onDelete={handleTimelineDelete} 
+                            <TimelineItem
+                              key={idx}
+                              appId={selectedApp.id}
+                              step={step}
+                              idx={idx}
+                              onDelete={handleTimelineDelete}
                             />
                           ))
                         ) : (
                           <div className="flex flex-col items-center justify-center py-12 px-6 bg-slate-50/50 rounded-[2.5rem] border border-dashed border-slate-200">
-                             <History size={32} className="text-slate-300 mb-4" />
-                             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">
-                                No activity logged yet
-                             </p>
+                            <History size={32} className="text-slate-300 mb-4" />
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">
+                              No activity logged yet
+                            </p>
                           </div>
                         )}
                       </div>

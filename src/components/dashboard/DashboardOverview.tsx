@@ -12,20 +12,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ApplicationDialog } from '../ApplicationDialog';
 import { ChevronRight } from 'lucide-react';
 
-const COLORS = ['#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#64748B', '#8B5CF6', '#F43F5E', '#1E293B'];
+const COLORS = ['#8B5CF6', '#3B82F6', '#06B6D4', '#F59E0B', '#10B981', '#64748B', '#F43F5E'];
 
 const STATUS_COLORS: Record<string, string> = {
-  'applied': '#10B981',
-  'interviewing': '#3B82F6',
-  'screening': '#6366F1',
+  'applied': '#3B82F6',
+  'interviewing': '#8B5CF6',
+  'screening': '#8B5CF6',
   'technical interview': '#F59E0B',
-  'offer': '#8B5CF6',
+  'offer': '#10B981',
   'accepted': '#10B981',
-  'rejected': '#1E293B',
-  'closed': '#F43F5E',
-  'withdrawn': '#64748B',
+  'rejected': '#EF4444',
+  'closed': '#64748B',
+  'withdrawn': '#94A3B8',
   'on hold': '#94A3B8',
-  'prospecting': '#14B8A6',
+  'prospecting': '#06B6D4',
 };
 
 export function DashboardOverview({ applications }: { applications: any[] }) {
@@ -121,22 +121,22 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   if (applications.length === 0) {
     return (
       <div className="h-[70vh] flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-700">
-        <div className="w-24 h-24 bg-slate-100 rounded-[2.5rem] flex items-center justify-center mb-4 premium-shadow-sm border border-white">
+        <div className="w-24 h-24 bg-slate-50 rounded-xl flex items-center justify-center mb-8 border border-slate-100/50 shadow-sm">
           <Briefcase size={40} className="text-slate-300" />
         </div>
-        <div className="space-y-2">
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">No applications yet</h3>
-          <p className="text-slate-500 max-w-xs mx-auto text-sm leading-relaxed">
+        <div className="space-y-3">
+          <h3 className="text-3xl font-black text-slate-900 tracking-tight">No applications yet</h3>
+          <p className="text-slate-500 max-w-sm mx-auto text-base leading-relaxed">
             Your career dashboard is waiting for its first entry. Start tracking your journey today!
           </p>
         </div>
-        <div className="pt-4">
+        <div className="pt-8">
             <ApplicationDialog 
               mode="create" 
               trigger={
-                <button className="bg-slate-950 text-white px-8 py-4 rounded-[1.5rem] font-bold text-sm hover:bg-indigo-600 transition-all hover:scale-105 active:scale-95 premium-shadow flex items-center gap-2 group">
+                <button className="bg-slate-950 text-white px-10 py-4 rounded-md font-bold text-sm hover:bg-[#8B5CF6] transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 group shadow-lg shadow-purple-500/10">
                    Create your first application
-                   <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               } 
             />
@@ -154,8 +154,8 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">Recruit Intelligence Engine</p>
         </div>
         
-        <div className="glass-card p-2 rounded-[2rem] border-white/60 flex items-center gap-4 premium-shadow-sm pr-4">
-          <div className="p-3 rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-200 shrink-0">
+        <div className="bg-white p-2 rounded-xl border border-slate-100/80 flex items-center gap-4 pr-5 shadow-sm">
+          <div className="p-3 rounded-md bg-slate-950 text-white shrink-0 shadow-md shadow-slate-900/10">
             <Filter size={18} />
           </div>
           <div className="flex items-center gap-6">
@@ -163,43 +163,43 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">From</span>
               <div className="flex items-center gap-2">
                 <Select value={startYear} onValueChange={(v) => setStartYear(v ?? "")}>
-                  <SelectTrigger className="h-9 w-[90px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                  <SelectTrigger className="h-10 w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
-                    {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
+                  <SelectContent className="rounded-md p-1 border-slate-100">
+                    {years.map(y => <SelectItem key={y} value={y} className="rounded-sm">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={startMonth} onValueChange={(v) => setStartMonth(v ?? "")}>
-                  <SelectTrigger className="h-9 w-[100px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                  <SelectTrigger className="h-10 w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
-                    {months.map(m => <SelectItem key={m} value={m} className="rounded-lg">{m}</SelectItem>)}
+                  <SelectContent className="rounded-md p-1 border-slate-100">
+                    {months.map(m => <SelectItem key={m} value={m} className="rounded-sm">{m}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <div className="h-6 w-px bg-slate-200/60 shrink-0" />
+            <div className="h-5 w-px bg-slate-200" />
 
             <div className="flex items-center gap-3">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">To</span>
               <div className="flex items-center gap-2">
                 <Select value={endYear} onValueChange={(v) => setEndYear(v ?? "")}>
-                  <SelectTrigger className="h-9 w-[90px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                  <SelectTrigger className="h-10 w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
-                    {years.map(y => <SelectItem key={y} value={y} className="rounded-lg">{y}</SelectItem>)}
+                  <SelectContent className="rounded-md p-1 border-slate-100">
+                    {years.map(y => <SelectItem key={y} value={y} className="rounded-sm">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={endMonth} onValueChange={(v) => setEndMonth(v ?? "")}>
-                  <SelectTrigger className="h-9 w-[100px] rounded-xl border-slate-200/40 bg-white/50 focus:bg-white text-xs font-bold" size="sm">
+                  <SelectTrigger className="h-10 w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl p-1 premium-shadow border-slate-100">
-                    {months.map(m => <SelectItem key={m} value={m} className="rounded-lg">{m}</SelectItem>)}
+                  <SelectContent className="rounded-md p-1 border-slate-100">
+                    {months.map(m => <SelectItem key={m} value={m} className="rounded-sm">{m}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -212,45 +212,50 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Primary Metrics (Row 1) */}
         <MetricCard 
-          title="Total Volume" 
+          title="Total Applications" 
           value={stats.total} 
-          icon={Briefcase}
-          trend="+12% growth"
-          color="bg-indigo-600"
-          glowColor="rgba(79, 70, 229, 0.2)"
+          trend="+12%"
+          trendLabel="Volume trend"
+          color="bg-indigo-500"
+          gradient={['#8B5CF6', '#A78BFA', '#C4B5FD']}
+          data={[40, 60, 45, 90, 65, 80]}
         />
         <MetricCard 
-          title="In Progress" 
+          title="Active Pipeline" 
           value={stats.active} 
-          icon={Target}
-          trend="Active pipeline"
-          color="bg-blue-600"
-          glowColor="rgba(37, 99, 235, 0.2)"
+          trend="+5.6%"
+          trendLabel="Last 30 days"
+          color="bg-blue-500"
+          gradient={['#3B82F6', '#60A5FA', '#93C5FD']}
+          data={[30, 45, 70, 50, 90, 100]}
         />
         <MetricCard 
           title="Success Rate" 
           value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
-          icon={CheckCircle2}
-          trend={`${stats.offers} offers secured`}
-          color="bg-emerald-500"
-          glowColor="rgba(16, 185, 129, 0.2)"
+          trend="+0.6%"
+          trendLabel="Applied → Offer"
+          color="bg-cyan-500"
+          gradient={['#06B6D4', '#22D3EE', '#67E8F9']}
+          data={[20, 40, 30, 60, 50, 75]}
         />
         <MetricCard 
           title="Avg. Market Range" 
           value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
-          icon={Banknote}
-          trend="Gross yearly"
-          color="bg-amber-500"
-          glowColor="rgba(245, 158, 11, 0.2)"
+          trend="-0.4pts"
+          trendLabel="Gross yearly"
+          color="bg-slate-400"
+          gradient={['#94A3B8', '#CBD5E1', '#E2E8F0']}
+          data={[50, 40, 60, 45, 55, 40]}
+          isNegativeTrend
         />
 
         {/* Large Bento Sections (Row 2 & 3) */}
         
         {/* Status Chart (1 Column) */}
         <Card className="lg:col-span-1 bento-card">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-2 mb-8">
-                <div className="w-1.5 h-6 bg-slate-900 rounded-full" />
+          <CardContent className="p-10">
+            <div className="flex items-center gap-2.5 mb-10">
+                <div className="w-1 h-5 bg-slate-900 rounded-full" />
                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status Distribution</h3>
             </div>
             <div className="w-full relative" style={{ height: 400 }}>
@@ -306,10 +311,10 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
         {/* Momentum Chart (3 Columns) */}
         <Card className="lg:col-span-3 bento-card">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+          <CardContent className="p-10">
+            <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-1 h-5 bg-purple-600 rounded-full" />
                     <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Momentum</h3>
                 </div>
                 <div className="flex items-center gap-4">
@@ -324,8 +329,8 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                 <BarChart data={stats.activityData}>
                   <defs>
                     <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#6366F1" stopOpacity={1} />
-                      <stop offset="100%" stopColor="#818CF8" stopOpacity={0.8} />
+                      <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8} />
+                      <stop offset="100%" stopColor="#C4B5FD" stopOpacity={0.3} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="8 8" vertical={false} stroke="#f1f5f9" />
@@ -342,10 +347,10 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
                   />
                   <Tooltip 
-                    cursor={{ fill: '#f8fafc', radius: 16 }}
-                    contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '16px' }}
+                    cursor={{ fill: '#f8fafc', radius: 4 }}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 30px rgba(0,0,0,0.06)', padding: '16px' }}
                   />
-                  <Bar dataKey="count" fill="url(#barGradient)" radius={[12, 12, 12, 12]} barSize={40} />
+                  <Bar dataKey="count" fill="url(#barGradient)" radius={[4, 4, 0, 0]} barSize={40} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -356,26 +361,40 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   );
 }
 
-function MetricCard({ title, value, icon: Icon, trend, color, glowColor }: any) {
+function MetricCard({ title, value, trend, trendLabel, color, gradient, data, isNegativeTrend }: any) {
   return (
-    <Card className="rounded-[2.5rem] border-slate-200/60 shadow-sm bg-white hover:premium-shadow transition-all duration-300 border-white/60 group">
-      <CardContent className="p-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className={cn("p-3 rounded-2xl text-white shadow-lg transition-transform group-hover:scale-110 duration-300", color)} style={{ boxShadow: `0 8px 20px ${glowColor}` }}>
-            <Icon size={24} strokeWidth={2.5} />
+    <Card className="rounded-xl border-none premium-shadow bg-white hover:scale-[1.01] transition-all duration-500 group overflow-hidden">
+      <CardContent className="p-8 relative">
+        <div className="flex justify-between items-start mb-1">
+          <div>
+            <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.15em] mb-3">{title}</h4>
+            <div className="text-4xl font-black text-slate-900 leading-tight tracking-tight mb-2">
+                {value}
+            </div>
+            <div className="flex items-center gap-2">
+                <span className={cn(
+                    "text-[9px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1",
+                    isNegativeTrend ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-500"
+                )}>
+                    {isNegativeTrend ? "↘" : "↗"} {trend}
+                </span>
+                <span className="text-[9px] font-bold text-slate-300 uppercase tracking-tighter">{trendLabel}</span>
+            </div>
           </div>
         </div>
-        <div>
-          <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">{title}</h4>
-          <div className="text-4xl font-black text-slate-900 leading-tight tracking-tight">
-            {value}
-          </div>
-          {trend && (
-            <div className="flex items-center gap-1.5 mt-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{trend}</span>
-            </div>
-          )}
+
+        {/* Mini Sparkline Bar Chart */}
+        <div className="mt-8 h-12 flex items-end gap-1 px-1">
+            {data.map((h: number, i: number) => (
+                <div 
+                    key={i} 
+                    className="flex-1 rounded-sm transition-all duration-500 group-hover:opacity-100 opacity-40"
+                    style={{ 
+                        height: `${h}%`,
+                        backgroundColor: gradient[i % 3],
+                    }}
+                />
+            ))}
         </div>
       </CardContent>
     </Card>

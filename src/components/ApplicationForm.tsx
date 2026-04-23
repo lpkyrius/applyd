@@ -40,7 +40,7 @@ function FieldInput({ field, label, placeholder, type = 'text' }: any) {
           type={type}
           placeholder={placeholder}
           value={field.value ?? ''}
-          className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 transition-all bg-white/50 focus:bg-white"
+          className="h-12 text-sm rounded-md border-slate-100 bg-slate-50/30 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 transition-all focus:bg-white"
         />
       </FormControl>
       <FormMessage />
@@ -56,7 +56,7 @@ function FieldSelect({ field, label, options }: any) {
         <select
           {...field}
           value={field.value ?? ''}
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white/50 px-3 py-1 text-sm shadow-sm transition-all focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 appearance-none focus:bg-white"
+          className="h-12 w-full rounded-md border border-slate-100 bg-slate-50/30 px-4 py-1 text-sm transition-all focus:outline-none focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/5 appearance-none focus:bg-white"
         >
           <option value="">— Select —</option>
           {options.map((o: string) => (
@@ -78,8 +78,8 @@ function FieldTextarea({ field, label, placeholder }: any) {
           {...field}
           placeholder={placeholder}
           value={field.value ?? ''}
-          rows={3}
-          className="w-full rounded-xl border border-slate-200 bg-white/50 px-3 py-2 text-sm shadow-sm transition-all focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 resize-none focus:bg-white"
+          rows={4}
+          className="w-full rounded-md border border-slate-100 bg-slate-50/30 px-4 py-3 text-sm transition-all focus:outline-none focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/5 resize-none focus:bg-white"
         />
       </FormControl>
       <FormMessage />
@@ -198,7 +198,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
               <FormItem className="space-y-1.5">
                 <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gross From</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-12 text-sm rounded-md border-slate-100 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 bg-slate-50/30 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -206,7 +206,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
               <FormItem className="space-y-1.5">
                 <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gross To</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-12 text-sm rounded-md border-slate-100 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 bg-slate-50/30 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -217,7 +217,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
               <FormItem className="space-y-1.5">
                 <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Net From</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -225,7 +225,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
               <FormItem className="space-y-1.5">
                 <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Net To</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -289,7 +289,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
 
         <Button 
           type="submit" 
-          className="w-full h-12 bg-slate-950 hover:bg-indigo-600 text-white rounded-xl font-bold transition-all duration-300 premium-shadow hover:scale-[1.01] active:scale-[0.99] mt-8" 
+          className="w-full h-14 bg-slate-950 hover:bg-[#8B5CF6] text-white rounded-md font-bold transition-all duration-500 shadow-xl shadow-slate-900/10 hover:scale-[1.01] active:scale-[0.99] mt-10" 
           disabled={isPending}
         >
           {isPending ? 'Saving…' : id ? 'Update Application' : 'Create Application'}

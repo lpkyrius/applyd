@@ -39,13 +39,13 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
 }
 
 :root {
@@ -64,8 +64,8 @@
   --accent: oklch(0.6 0.18 260);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.6 0.2 25);
-  --border: oklch(0.9 0.03 260);
-  --input: oklch(0.9 0.03 260);
+  --border: oklch(0.95 0.01 260);
+  --input: oklch(0.95 0.01 260);
   --ring: oklch(0.6 0.18 260);
   --chart-1: oklch(0.2 0.05 260);
   --chart-2: oklch(0.6 0.18 260);
@@ -131,23 +131,23 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+    @apply bg-white/60 border border-slate-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.02)];
   }
   
   .glass-morphism {
-    @apply backdrop-blur-md bg-white/40 border border-white/20;
+    @apply bg-white/30 border border-slate-100/30;
   }
 
   .premium-shadow {
-    @apply shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)];
+    box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04);
   }
 
   .premium-shadow-sm {
-    @apply shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)];
+    box-shadow: 0 4px 15px rgb(0, 0, 0, 0.02);
   }
 
   .bento-card {
-    @apply bg-white rounded-[2.5rem] border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden;
+    @apply bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] transition-all duration-500 overflow-hidden;
   }
   
   .text-glow {

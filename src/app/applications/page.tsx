@@ -16,7 +16,7 @@ export default async function ApplicationsPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-4">
             <h1 className="text-4xl font-black text-slate-900 tracking-tight">Applications</h1>
-            <div className="bg-indigo-600 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-100">
+            <div className="bg-[#8B5CF6] text-white px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm">
               {applications.length} Active
             </div>
           </div>
@@ -27,7 +27,7 @@ export default async function ApplicationsPage() {
           <ApplicationDialog 
             mode="create" 
             trigger={
-                <button className="bg-slate-950 text-white px-8 py-4 rounded-[1.5rem] font-bold text-sm hover:bg-indigo-600 transition-all hover:scale-105 active:scale-95 premium-shadow flex items-center gap-2 group">
+                <button className="bg-slate-950 text-white px-6 py-3 rounded-md font-bold text-sm hover:bg-[#8B5CF6] transition-all hover:scale-[1.02] active:scale-95 border border-slate-900 flex items-center gap-2 group shadow-sm">
                    <Plus size={18} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
                    New Application
                 </button>

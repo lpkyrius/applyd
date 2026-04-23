@@ -23,8 +23,8 @@ export default async function DashboardPage() {
         </div>
         <div className="flex gap-3">
           <ApplicationDialog mode="create" trigger={
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-2xl font-semibold hover:bg-slate-800 transition-all flex items-center gap-2 shadow-lg shadow-slate-200">
-              <Plus size={18} /> New Application
+            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-md font-semibold hover:bg-[#8B5CF6] transition-all flex items-center gap-2 border border-slate-900 group shadow-sm">
+              <Plus size={18} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" /> New Application
             </button>
           } />
         </div>

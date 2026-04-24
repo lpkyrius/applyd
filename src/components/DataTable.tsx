@@ -123,30 +123,28 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
           <X size={18} strokeWidth={3} />
         </button>
       </div>
-      <div className="flex gap-3">
+      <div className="flex p-1 bg-slate-100/80 rounded-lg gap-1">
         <button
           onClick={() => setType('STEP')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-slate-950 text-white border-slate-950 shadow-sm' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'STEP' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
         >
-          <FileText size={14} /> Interview Step
+          <FileText size={12} className={type === 'STEP' ? 'text-[#8B5CF6]' : ''} /> Interview Step
         </button>
         <button
           onClick={() => setType('CONTACT')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'CONTACT' ? 'bg-slate-950 text-white border-slate-950 shadow-sm' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'CONTACT' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
         >
-          <MessageSquare size={14} /> Contact / Note
+          <MessageSquare size={12} className={type === 'CONTACT' ? 'text-[#8B5CF6]' : ''} /> Contact / Note
         </button>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
-          <input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm font-bold focus:bg-white focus:border-[#8B5CF6] focus:outline-none transition-all"
-          />
-        </div>
+      <div className="space-y-1.5">
+        <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
+        <input
+          type="date"
+          value={date}
+          onChange={e => setDate(e.target.value)}
+          className="w-full h-9 rounded-lg border border-slate-100 bg-slate-50/50 px-3 text-[13px] font-bold text-slate-700 focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+        />
       </div>
       <div className="space-y-1.5">
         <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Entry Details</label>
@@ -199,30 +197,28 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
             <X size={16} />
           </button>
         </div>
-        <div className="flex gap-3">
+        <div className="flex p-1 bg-slate-100/50 rounded-xl gap-1">
           <button
             onClick={() => setType('STEP')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'STEP' ? 'bg-[#8B5CF6] text-white border-[#8B5CF6] shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'STEP' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
           >
-            <FileText size={14} /> Interview Step
+            <FileText size={12} className={type === 'STEP' ? 'text-[#8B5CF6]' : ''} /> Interview Step
           </button>
           <button
             onClick={() => setType('CONTACT')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${type === 'CONTACT' ? 'bg-slate-900 text-white border-slate-900 shadow-lg' : 'border-slate-100 text-slate-400 hover:border-slate-200 bg-slate-50/50'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'CONTACT' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
           >
-            <MessageSquare size={14} /> Contact / Note
+            <MessageSquare size={12} className={type === 'CONTACT' ? 'text-[#8B5CF6]' : ''} /> Contact / Note
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
-            <input
-              type="date"
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              className="w-full h-11 rounded-xl border border-slate-100 bg-slate-50/50 px-4 text-sm font-bold focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
-            />
-          </div>
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Event Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            className="w-full h-9 rounded-lg border border-slate-100 bg-slate-50/50 px-3 text-[13px] font-bold text-slate-700 focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+          />
         </div>
         <div className="space-y-1.5">
           <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Entry Details</label>
@@ -415,7 +411,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         (app.company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.companyLocation?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+        (app.companyLocation?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (app.mainRecruiter?.toLowerCase() || '').includes(searchQuery.toLowerCase());
 
       const matchesStatus = statusFilter.length === 0 || statusFilter.includes(app.status);
       const matchesType = typeFilter.length === 0 || typeFilter.includes((app.jobType as string) || '');
@@ -505,11 +502,21 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   const getStatusColor = (status: string) => {
     const s = (status || '').toLowerCase()
-    if (s.includes('applied') || s.includes('prospec')) return 'bg-slate-50 text-slate-500 border-slate-100 font-bold tracking-tight px-3 py-1 rounded-md'
-    if (s.includes('interview') || s.includes('screening') || s.includes('test')) return 'bg-purple-50/50 text-[#8B5CF6] border-purple-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
-    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) return 'bg-red-50/50 text-red-500 border-red-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
-    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) return 'bg-emerald-50/50 text-emerald-600 border-emerald-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
-    return 'bg-slate-50/50 text-slate-400 border-slate-100/40 font-bold tracking-tight px-3 py-1 rounded-md'
+    const base = "text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border shadow-sm transition-all duration-300"
+    
+    if (s.includes('applied') || s.includes('prospec')) 
+      return cn(base, "bg-slate-50 text-slate-500 border-slate-200/60")
+    
+    if (s.includes('interview') || s.includes('screening') || s.includes('test')) 
+      return cn(base, "bg-indigo-50 text-indigo-600 border-indigo-100/80")
+    
+    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) 
+      return cn(base, "bg-rose-50 text-rose-500 border-rose-100/80")
+    
+    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) 
+      return cn(base, "bg-emerald-50 text-emerald-600 border-emerald-100/80")
+    
+    return cn(base, "bg-slate-50 text-slate-400 border-slate-200/60")
   }
 
 
@@ -937,7 +944,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                     </span>
                     <span className="text-slate-400 text-lg font-bold tracking-tight">{selectedApp.role}</span>
                   </div>
-                  <Badge className={cn("px-5 py-2 rounded-2xl border-white/40 shadow-lg text-xs font-bold uppercase tracking-wider self-start mt-1", getStatusColor(selectedApp.status))}>
+                  <Badge className={cn("self-start mt-1", getStatusColor(selectedApp.status))}>
                     {selectedApp.status}
                   </Badge>
                 </SheetTitle>

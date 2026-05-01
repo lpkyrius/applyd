@@ -25,7 +25,7 @@ export async function saveApplication(data: ApplicationFormData, id?: string) {
       await prisma.application.create({
         data: {
           ...payload,
-          steps: JSON.stringify([{ type: 'STEP', isStep: true, date: new Date(), description: 'Application recorded manually.' }])
+          steps: JSON.stringify([{ type: 'CONTACT', isStep: false, date: new Date(), description: 'Application recorded manually.' }])
         } as any
       });
     }

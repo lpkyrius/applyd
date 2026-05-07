@@ -17,7 +17,7 @@ import {
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
   ArrowUpDown, ArrowUp, ArrowDown, Users, Bell, Boxes, SlidersHorizontal,
   CheckCircle2, XCircle, PauseCircle, ChevronLeft, ChevronRight,
-  ChevronsLeft, ChevronsRight, FileText, MessageSquare, History
+  ChevronsLeft, ChevronsRight, FileText, MessageSquare, History, Star
 } from 'lucide-react'
 import {
   Select,
@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/select"
 import { cn } from '@/lib/utils'
 import { ApplicationDialog } from './ApplicationDialog'
-import { deleteApplication, addTimelineEntry, deleteTimelineEntry, updateTimelineEntry } from '@/lib/actions'
+import { deleteApplication, addTimelineEntry, deleteTimelineEntry, updateTimelineEntry, toggleFavorite } from '@/lib/actions'
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Step {
@@ -348,6 +348,7 @@ const renderStatusIcon = (status: string) => {
 
 // ─── Main component ──────────────────────────────────────────────────────────
 export function DataTable({ applications: initialApps }: { applications: any[] }) {
+  const [apps, setApps] = useState(initialApps)
   const [selectedApp, setSelectedApp] = useState<any | null>(null)
   const [isPending, startTransition] = useTransition()
 
@@ -355,6 +356,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [typeFilter, setTypeFilter] = useState<string[]>([])
+  const [favoriteFilter, setFavoriteFilter] = useState<boolean>(false)
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'latestActivityDate', direction: 'desc' })
 
   // Pagination states
@@ -363,7 +365,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   // Column Resizing state
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({
-    statusIcon: 60,
+    statusIcon: 80,
     recruiterCo: 180,
     company: 200,
     role: 300,
@@ -400,7 +402,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
   const filteredApplications = useMemo(() => {
     // 1. Calculate derived activity dates
-    const withActivity = initialApps.map(app => ({
+    const withActivity = apps.map(app => ({
       ...app,
       latestActivityDate: getLatestStepDate(app.steps)
     }));
@@ -416,8 +418,9 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
       const matchesStatus = statusFilter.length === 0 || statusFilter.includes(app.status);
       const matchesType = typeFilter.length === 0 || typeFilter.includes((app.jobType as string) || '');
+      const matchesFavorite = !favoriteFilter || app.isFavorite;
 
-      return matchesSearch && matchesStatus && matchesType;
+      return matchesSearch && matchesStatus && matchesType && matchesFavorite;
     });
 
     // 3. Sort
@@ -447,7 +450,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
-  }, [initialApps, searchQuery, statusFilter, typeFilter, sortConfig]);
+  }, [apps, searchQuery, statusFilter, typeFilter, favoriteFilter, sortConfig]);
 
   const paginatedApplications = useMemo(() => {
     const startIndex = (currentPage - 1) * rowsPerPage
@@ -457,10 +460,11 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   // Reset page on filter/search change
   React.useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, statusFilter, typeFilter])
+  }, [searchQuery, statusFilter, typeFilter, favoriteFilter])
 
-  // Keep selectedApp in sync when initialApps change
+  // Keep selectedApp and apps in sync when initialApps change
   React.useEffect(() => {
+    setApps(initialApps)
     if (selectedApp) {
       const updated = initialApps.find(a => a.id === selectedApp.id)
       if (updated) setSelectedApp(updated)
@@ -485,6 +489,18 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     }
   }
 
+  const toggleFavoriteApp = (id: string, isFavorite: boolean) => {
+    // Optimistic update
+    setApps(current => current.map(app => app.id === id ? { ...app, isFavorite } : app))
+
+    startTransition(async () => {
+      if (selectedApp?.id === id) {
+        setSelectedApp({ ...selectedApp, isFavorite })
+      }
+      await toggleFavorite(id, isFavorite)
+    })
+  }
+
   const handleTimelineDelete = (idx: number) => {
     if (!selectedApp) return
     if (!confirm("Remove this timeline entry?")) return
@@ -497,6 +513,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     setSearchQuery('')
     setStatusFilter([])
     setTypeFilter([])
+    setFavoriteFilter(false)
     setSortConfig({ key: 'latestActivityDate', direction: 'desc' })
   }
 
@@ -520,7 +537,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   }
 
 
-  const SortIndicator = ({ column }: { column: SortKey }) => {
+  const renderSortIndicator = (column: SortKey) => {
     if (sortConfig.key !== column) return <ArrowUpDown className="ml-2 h-3 w-3 opacity-30" />;
     return sortConfig.direction === 'asc' ? <ArrowUp className="ml-2 h-3 w-3 text-blue-600" /> : <ArrowDown className="ml-2 h-3 w-3 text-blue-600" />;
   };
@@ -653,6 +670,16 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
           <Button
             variant="ghost"
             size="icon"
+            className={cn("h-11 w-11 transition-all rounded-md", favoriteFilter ? "text-amber-500 bg-amber-50" : "text-slate-400 hover:text-amber-500 hover:bg-amber-50")}
+            onClick={() => setFavoriteFilter(!favoriteFilter)}
+            title="Filter by Favorites"
+          >
+            <Star className="h-4 w-4" fill={favoriteFilter ? "currentColor" : "none"} />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
             className="h-11 w-11 text-slate-400 hover:text-[#8B5CF6] hover:bg-slate-50 transition-all rounded-md"
             onClick={resetFilters}
             title="Reset filters & sort"
@@ -680,7 +707,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('recruiterCo')}
               >
-                <div className="flex items-center truncate">Recruiter Co. <SortIndicator column="recruiterCo" /></div>
+                <div className="flex items-center truncate">Recruiter Co. {renderSortIndicator("recruiterCo")}</div>
 
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'recruiterCo')}
@@ -692,7 +719,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('company')}
               >
-                <div className="flex items-center truncate">Company <SortIndicator column="company" /></div>
+                <div className="flex items-center truncate">Company {renderSortIndicator("company")}</div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'company')}
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'company' ? 'bg-indigo-500' : ''}`}
@@ -703,7 +730,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('role')}
               >
-                <div className="flex items-center truncate">Role <SortIndicator column="role" /></div>
+                <div className="flex items-center truncate">Role {renderSortIndicator("role")}</div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'role')}
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'role' ? 'bg-indigo-500' : ''}`}
@@ -714,7 +741,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                 onClick={() => handleSort('status')}
               >
-                <div className="flex items-center truncate">Status <SortIndicator column="status" /></div>
+                <div className="flex items-center truncate">Status {renderSortIndicator("status")}</div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'status')}
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'status' ? 'bg-indigo-500' : ''}`}
@@ -725,7 +752,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('applicationDate')}
               >
-                <div className="flex items-center truncate">Date Applied <SortIndicator column="applicationDate" /></div>
+                <div className="flex items-center truncate">Date Applied {renderSortIndicator("applicationDate")}</div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'applicationDate')}
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-indigo-500' : ''}`}
@@ -736,7 +763,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                 onClick={() => handleSort('latestActivityDate')}
               >
-                <div className="flex items-center truncate">Latest Activity <SortIndicator column="latestActivityDate" /></div>
+                <div className="flex items-center truncate">Latest Activity {renderSortIndicator("latestActivityDate")}</div>
                 <div
                   onMouseDown={(e) => handleResizeStart(e, 'latestActivityDate')}
                   className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-indigo-500' : ''}`}
@@ -754,10 +781,18 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 last:border-0 relative overflow-hidden">
                   <TableCell
                     style={{ width: columnWidths.statusIcon }}
-                    className="pl-6 py-3"
+                    className="pl-4 py-3"
                     onClick={() => setSelectedApp(app)}
                   >
-                    {renderStatusIcon(app.status)}
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); toggleFavoriteApp(app.id, !app.isFavorite); }}
+                        className={cn("transition-colors focus:outline-none", app.isFavorite ? "text-amber-400 hover:text-amber-500" : "text-slate-200 hover:text-amber-400")}
+                      >
+                        <Star className="h-4 w-4" fill={app.isFavorite ? "currentColor" : "none"} />
+                      </button>
+                      {renderStatusIcon(app.status)}
+                    </div>
                   </TableCell>
                   <TableCell style={{ width: columnWidths.recruiterCo }} className="text-sm font-medium text-slate-600 truncate" onClick={() => setSelectedApp(app)}>
                     {app.recruiterCo && app.recruiterCo !== '#NotInformed' ? app.recruiterCo : <span className="text-slate-300 font-medium italic">Not specified</span>}

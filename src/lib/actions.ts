@@ -31,6 +31,7 @@ export async function saveApplication(data: ApplicationFormData, id?: string) {
     }
 
     revalidatePath('/');
+    revalidatePath('/applications');
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -41,6 +42,7 @@ export async function deleteApplication(id: string) {
   try {
     await prisma.application.delete({ where: { id } });
     revalidatePath('/');
+    revalidatePath('/applications');
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -77,6 +79,7 @@ export async function addTimelineEntry(
     });
 
     revalidatePath('/');
+    revalidatePath('/applications');
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -102,6 +105,7 @@ export async function deleteTimelineEntry(appId: string, index: number) {
     });
 
     revalidatePath('/');
+    revalidatePath('/applications');
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -141,6 +145,21 @@ export async function updateTimelineEntry(
     });
 
     revalidatePath('/');
+    revalidatePath('/applications');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function toggleFavorite(appId: string, isFavorite: boolean) {
+  try {
+    await prisma.application.update({
+      where: { id: appId },
+      data: { isFavorite }
+    });
+    revalidatePath('/');
+    revalidatePath('/applications');
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };

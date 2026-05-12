@@ -115,4 +115,6 @@ This project is licensed under a custom license:
 * **Contributions:** Code improvements through PRs are encouraged.
 * **Commercial Use:** **Prohibited.** This software may not be commercialized, sold, or redistributed as part of paid packages by third parties.
 
+Licensed under CC BY-NC 4.0. See LICENSE file for details.
+
 Developed with ❤️ by [Leandro Passos](https://github.com/leandropassos).

@@ -4,8 +4,11 @@
 
 **Applyd** is a high-density dashboard designed for tech professionals to manage and track job applications with surgical precision. Unlike generic spreadsheets or cloud platforms, Applyd offers a powerful, "local-first" interface focused on productivity, deep technical tracking, and total privacy.
 
-This project is offered as an exclusive resource and an integral part of the course:
-🚀 **[International Job Interview Mastery for Tech Professionals](https://bit.ly/jobinterviewmastery)**
+This project is offered an integral part of the course:
+
+🚀 **[International Job Interview Mastery for Tech Professionals - link 1](https://bit.ly/jobinterviewmastery)**
+
+🚀 **[International Job Interview Mastery for Tech Professionals - link 2](https://www.udemy.com/course/international-job-interview-mastery-for-tech-professionals/?referralCode=55CC8B244F35504A079B)**
 
 ---
 

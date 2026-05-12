@@ -1,58 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Applyd — High-Density Job Application Tracker
 
-## Getting Started
+![Applyd Dashboard](images/dashboard1.png)
 
-First, run the development server:
+**Applyd** is a high-density dashboard designed for tech professionals to manage and track job applications with surgical precision. Unlike generic spreadsheets or cloud platforms, Applyd offers a powerful, "local-first" interface focused on productivity, deep technical tracking, and total privacy.
+
+This project is offered as an exclusive resource and an integral part of the course:
+🚀 **[International Job Interview Mastery for Tech Professionals](https://bit.ly/jobinterviewmastery)**
+
+---
+
+## 🔒 "Local-First" Privacy & Portability
+
+Unlike other job tracking tools, Applyd was built with the philosophy that **your data belongs to you**. 
+
+- **No Cloud Dependency:** There is no online database sharing your information.
+- **SQLite Persistence:** The project uses a local SQLite database file.
+- **Automatic Sync:** By defining an **absolute path** in your `DATABASE_URL`, you can keep your database in a synced folder (e.g., Google Drive, OneDrive, or Dropbox) for automatic backups and seamless cross-machine work without third-party access.
+
+---
+
+## ✨ Key Features
+
+### 📊 Intelligent Dashboard
+The Dashboard provides a macro view of your job market health.
+![Applyd Dashboard](images/dashboard1.png)
+- **Automatic Calculations:** Processes conversion rates between stages (e.g., Applied -> Interview).
+- **Salary Tracking:** Native support for gross/net salary conversions across different periods (hour, day, month, year).
+- **Modern Visualization:** Built with **Tailwind CSS v4** for a premium, high-performance look and feel.
+
+### 📝 Application Management
+A high-density table that allows managing dozens of processes simultaneously.
+![Applications View](images/applications1.png)
+- **Interview Timeline (JSON):** A flexible field to record every interaction (Steps or Contacts) chronologically.
+![Applications View](images/time-line.png)
+- **Interactive UI:** Supports **dynamic column resizing** (drag header edges) and advanced filtering by company, role, or recruiter.
+- **Form Validation:** Robust data entry powered by **React Hook Form** and **Zod**.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS v4 & shadcn/ui
+- **ORM:** Prisma v6
+- **Database:** SQLite (Local)
+- **Validation:** Zod
+
+---
+
+## 🚀 Setup & Running
+
+### 1. Prerequisites
+- Node.js (v18+)
+- npm
+
+### 2. Configuration
+Copy the template environment file and adjust the `DATABASE_URL` to your preference:
+
+```bash
+cp .env.example .env
+```
+
+In your `.env` file, you **MUST** define the `DATABASE_URL`. Use an absolute path for sync capabilities:
+
+```env
+# Example for macOS/Linux
+DATABASE_URL="file:/Users/YOUR_USER/Path/To/Your/SyncFolder/dev.db"
+
+# Example for Windows
+DATABASE_URL="file:C:/Users/YOUR_USER/Path/To/Your/SyncFolder/dev.db"
+
+```
+
+### 3. Installation & Database Setup
+
+Install dependencies and run Prisma migrations to initialize your local database:
+
+```bash
+npm install
+npx prisma migrate dev
+
+```
+
+### 4. Run the Application
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🤝 Contributions (Open Source)
 
-## Dashboard Analytics
+This is an open project and contributions are very welcome! If you have an idea for a new feature or found a bug:
 
-The insights dashboard provides a data-driven overview of your career progression. Below is the logic behind the key metrics:
+1. **Fork** the project.
+2. Create a **Branch** (`git checkout -b feature/NewFeature`).
+3. **Commit** your changes (`git commit -m 'Add: New feature'`).
+4. **Push** to the Branch and open a **Pull Request**.
 
-### 1. Active Pipeline
-Represents the count of applications that are currently "live" within the selected date range.
-- **Filter Logic**: It excludes any application containing terminal keywords such as `Rejected`, `Denied`, `Closed`, or `Withdrawn`.
-- **Included Statuses**: All other states (e.g., `Applied`, `Interview`, `Negotiating`) are counted as part of the active funnel.
+---
 
-### 2. Application Momentum
-A bar chart visualization of your submission volume over time.
-- **Grouping**: Data is aggregated by month and year based on the `applicationDate`.
-- **Range**: Dynamically updates to reflect the period selected in the dashboard filters.
+## ⚖️ License
 
-### 3. Avg. Market Range
-The average salary potential across your current opportunities.
-- **Normalization**: Uses a `toYearly` utility to convert all salary periods (Hourly, Daily, Monthly) into a standardized **Gross Yearly** amount.
-- **Calculation**: Computes the mean of the `grossSalTo` values for all applications in the active filtered set.
+This project is licensed under a custom license:
 
-### 4. Status Analysis
-A breakdown of your applications by their current stage, providing a snapshot of your funnel health and identifying where most opportunities are concentrated.
+* **Personal & Educational Use:** Free to use, modify, and study.
+* **Contributions:** Code improvements through PRs are encouraged.
+* **Commercial Use:** **Prohibited.** This software may not be commercialized, sold, or redistributed as part of paid packages by third parties.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Developed with ❤️ by [Leandro Passos](https://github.com/leandropassos).

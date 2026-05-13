@@ -936,7 +936,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
       {/* ─── Detail Sheet ─── */}
       <Sheet open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>
-        <SheetContent className="sm:max-w-2xl border-l border-slate-200 bg-white p-0 shadow-2xl flex flex-col h-full overflow-hidden">
+        <SheetContent className="w-[50%] sm:max-w-none data-[side=right]:sm:max-w-[50%] border-l border-slate-200 bg-white p-0 shadow-2xl flex flex-col h-full overflow-hidden">
           {selectedApp && (
             <>
               {/* Header */}

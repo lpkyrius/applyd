@@ -5,7 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, LineChart, Line
 } from 'recharts';
-import { AlertCircle, Banknote, Briefcase, Calendar, CheckCircle2, Clock, Target, TrendingUp, Users, Filter } from 'lucide-react';
+import { AlertCircle, Banknote, Briefcase, Calendar, CheckCircle2, Clock, Target, TrendingUp, Users, Filter, Info } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -56,31 +56,33 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   const [endYear, setEndYear] = React.useState(defaultDates.endY);
   const [endMonth, setEndMonth] = React.useState(defaultDates.endM);
 
-  const filteredApps = useMemo(() => {
+  const { filteredApps, prevFilteredApps } = useMemo(() => {
     const sVal = parseInt(startYear) * 12 + months.indexOf(startMonth);
     const eVal = parseInt(endYear) * 12 + months.indexOf(endMonth);
+    const duration = eVal - sVal;
     
-    return applications.filter(app => {
-      if (!app.applicationDate) return false;
+    const psVal = sVal - 1 - duration;
+    const peVal = sVal - 1;
+
+    const current: any[] = [];
+    const previous: any[] = [];
+
+    applications.forEach(app => {
+      if (!app.applicationDate) return;
       const d = new Date(app.applicationDate);
-      const currentVal = d.getFullYear() * 12 + d.getMonth();
-      return currentVal >= sVal && currentVal <= eVal;
+      const val = d.getFullYear() * 12 + d.getMonth();
+      
+      if (val >= sVal && val <= eVal) {
+        current.push(app);
+      } else if (val >= psVal && val <= peVal) {
+        previous.push(app);
+      }
     });
+    
+    return { filteredApps: current, prevFilteredApps: previous };
   }, [applications, startYear, startMonth, endYear, endMonth]);
 
   const stats = useMemo(() => {
-    const total = filteredApps.length;
-    const active = filteredApps.filter(a => !['rejected', 'denied', 'closed', 'withdrawn'].some(s => a.status.toLowerCase().includes(s))).length;
-    const offers = filteredApps.filter(a => ['offer', 'accepted'].some(s => a.status.toLowerCase().includes(s))).length;
-    
-    const statusCounts = filteredApps.reduce((acc: any, app) => {
-      const status = app.status;
-      acc[status] = (acc[status] || 0) + 1;
-      return acc;
-    }, {});
-
-    const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
-
     const toYearly = (value: number, period: string | null | undefined): number => {
       switch ((period || 'year').toLowerCase()) {
         case 'hour':  return value * 8 * 220;
@@ -89,10 +91,41 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
         default:      return value;
       }
     };
-    const salApps = filteredApps.filter(a => a.grossSalTo > 0);
-    const avgGross = salApps.length > 0
-      ? salApps.reduce((acc, a) => acc + toYearly(a.grossSalTo, a.salaryPeriod), 0) / salApps.length
-      : 0;
+
+    const getMetrics = (apps: any[]) => {
+      const total = apps.length;
+      const active = apps.filter(a => !['rejected', 'denied', 'closed', 'withdrawn'].some(s => a.status.toLowerCase().includes(s))).length;
+      const offers = apps.filter(a => ['offer', 'accepted'].some(s => a.status.toLowerCase().includes(s))).length;
+      const successRate = total > 0 ? (offers / total) * 100 : 0;
+      
+      const salApps = apps.filter(a => a.grossSalTo > 0);
+      const avgGross = salApps.length > 0
+        ? salApps.reduce((acc, a) => acc + toYearly(a.grossSalTo, a.salaryPeriod), 0) / salApps.length
+        : 0;
+
+      return { total, active, offers, successRate, avgGross };
+    };
+
+    const current = getMetrics(filteredApps);
+    const previous = getMetrics(prevFilteredApps);
+
+    const calculateTrend = (curr: number, prev: number, isPoints = false) => {
+      if (prev === 0) return { trend: curr > 0 ? '+100%' : '0%', isNegative: false };
+      if (isPoints) {
+        const diff = curr - prev;
+        return { trend: `${diff > 0 ? '+' : ''}${diff.toFixed(1)}pts`, isNegative: diff < 0 };
+      }
+      const pct = ((curr - prev) / prev) * 100;
+      return { trend: `${pct > 0 ? '+' : ''}${pct.toFixed(1)}%`, isNegative: pct < 0 };
+    };
+
+    const statusCounts = filteredApps.reduce((acc: any, app) => {
+      const status = app.status;
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+
+    const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
 
     const counts: any = {};
     filteredApps.forEach(app => {
@@ -120,8 +153,21 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       }
     }
 
-    return { total, active, offers, statusData, avgGross, activityData };
-  }, [filteredApps, startYear, startMonth, endYear, endMonth]);
+    return { 
+      total: current.total, 
+      active: current.active, 
+      offers: current.offers, 
+      avgGross: current.avgGross,
+      trends: {
+        total: calculateTrend(current.total, previous.total),
+        active: calculateTrend(current.active, previous.active),
+        success: calculateTrend(current.successRate, previous.successRate, true),
+        avgGross: calculateTrend(current.avgGross, previous.avgGross)
+      },
+      statusData, 
+      activityData 
+    };
+  }, [filteredApps, prevFilteredApps, startYear, startMonth, endYear, endMonth]);
 
   if (!isMounted) {
     return <div className="h-[70vh] flex items-center justify-center text-slate-300">Loading Dashboard...</div>;
@@ -228,49 +274,55 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           <MetricCard 
             title="Total Applications" 
             value={stats.total} 
-            trend="+12%"
+            trend={stats.trends.total.trend}
             trendLabel="Volume trend"
             color="bg-indigo-500"
             gradient={['#8B5CF6', '#A78BFA', '#C4B5FD']}
             data={[40, 60, 45, 90, 65, 80]}
+            isNegativeTrend={stats.trends.total.isNegative}
+            description="Total number of job applications submitted within the selected date range."
           />
         </div>
         <div className="lg:col-span-3">
           <MetricCard 
             title="Active Pipeline" 
             value={stats.active} 
-            trend="+5.6%"
+            trend={stats.trends.active.trend}
             trendLabel="Last 30 days"
             color="bg-blue-500"
             gradient={['#3B82F6', '#60A5FA', '#93C5FD']}
             data={[30, 45, 70, 50, 90, 100]}
+            isNegativeTrend={stats.trends.active.isNegative}
+            description="Number of applications currently in progress, excluding rejected, closed, or withdrawn status."
           />
         </div>
         <div className="lg:col-span-3">
           <MetricCard 
             title="Success Rate" 
             value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
-            trend="+0.6%"
+            trend={stats.trends.success.trend}
             trendLabel="Applied → Offer"
             color="bg-cyan-500"
             gradient={['#06B6D4', '#22D3EE', '#67E8F9']}
             data={[20, 40, 30, 60, 50, 75]}
+            isNegativeTrend={stats.trends.success.isNegative}
+            description="Percentage of total applications that reached an 'Offer' or 'Accepted' status."
           />
         </div>
         <div className="lg:col-span-3">
           <MetricCard 
             title="Avg. Market Range" 
             value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
-            trend="-0.4pts"
+            trend={stats.trends.avgGross.trend}
             trendLabel="Gross yearly"
             color="bg-slate-400"
             gradient={['#94A3B8', '#CBD5E1', '#E2E8F0']}
             data={[50, 40, 60, 45, 55, 40]}
-            isNegativeTrend
+            isNegativeTrend={stats.trends.avgGross.isNegative}
+            description="Average upper-bound gross annual salary from all applications with provided salary data."
           />
         </div>
-
-        {/* Large Bento Sections (Row 2 & 3) */}
+      </div>
         
         {/* Status Chart (Increase to 5 columns out of 12) */}
         <Card className="lg:col-span-5 bento-card overflow-hidden">
@@ -383,14 +435,26 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           </CardContent>
         </Card>
       </div>
-    </div>
   );
 }
 
-function MetricCard({ title, value, trend, trendLabel, color, gradient, data, isNegativeTrend }: any) {
+function MetricCard({ title, value, trend, trendLabel, color, gradient, data, isNegativeTrend, description }: any) {
   return (
-    <Card className="rounded-xl border-none premium-shadow bg-white hover:scale-[1.01] transition-all duration-500 group overflow-hidden">
+    <Card className="rounded-xl border-none premium-shadow bg-white hover:scale-[1.01] transition-all duration-500 group overflow-hidden relative">
       <CardContent className="p-8 relative">
+        {/* Tooltip */}
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+           <div className="relative flex items-center justify-center">
+              <div className="peer cursor-help p-1 rounded-full hover:bg-slate-50 transition-colors">
+                <Info size={14} className="text-slate-300 hover:text-slate-600 transition-colors" />
+              </div>
+              <div className="absolute right-0 top-7 w-48 p-3 bg-slate-900/95 backdrop-blur-sm text-white text-[10px] font-medium rounded-lg shadow-xl opacity-0 peer-hover:opacity-100 translate-y-1 peer-hover:translate-y-0 transition-all duration-300 pointer-events-none z-50 leading-relaxed border border-white/10">
+                <div className="absolute -top-1 right-2 w-2 h-2 bg-slate-900 rotate-45" />
+                {description}
+              </div>
+           </div>
+        </div>
+
         <div className="flex justify-between items-start mb-1">
           <div>
             <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.15em] mb-3">{title}</h4>

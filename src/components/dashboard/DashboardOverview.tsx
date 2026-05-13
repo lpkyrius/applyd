@@ -281,6 +281,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             data={[40, 60, 45, 90, 65, 80]}
             isNegativeTrend={stats.trends.total.isNegative}
             description="Total number of job applications submitted within the selected date range."
+            trendDescription="Calculated as the percentage change compared to the preceding period of the same duration."
           />
         </div>
         <div className="lg:col-span-3">
@@ -294,6 +295,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             data={[30, 45, 70, 50, 90, 100]}
             isNegativeTrend={stats.trends.active.isNegative}
             description="Number of applications currently in progress, excluding rejected, closed, or withdrawn status."
+            trendDescription="The percentage change in active applications compared to the preceding period."
           />
         </div>
         <div className="lg:col-span-3">
@@ -307,6 +309,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             data={[20, 40, 30, 60, 50, 75]}
             isNegativeTrend={stats.trends.success.isNegative}
             description="Percentage of total applications that reached an 'Offer' or 'Accepted' status."
+            trendDescription="The difference in percentage points (pts) compared to the preceding period."
           />
         </div>
         <div className="lg:col-span-3">
@@ -320,6 +323,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             data={[50, 40, 60, 45, 55, 40]}
             isNegativeTrend={stats.trends.avgGross.isNegative}
             description="Average upper-bound gross annual salary from all applications with provided salary data."
+            trendDescription="The percentage change in average salary upper-bound compared to the preceding period."
           />
         </div>
       </div>
@@ -438,17 +442,17 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   );
 }
 
-function MetricCard({ title, value, trend, trendLabel, color, gradient, data, isNegativeTrend, description }: any) {
+function MetricCard({ title, value, trend, trendLabel, color, gradient, data, isNegativeTrend, description, trendDescription }: any) {
   return (
     <Card className="rounded-xl border-none premium-shadow bg-white hover:scale-[1.01] transition-all duration-500 group overflow-hidden relative">
       <CardContent className="p-8 relative">
-        {/* Tooltip */}
+        {/* Card Info Tooltip */}
         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
            <div className="relative flex items-center justify-center">
-              <div className="peer cursor-help p-1 rounded-full hover:bg-slate-50 transition-colors">
+              <div className="peer/cardinfo cursor-help p-1 rounded-full hover:bg-slate-50 transition-colors">
                 <Info size={14} className="text-slate-300 hover:text-slate-600 transition-colors" />
               </div>
-              <div className="absolute right-0 top-7 w-48 p-3 bg-slate-900/95 backdrop-blur-sm text-white text-[10px] font-medium rounded-lg shadow-xl opacity-0 peer-hover:opacity-100 translate-y-1 peer-hover:translate-y-0 transition-all duration-300 pointer-events-none z-50 leading-relaxed border border-white/10">
+              <div className="absolute right-0 top-7 w-48 p-3 bg-slate-900 backdrop-blur-sm text-white text-[10px] font-medium rounded-lg shadow-xl opacity-0 peer-hover/cardinfo:opacity-100 translate-y-1 peer-hover/cardinfo:translate-y-0 transition-all duration-300 pointer-events-none z-50 leading-relaxed border border-white/10">
                 <div className="absolute -top-1 right-2 w-2 h-2 bg-slate-900 rotate-45" />
                 {description}
               </div>
@@ -462,12 +466,21 @@ function MetricCard({ title, value, trend, trendLabel, color, gradient, data, is
                 {value}
             </div>
             <div className="flex items-center gap-2">
-                <span className={cn(
-                    "text-[9px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1",
-                    isNegativeTrend ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-500"
-                )}>
-                    {isNegativeTrend ? "↘" : "↗"} {trend}
-                </span>
+                <div className="relative flex items-center group/trend">
+                    <div className="flex items-center gap-1.5 cursor-help">
+                        <span className={cn(
+                            "text-[9px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1",
+                            isNegativeTrend ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-500"
+                        )}>
+                            {isNegativeTrend ? "↘" : "↗"} {trend}
+                        </span>
+                        <Info size={8} className="text-slate-300 group-hover/trend:text-slate-500 transition-colors" />
+                    </div>
+                    <div className="absolute bottom-full left-0 mb-2 w-48 p-3 bg-slate-900 backdrop-blur-sm text-white text-[10px] font-medium rounded-lg shadow-xl opacity-0 group-hover/trend:opacity-100 translate-y-1 group-hover/trend:translate-y-0 transition-all duration-300 pointer-events-none z-50 leading-relaxed border border-white/10">
+                        <div className="absolute -bottom-1 left-4 w-2 h-2 bg-slate-900 rotate-45" />
+                        {trendDescription}
+                    </div>
+                </div>
                 <span className="text-[9px] font-bold text-slate-300 uppercase tracking-tighter">{trendLabel}</span>
             </div>
           </div>

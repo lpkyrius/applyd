@@ -48,6 +48,8 @@ model Application {
   finalFeedback      String?
   steps              String // JSON stringified: Array<{ type: 'STEP' | 'CONTACT', isStep: boolean, date: DateTime, description: string }>
   isFavorite         Boolean  @default(false)
+  attachmentPath     String?
+  attachmentName     String?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }

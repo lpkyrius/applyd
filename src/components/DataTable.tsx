@@ -17,7 +17,8 @@ import {
   MoreHorizontal, Edit, Trash2, Plus, X, Search, Filter, RotateCcw,
   ArrowUpDown, ArrowUp, ArrowDown, Users, Bell, Boxes, SlidersHorizontal,
   CheckCircle2, XCircle, PauseCircle, ChevronLeft, ChevronRight,
-  ChevronsLeft, ChevronsRight, FileText, MessageSquare, History, Star
+  ChevronsLeft, ChevronsRight, FileText, MessageSquare, History, Star,
+  Paperclip
 } from 'lucide-react'
 import {
   Select,
@@ -357,6 +358,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [typeFilter, setTypeFilter] = useState<string[]>([])
   const [favoriteFilter, setFavoriteFilter] = useState<boolean>(false)
+  const [attachmentFilter, setAttachmentFilter] = useState<boolean>(false)
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'latestActivityDate', direction: 'desc' })
 
   // Pagination states
@@ -408,19 +410,25 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     }));
 
     // 2. Filter
+    const removeAccents = (str: string) => 
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    const query = removeAccents(searchQuery.toLowerCase());
+
     const filtered = withActivity.filter(app => {
       const matchesSearch =
-        (app.company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.recruiterCo?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.companyLocation?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (app.mainRecruiter?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+        removeAccents(app.company?.toLowerCase() || '').includes(query) ||
+        removeAccents(app.role?.toLowerCase() || '').includes(query) ||
+        removeAccents(app.recruiterCo?.toLowerCase() || '').includes(query) ||
+        removeAccents(app.companyLocation?.toLowerCase() || '').includes(query) ||
+        removeAccents(app.mainRecruiter?.toLowerCase() || '').includes(query);
 
       const matchesStatus = statusFilter.length === 0 || statusFilter.includes(app.status);
       const matchesType = typeFilter.length === 0 || typeFilter.includes((app.jobType as string) || '');
       const matchesFavorite = !favoriteFilter || app.isFavorite;
+      const matchesAttachment = !attachmentFilter || !!app.attachmentPath;
 
-      return matchesSearch && matchesStatus && matchesType && matchesFavorite;
+      return matchesSearch && matchesStatus && matchesType && matchesFavorite && matchesAttachment;
     });
 
     // 3. Sort
@@ -450,7 +458,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
-  }, [apps, searchQuery, statusFilter, typeFilter, favoriteFilter, sortConfig]);
+  }, [apps, searchQuery, statusFilter, typeFilter, favoriteFilter, attachmentFilter, sortConfig]);
 
   const paginatedApplications = useMemo(() => {
     const startIndex = (currentPage - 1) * rowsPerPage
@@ -460,7 +468,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   // Reset page on filter/search change
   React.useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, statusFilter, typeFilter, favoriteFilter])
+  }, [searchQuery, statusFilter, typeFilter, favoriteFilter, attachmentFilter])
 
   // Keep selectedApp and apps in sync when initialApps change
   React.useEffect(() => {
@@ -514,25 +522,26 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     setStatusFilter([])
     setTypeFilter([])
     setFavoriteFilter(false)
+    setAttachmentFilter(false)
     setSortConfig({ key: 'latestActivityDate', direction: 'desc' })
   }
 
   const getStatusColor = (status: string) => {
     const s = (status || '').toLowerCase()
     const base = "text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border shadow-sm transition-all duration-300"
-    
-    if (s.includes('applied') || s.includes('prospec')) 
+
+    if (s.includes('applied') || s.includes('prospec'))
       return cn(base, "bg-slate-50 text-slate-500 border-slate-200/60")
-    
-    if (s.includes('interview') || s.includes('screening') || s.includes('test')) 
+
+    if (s.includes('interview') || s.includes('screening') || s.includes('test'))
       return cn(base, "bg-indigo-50 text-indigo-600 border-indigo-100/80")
-    
-    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn')) 
+
+    if (s.includes('rejected') || s.includes('denied') || s.includes('closed') || s.includes('withdrawn'))
       return cn(base, "bg-rose-50 text-rose-500 border-rose-100/80")
-    
-    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat')) 
+
+    if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat'))
       return cn(base, "bg-emerald-50 text-emerald-600 border-emerald-100/80")
-    
+
     return cn(base, "bg-slate-50 text-slate-400 border-slate-200/60")
   }
 
@@ -676,6 +685,16 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
           >
             <Star className="h-4 w-4" fill={favoriteFilter ? "currentColor" : "none"} />
           </Button>
+ 
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn("h-11 w-11 transition-all rounded-md", attachmentFilter ? "text-[#8B5CF6] bg-purple-50" : "text-slate-400 hover:text-[#8B5CF6] hover:bg-purple-50")}
+            onClick={() => setAttachmentFilter(!attachmentFilter)}
+            title="Filter by Attachments"
+          >
+            <Paperclip className="h-4 w-4" />
+          </Button>
 
           <Button
             variant="ghost"
@@ -694,169 +713,176 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
       <div className="bg-white rounded-xl border border-slate-100 premium-shadow overflow-hidden group/table">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200">
           <Table className="table-fixed w-full min-w-[1000px] border-collapse">
-          <TableHeader className="bg-slate-50/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200">
-            <TableRow className="hover:bg-transparent">
-              <TableHead
-                style={{ width: columnWidths.statusIcon }}
-                className="py-5 pl-8 relative"
-              >
-                <div className="w-11" /> {/* Spacer for icon */}
-              </TableHead>
-              <TableHead
-                style={{ width: columnWidths.recruiterCo }}
-                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
-                onClick={() => handleSort('recruiterCo')}
-              >
-                <div className="flex items-center truncate">Recruiter Co. {renderSortIndicator("recruiterCo")}</div>
+            <TableHeader className="bg-slate-50/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200">
+              <TableRow className="hover:bg-transparent">
+                <TableHead
+                  style={{ width: columnWidths.statusIcon }}
+                  className="py-5 pl-8 relative"
+                >
+                  <div className="w-11" /> {/* Spacer for icon */}
+                </TableHead>
+                <TableHead
+                  style={{ width: columnWidths.recruiterCo }}
+                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  onClick={() => handleSort('recruiterCo')}
+                >
+                  <div className="flex items-center truncate">Recruiter Co. {renderSortIndicator("recruiterCo")}</div>
 
-                <div
-                  onMouseDown={(e) => handleResizeStart(e, 'recruiterCo')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'recruiterCo' ? 'bg-blue-500' : ''}`}
-                />
-              </TableHead>
-              <TableHead
-                style={{ width: columnWidths.company }}
-                className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
-                onClick={() => handleSort('company')}
-              >
-                <div className="flex items-center truncate">Company {renderSortIndicator("company")}</div>
-                <div
-                  onMouseDown={(e) => handleResizeStart(e, 'company')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'company' ? 'bg-indigo-500' : ''}`}
-                />
-              </TableHead>
-              <TableHead
-                style={{ width: columnWidths.role }}
-                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
-                onClick={() => handleSort('role')}
-              >
-                <div className="flex items-center truncate">Role {renderSortIndicator("role")}</div>
-                <div
-                  onMouseDown={(e) => handleResizeStart(e, 'role')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'role' ? 'bg-indigo-500' : ''}`}
-                />
-              </TableHead>
-              <TableHead
-                style={{ width: columnWidths.status }}
-                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
-                onClick={() => handleSort('status')}
-              >
-                <div className="flex items-center truncate">Status {renderSortIndicator("status")}</div>
-                <div
-                  onMouseDown={(e) => handleResizeStart(e, 'status')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'status' ? 'bg-indigo-500' : ''}`}
-                />
-              </TableHead>
-              <TableHead
-                style={{ width: columnWidths.applicationDate }}
-                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
-                onClick={() => handleSort('applicationDate')}
-              >
-                <div className="flex items-center truncate">Date Applied {renderSortIndicator("applicationDate")}</div>
-                <div
-                  onMouseDown={(e) => handleResizeStart(e, 'applicationDate')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-indigo-500' : ''}`}
-                />
-              </TableHead>
-              <TableHead
-                style={{ width: columnWidths.latestActivityDate }}
-                className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
-                onClick={() => handleSort('latestActivityDate')}
-              >
-                <div className="flex items-center truncate">Latest Activity {renderSortIndicator("latestActivityDate")}</div>
-                <div
-                  onMouseDown={(e) => handleResizeStart(e, 'latestActivityDate')}
-                  className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-indigo-500' : ''}`}
-                />
-              </TableHead>
-              <TableHead style={{ width: columnWidths._actions }} className="font-bold text-slate-500 uppercase tracking-widest text-[10px] text-right pr-8 relative">
-                Actions
-              </TableHead>
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, 'recruiterCo')}
+                    className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-blue-400/50 transition-colors ${resizing === 'recruiterCo' ? 'bg-blue-500' : ''}`}
+                  />
+                </TableHead>
+                <TableHead
+                  style={{ width: columnWidths.company }}
+                  className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  onClick={() => handleSort('company')}
+                >
+                  <div className="flex items-center truncate">Company {renderSortIndicator("company")}</div>
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, 'company')}
+                    className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'company' ? 'bg-indigo-500' : ''}`}
+                  />
+                </TableHead>
+                <TableHead
+                  style={{ width: columnWidths.role }}
+                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  onClick={() => handleSort('role')}
+                >
+                  <div className="flex items-center truncate">Role {renderSortIndicator("role")}</div>
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, 'role')}
+                    className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'role' ? 'bg-indigo-500' : ''}`}
+                  />
+                </TableHead>
+                <TableHead
+                  style={{ width: columnWidths.status }}
+                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  onClick={() => handleSort('status')}
+                >
+                  <div className="flex items-center truncate">Status {renderSortIndicator("status")}</div>
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, 'status')}
+                    className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'status' ? 'bg-indigo-500' : ''}`}
+                  />
+                </TableHead>
+                <TableHead
+                  style={{ width: columnWidths.applicationDate }}
+                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
+                  onClick={() => handleSort('applicationDate')}
+                >
+                  <div className="flex items-center truncate">Date Applied {renderSortIndicator("applicationDate")}</div>
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, 'applicationDate')}
+                    className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'applicationDate' ? 'bg-indigo-500' : ''}`}
+                  />
+                </TableHead>
+                <TableHead
+                  style={{ width: columnWidths.latestActivityDate }}
+                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
+                  onClick={() => handleSort('latestActivityDate')}
+                >
+                  <div className="flex items-center truncate">Latest Activity {renderSortIndicator("latestActivityDate")}</div>
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, 'latestActivityDate')}
+                    className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-indigo-500' : ''}`}
+                  />
+                </TableHead>
+                <TableHead style={{ width: columnWidths._actions }} className="font-bold text-slate-500 uppercase tracking-widest text-[10px] text-right pr-8 relative">
+                  Actions
+                </TableHead>
 
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedApplications.length > 0 ? (
-              paginatedApplications.map((app) => (
-                <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 last:border-0 relative overflow-hidden">
-                  <TableCell
-                    style={{ width: columnWidths.statusIcon }}
-                    className="pl-4 py-3"
-                    onClick={() => setSelectedApp(app)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); toggleFavoriteApp(app.id, !app.isFavorite); }}
-                        className={cn("transition-colors focus:outline-none", app.isFavorite ? "text-amber-400 hover:text-amber-500" : "text-slate-200 hover:text-amber-400")}
-                      >
-                        <Star className="h-4 w-4" fill={app.isFavorite ? "currentColor" : "none"} />
-                      </button>
-                      {renderStatusIcon(app.status)}
-                    </div>
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths.recruiterCo }} className="text-sm font-medium text-slate-600 truncate" onClick={() => setSelectedApp(app)}>
-                    {app.recruiterCo && app.recruiterCo !== '#NotInformed' ? app.recruiterCo : <span className="text-slate-300 font-medium italic">Not specified</span>}
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths.company }} className="text-sm text-slate-400 font-medium truncate" onClick={() => setSelectedApp(app)}>
-                    {app.company && app.company !== '#NotInformed' ? app.company : <span className="text-slate-300 italic">Not specified</span>}
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths.role }} className="text-sm text-slate-600 font-medium truncate" onClick={() => setSelectedApp(app)} title={app.role}>
-                    {app.role && app.role !== '#NotInformed' ? app.role : <span className="text-slate-300 font-medium italic">Not specified</span>}
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths.status }} className="truncate" onClick={() => setSelectedApp(app)}>
-                    <Badge variant="outline" className={cn(getStatusColor(app.status), "shadow-sm text-[10px] py-0 h-5")}>
-                      {app.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths.applicationDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
-                    {app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'}
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths.latestActivityDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
-                    {app.latestActivityDate ? format(app.latestActivityDate, 'MMM d, yyyy') : (
-                      app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'
-                    )}
-                  </TableCell>
-                  <TableCell style={{ width: columnWidths._actions }} className="text-right pr-8">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger render={
-                        <button className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-all bg-white border border-slate-200 rounded-lg premium-shadow-sm flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
-                          <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
-                        </button>
-                      } />
-
-                      <DropdownMenuContent align="end" className="w-40">
-                        <ApplicationDialog
-                          mode="edit"
-                          id={app.id}
-                          initData={app}
-                          nativeButton={false}
-                          trigger={
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer">
-                              <Edit className="mr-2 h-4 w-4" /> Edit
-                            </DropdownMenuItem>
-                          }
-                        />
-                        <DropdownMenuItem
-                          onClick={() => deleteApp(app.id)}
-                          className="text-red-600 cursor-pointer"
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedApplications.length > 0 ? (
+                paginatedApplications.map((app) => (
+                  <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 last:border-0 relative overflow-hidden">
+                    <TableCell
+                      style={{ width: columnWidths.statusIcon }}
+                      className="pl-4 py-3"
+                      onClick={() => setSelectedApp(app)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleFavoriteApp(app.id, !app.isFavorite); }}
+                          className={cn("transition-colors focus:outline-none", app.isFavorite ? "text-amber-400 hover:text-amber-500" : "text-slate-200 hover:text-amber-400")}
                         >
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          <Star className="h-4 w-4" fill={app.isFavorite ? "currentColor" : "none"} />
+                        </button>
+                        {renderStatusIcon(app.status)}
+                      </div>
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths.recruiterCo }} className="text-sm font-medium text-slate-600 truncate" onClick={() => setSelectedApp(app)}>
+                      {app.recruiterCo && app.recruiterCo !== '#NotInformed' ? app.recruiterCo : <span className="text-slate-300 font-medium italic">Not specified</span>}
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths.company }} className="text-sm text-slate-400 font-medium truncate" onClick={() => setSelectedApp(app)}>
+                      {app.company && app.company !== '#NotInformed' ? app.company : <span className="text-slate-300 italic">Not specified</span>}
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths.role }} className="text-sm text-slate-600 font-medium truncate" onClick={() => setSelectedApp(app)} title={app.role}>
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="truncate">{app.role && app.role !== '#NotInformed' ? app.role : <span className="text-slate-300 font-medium italic">Not specified</span>}</span>
+                        {app.attachmentPath && (
+                          <span title="Has attached Job Description" className="shrink-0 flex items-center">
+                            <Paperclip size={12} className="text-[#8B5CF6] animate-pulse" />
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths.status }} className="truncate" onClick={() => setSelectedApp(app)}>
+                      <Badge variant="outline" className={cn(getStatusColor(app.status), "shadow-sm text-[10px] py-0 h-5")}>
+                        {app.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths.applicationDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
+                      {app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'}
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths.latestActivityDate }} className="text-xs text-slate-400 font-medium whitespace-nowrap truncate" onClick={() => setSelectedApp(app)}>
+                      {app.latestActivityDate ? format(app.latestActivityDate, 'MMM d, yyyy') : (
+                        app.applicationDate ? format(new Date(app.applicationDate), 'MMM d, yyyy') : '—'
+                      )}
+                    </TableCell>
+                    <TableCell style={{ width: columnWidths._actions }} className="text-right pr-8">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger render={
+                          <button className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-all bg-white border border-slate-200 rounded-lg premium-shadow-sm flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
+                            <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
+                          </button>
+                        } />
+
+                        <DropdownMenuContent align="end" className="w-40">
+                          <ApplicationDialog
+                            mode="edit"
+                            id={app.id}
+                            initData={app}
+                            nativeButton={false}
+                            trigger={
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer">
+                                <Edit className="mr-2 h-4 w-4" /> Edit
+                              </DropdownMenuItem>
+                            }
+                          />
+                          <DropdownMenuItem
+                            onClick={() => deleteApp(app.id)}
+                            className="text-red-600 cursor-pointer"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} className="h-32 text-center text-slate-500 italic">
+                    No applications found matching your criteria.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={8} className="h-32 text-center text-slate-500 italic">
-                  No applications found matching your criteria.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
         {/* ─── Pagination ─── */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/30">
@@ -936,7 +962,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
       {/* ─── Detail Sheet ─── */}
       <Sheet open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>
-        <SheetContent className="w-[50%] sm:max-w-none data-[side=right]:sm:max-w-[50%] border-l border-slate-200 bg-white p-0 shadow-2xl flex flex-col h-full overflow-hidden">
+        <SheetContent className="w-[35%] sm:max-w-none data-[side=right]:sm:max-w-[35%] border-l border-slate-200 bg-white p-0 shadow-2xl flex flex-col h-full overflow-hidden">
           {selectedApp && (
             <>
               {/* Header */}
@@ -1033,6 +1059,35 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                           <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Feel</span><span className="font-bold text-slate-700">{selectedApp.feel || '—'}</span></div>
                         </div>
                       </section>
+
+                      {selectedApp.attachmentPath && (
+                        <section>
+                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">Job Description Attachment</h4>
+                          <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100/70 rounded-2xl hover:border-purple-100/60 transition-colors">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#8B5CF6]">
+                                <FileText size={22} />
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <span className="text-sm font-bold text-slate-800 truncate max-w-[250px]" title={selectedApp.attachmentName}>
+                                  {selectedApp.attachmentName}
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                  Local File Storage
+                                </span>
+                              </div>
+                            </div>
+                            <a
+                              href={`/api/attachments/${selectedApp.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-[#8B5CF6] hover:text-white transition-all bg-[#8B5CF6]/5 hover:bg-[#8B5CF6] border border-[#8B5CF6]/10 rounded-lg px-4 py-2.5 shadow-sm font-bold"
+                            >
+                              <ExternalLink size={12} strokeWidth={2.5} /> View PDF / Word
+                            </a>
+                          </div>
+                        </section>
+                      )}
 
                       <section>
                         <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Compensation</h4>

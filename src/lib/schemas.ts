@@ -33,7 +33,9 @@ export const applicationSchema = z.object({
   finalFeedback: z.string().optional().nullable(),
   applicationDate: z.union([z.string(), z.date()]).optional().nullable(),
   stepDate: z.union([z.string(), z.date()]).optional().nullable(),
-  deadline: z.union([z.string(), z.date()]).optional().nullable()
+  deadline: z.union([z.string(), z.date()]).optional().nullable(),
+  attachmentPath: z.string().optional().nullable(),
+  attachmentName: z.string().optional().nullable()
 })
 
 export type ApplicationFormData = z.infer<typeof applicationSchema>

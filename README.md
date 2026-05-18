@@ -19,6 +19,7 @@ Unlike other job tracking tools, Applyd was built with the philosophy that **you
 - **No Cloud Dependency:** There is no online database sharing your information.
 - **SQLite Persistence:** The project uses a local SQLite database file.
 - **Automatic Sync:** By defining an **absolute path** in your `DATABASE_URL`, you can keep your database in a synced folder (e.g., Google Drive, OneDrive, or Dropbox) for automatic backups and seamless cross-machine work without third-party access.
+- **Hybrid Architecture for Attachments:** To prevent binary bloat in the database and maintain compatibility across diverse database backends, physical files (e.g. PDFs, Word documents) are stored directly inside a nested `/attachments` directory adjacent to your SQLite database. Only metadata is stored in the database. This ensures physical files and database backups synchronize in lockstep to your cloud storage account without polluting your local codebase directory.
 
 ---
 

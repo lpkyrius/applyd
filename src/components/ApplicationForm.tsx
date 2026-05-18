@@ -1,14 +1,15 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useTransition, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { applicationSchema, type ApplicationFormData } from '@/lib/schemas';
-import { saveApplication } from '@/lib/actions';
+import { saveApplication, uploadAttachment, removeAttachment } from '@/lib/actions';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { UploadCloud, Trash2, FileText, X } from 'lucide-react';
 
 const STATUS_OPTIONS = [
   'Applied', 'Screening', 'Interview', 'Technical Interview', 'Final Interview',
@@ -131,13 +132,43 @@ export function ApplicationForm({ initData, id, onSuccess }: {
       currentStepNotes: initData?.currentStepNotes || '',
       notes: initData?.notes || '',
       finalFeedback: initData?.finalFeedback || '',
+      attachmentPath: initData?.attachmentPath || null,
+      attachmentName: initData?.attachmentName || null,
     }
   });
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [shouldRemoveExisting, setShouldRemoveExisting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const onSubmit = (data: ApplicationFormData) => {
     startTransition(async () => {
       const res = await saveApplication(data, id);
-      if (res.success) {
+      if (res.success && res.id) {
+        if (shouldRemoveExisting && id) {
+          const removeRes = await removeAttachment(id);
+          if (!removeRes.success) {
+            alert("Failed to remove attachment: " + removeRes.error);
+            return;
+          }
+        }
+
+        if (selectedFile) {
+          setIsUploading(true);
+          try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('id', res.id);
+            const uploadRes = await uploadAttachment(formData);
+            if (!uploadRes.success) {
+              alert("Failed to upload attachment: " + uploadRes.error);
+              return;
+            }
+          } finally {
+            setIsUploading(false);
+          }
+        }
+
         onSuccess();
       } else {
         alert("Failed to save: " + res.error);
@@ -285,14 +316,94 @@ export function ApplicationForm({ initData, id, onSuccess }: {
             <FieldTextarea field={field} label="Final Feedback" placeholder="Outcome feedback from employer…" />
           )} />
 
+          <SectionTitle>Job Description File (PDF/Word)</SectionTitle>
+          <div className="col-span-2">
+            {initData?.attachmentPath && !shouldRemoveExisting ? (
+              <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100/60 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#8B5CF6]">
+                    <FileText size={20} />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-bold text-slate-800 truncate max-w-[250px]" title={initData.attachmentName || ''}>
+                      {initData.attachmentName}
+                    </span>
+                    <a
+                      href={`/api/attachments/${id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] font-bold text-[#8B5CF6] hover:text-[#7C3AED] uppercase tracking-wider mt-0.5"
+                    >
+                      View / Download File
+                    </a>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setShouldRemoveExisting(true)}
+                  className="h-9 w-9 p-0 rounded-full hover:bg-red-50 hover:text-red-600 text-slate-400 transition-colors"
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </div>
+            ) : selectedFile ? (
+              <div className="flex items-center justify-between p-4 bg-purple-50/50 border border-purple-100 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-purple-100/50 border border-purple-200/50 flex items-center justify-center text-[#8B5CF6]">
+                    <FileText size={20} />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-bold text-slate-800 truncate max-w-[250px]" title={selectedFile.name}>
+                      {selectedFile.name}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
+                      {(selectedFile.size / 1024).toFixed(1)} KB (Selected)
+                    </span>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setSelectedFile(null)}
+                  className="h-9 w-9 p-0 rounded-full hover:bg-slate-100 text-slate-400 transition-colors"
+                >
+                  <X size={16} />
+                </Button>
+              </div>
+            ) : (
+              <label className="border border-dashed border-slate-200 hover:border-[#8B5CF6] bg-slate-50/30 hover:bg-white rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group">
+                <input
+                  type="file"
+                  accept=".pdf,.docx,.doc,.txt,image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setSelectedFile(file);
+                      setShouldRemoveExisting(false);
+                    }
+                  }}
+                />
+                <UploadCloud className="h-8 w-8 text-slate-400 group-hover:text-[#8B5CF6] transition-colors mb-2" />
+                <span className="text-xs font-bold text-slate-600 group-hover:text-slate-800">
+                  Click to upload job description
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-1">
+                  PDF, DOCX, DOC, TXT (Max 10MB)
+                </span>
+              </label>
+            )}
+          </div>
+
         </div>
 
         <Button 
           type="submit" 
           className="w-full h-14 bg-slate-950 hover:bg-[#8B5CF6] text-white rounded-md font-bold transition-all duration-500 shadow-xl shadow-slate-900/10 hover:scale-[1.01] active:scale-[0.99] mt-10" 
-          disabled={isPending}
+          disabled={isPending || isUploading}
         >
-          {isPending ? 'Saving…' : id ? 'Update Application' : 'Create Application'}
+          {isPending || isUploading ? (isUploading ? 'Uploading file…' : 'Saving…') : id ? 'Update Application' : 'Create Application'}
         </Button>
       </form>
     </Form>

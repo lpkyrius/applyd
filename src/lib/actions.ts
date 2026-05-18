@@ -3,6 +3,7 @@
 import { prisma } from './prisma'
 import { revalidatePath } from 'next/cache'
 import { applicationSchema, type ApplicationFormData } from './schemas'
+import { saveAttachment, deleteAttachmentFile } from './storage'
 
 export async function saveApplication(data: ApplicationFormData, id?: string) {
   const result = applicationSchema.safeParse(data);
@@ -16,23 +17,26 @@ export async function saveApplication(data: ApplicationFormData, id?: string) {
       deadline: result.data.deadline ? new Date(result.data.deadline) : null,
     };
 
+    let returnedId = id;
+
     if (id) {
       await prisma.application.update({
         where: { id },
         data: payload as any
       });
     } else {
-      await prisma.application.create({
+      const created = await prisma.application.create({
         data: {
           ...payload,
           steps: JSON.stringify([{ type: 'CONTACT', isStep: false, date: new Date(), description: 'Application recorded manually.' }])
         } as any
       });
+      returnedId = created.id;
     }
 
     revalidatePath('/');
     revalidatePath('/applications');
-    return { success: true };
+    return { success: true, id: returnedId };
   } catch (err: any) {
     return { success: false, error: err.message };
   }
@@ -158,6 +162,77 @@ export async function toggleFavorite(appId: string, isFavorite: boolean) {
       where: { id: appId },
       data: { isFavorite }
     });
+    revalidatePath('/');
+    revalidatePath('/applications');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function uploadAttachment(formData: FormData) {
+  try {
+    const file = formData.get('file') as File | null;
+    const id = formData.get('id') as string | null;
+
+    if (!id) {
+      return { success: false, error: 'Application ID is required' };
+    }
+
+    if (!file || file.size === 0) {
+      return { success: false, error: 'No file uploaded or file is empty' };
+    }
+
+    // Get current application to check for existing attachment to delete
+    const app = await prisma.application.findUnique({ where: { id } });
+    if (!app) {
+      return { success: false, error: 'Application not found' };
+    }
+
+    // Save new file
+    const { relativePath, fileName } = await saveAttachment(file);
+
+    // Delete old attachment if there was one
+    if (app.attachmentPath) {
+      await deleteAttachmentFile(app.attachmentPath);
+    }
+
+    // Update database
+    await prisma.application.update({
+      where: { id },
+      data: {
+        attachmentPath: relativePath,
+        attachmentName: fileName,
+      },
+    });
+
+    revalidatePath('/');
+    revalidatePath('/applications');
+    return { success: true, attachmentPath: relativePath, attachmentName: fileName };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function removeAttachment(id: string) {
+  try {
+    const app = await prisma.application.findUnique({ where: { id } });
+    if (!app) {
+      return { success: false, error: 'Application not found' };
+    }
+
+    if (app.attachmentPath) {
+      await deleteAttachmentFile(app.attachmentPath);
+    }
+
+    await prisma.application.update({
+      where: { id },
+      data: {
+        attachmentPath: null,
+        attachmentName: null,
+      },
+    });
+
     revalidatePath('/');
     revalidatePath('/applications');
     return { success: true };

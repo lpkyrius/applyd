@@ -28,9 +28,12 @@ Unlike other job tracking tools, Applyd was built with the philosophy that **you
 ### 📊 Intelligent Dashboard
 The Dashboard provides a macro view of your job market health.
 ![Applyd Dashboard](images/dashboard1.png)
-- **Automatic Calculations:** Processes conversion rates between stages (e.g., Applied -> Interview).
-- **Salary Tracking:** Native support for gross/net salary conversions across different periods (hour, day, month, year).
-- **Modern Visualization:** Built with **Tailwind CSS v4** for a premium, high-performance look and feel.
+- **Total Applications:** Track the total volume of job applications submitted within your selected date range, along with percentage comparison trends.
+- **Active Pipeline:** Keep tabs on applications currently in progress (excludes rejected, closed, or withdrawn status).
+- **Success Rate:** Measures the percentage of your applications that successfully reach an 'Offer' or 'Accepted' status.
+- **Interviews Done:** Counts the total number of interview steps (excluding contacts/notes) recorded during the active period.
+- **Avg. Market Range:** Tracks average upper-bound gross annual salary, automatically standardizing values (hourly, daily, monthly) into a yearly projection.
+- **Modern Visualization:** Built with a clean, high-performance UI featuring interactive trend alerts and responsive charts.
 
 ### 📝 Application Management
 A high-density table that allows managing dozens of processes simultaneously.

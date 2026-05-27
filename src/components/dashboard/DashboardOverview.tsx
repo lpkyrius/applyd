@@ -83,6 +83,13 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   }, [applications, startYear, startMonth, endYear, endMonth]);
 
   const stats = useMemo(() => {
+    const sVal = parseInt(startYear) * 12 + months.indexOf(startMonth);
+    const eVal = parseInt(endYear) * 12 + months.indexOf(endMonth);
+    const duration = eVal - sVal;
+    
+    const psVal = sVal - 1 - duration;
+    const peVal = sVal - 1;
+
     const toYearly = (value: number, period: string | null | undefined): number => {
       switch ((period || 'year').toLowerCase()) {
         case 'hour':  return value * 8 * 220;
@@ -105,6 +112,28 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
       return { total, active, offers, successRate, avgGross };
     };
+
+    let currentInterviews = 0;
+    let previousInterviews = 0;
+
+    applications.forEach(app => {
+      try {
+        const steps = JSON.parse(app.steps as string || '[]');
+        steps.forEach((s: any) => {
+          if (s.type === 'STEP') {
+            const d = new Date(s.date);
+            if (!isNaN(d.getTime())) {
+              const val = d.getFullYear() * 12 + d.getMonth();
+              if (val >= sVal && val <= eVal) {
+                currentInterviews++;
+              } else if (val >= psVal && val <= peVal) {
+                previousInterviews++;
+              }
+            }
+          }
+        });
+      } catch {}
+    });
 
     const current = getMetrics(filteredApps);
     const previous = getMetrics(prevFilteredApps);
@@ -158,11 +187,13 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       active: current.active, 
       offers: current.offers, 
       avgGross: current.avgGross,
+      interviews: currentInterviews,
       trends: {
         total: calculateTrend(current.total, previous.total),
         active: calculateTrend(current.active, previous.active),
         success: calculateTrend(current.successRate, previous.successRate, true),
-        avgGross: calculateTrend(current.avgGross, previous.avgGross)
+        avgGross: calculateTrend(current.avgGross, previous.avgGross),
+        interviews: calculateTrend(currentInterviews, previousInterviews)
       },
       statusData, 
       activityData 
@@ -268,66 +299,71 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       </div>
 
       {/* ── BENTO GRID LAYOUT ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
         {/* Primary Metrics (Row 1) */}
-        <div className="lg:col-span-3">
-          <MetricCard 
-            title="Total Applications" 
-            value={stats.total} 
-            trend={stats.trends.total.trend}
-            trendLabel="Volume trend"
-            color="bg-indigo-500"
-            gradient={['#8B5CF6', '#A78BFA', '#C4B5FD']}
-            data={[40, 60, 45, 90, 65, 80]}
-            isNegativeTrend={stats.trends.total.isNegative}
-            description="Total number of job applications submitted within the selected date range."
-            trendDescription="Calculated as the percentage change compared to the preceding period of the same duration."
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <MetricCard 
-            title="Active Pipeline" 
-            value={stats.active} 
-            trend={stats.trends.active.trend}
-            trendLabel="Last 30 days"
-            color="bg-blue-500"
-            gradient={['#3B82F6', '#60A5FA', '#93C5FD']}
-            data={[30, 45, 70, 50, 90, 100]}
-            isNegativeTrend={stats.trends.active.isNegative}
-            description="Number of applications currently in progress, excluding rejected, closed, or withdrawn status."
-            trendDescription="The percentage change in active applications compared to the preceding period."
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <MetricCard 
-            title="Success Rate" 
-            value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
-            trend={stats.trends.success.trend}
-            trendLabel="Applied → Offer"
-            color="bg-cyan-500"
-            gradient={['#06B6D4', '#22D3EE', '#67E8F9']}
-            data={[20, 40, 30, 60, 50, 75]}
-            isNegativeTrend={stats.trends.success.isNegative}
-            description="Percentage of total applications that reached an 'Offer' or 'Accepted' status."
-            trendDescription="The difference in percentage points (pts) compared to the preceding period."
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <MetricCard 
-            title="Avg. Market Range" 
-            value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
-            trend={stats.trends.avgGross.trend}
-            trendLabel="Gross yearly"
-            color="bg-slate-400"
-            gradient={['#94A3B8', '#CBD5E1', '#E2E8F0']}
-            data={[50, 40, 60, 45, 55, 40]}
-            isNegativeTrend={stats.trends.avgGross.isNegative}
-            description="Average upper-bound gross annual salary from all applications with provided salary data."
-            trendDescription="The percentage change in average salary upper-bound compared to the preceding period."
-          />
-        </div>
+        <MetricCard 
+          title="Total Applications" 
+          value={stats.total} 
+          trend={stats.trends.total.trend}
+          trendLabel="Volume trend"
+          color="bg-indigo-500"
+          gradient={['#8B5CF6', '#A78BFA', '#C4B5FD']}
+          data={[40, 60, 45, 90, 65, 80]}
+          isNegativeTrend={stats.trends.total.isNegative}
+          description="Total number of job applications submitted within the selected date range."
+          trendDescription="Calculated as the percentage change compared to the preceding period of the same duration."
+        />
+        <MetricCard 
+          title="Active Pipeline" 
+          value={stats.active} 
+          trend={stats.trends.active.trend}
+          trendLabel="Last 30 days"
+          color="bg-blue-500"
+          gradient={['#3B82F6', '#60A5FA', '#93C5FD']}
+          data={[30, 45, 70, 50, 90, 100]}
+          isNegativeTrend={stats.trends.active.isNegative}
+          description="Number of applications currently in progress, excluding rejected, closed, or withdrawn status."
+          trendDescription="The percentage change in active applications compared to the preceding period."
+        />
+        <MetricCard 
+          title="Success Rate" 
+          value={`${((stats.offers / stats.total) * 100 || 0).toFixed(1)}%`} 
+          trend={stats.trends.success.trend}
+          trendLabel="Applied → Offer"
+          color="bg-cyan-500"
+          gradient={['#06B6D4', '#22D3EE', '#67E8F9']}
+          data={[20, 40, 30, 60, 50, 75]}
+          isNegativeTrend={stats.trends.success.isNegative}
+          description="Percentage of total applications that reached an 'Offer' or 'Accepted' status."
+          trendDescription="The difference in percentage points (pts) compared to the preceding period."
+        />
+        <MetricCard 
+          title="Interviews Done" 
+          value={stats.interviews} 
+          trend={stats.trends.interviews.trend}
+          trendLabel="Activity trend"
+          color="bg-pink-500"
+          gradient={['#EC4899', '#F472B6', '#FBCFE8']}
+          data={[10, 20, 15, 30, 25, 40]}
+          isNegativeTrend={stats.trends.interviews.isNegative}
+          description="Number of interview steps recorded within the selected period."
+          trendDescription="Calculated as the percentage change compared to the preceding period."
+        />
+        <MetricCard 
+          title="Avg. Market Range" 
+          value={`€${(stats.avgGross / 1000).toFixed(1)}k`} 
+          trend={stats.trends.avgGross.trend}
+          trendLabel="Gross yearly"
+          color="bg-slate-400"
+          gradient={['#94A3B8', '#CBD5E1', '#E2E8F0']}
+          data={[50, 40, 60, 45, 55, 40]}
+          isNegativeTrend={stats.trends.avgGross.isNegative}
+          description="Average upper-bound gross annual salary from all applications with provided salary data."
+          trendDescription="The percentage change in average salary upper-bound compared to the preceding period."
+        />
       </div>
         
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
         {/* Status Chart (Increase to 5 columns out of 12) */}
         <Card className="lg:col-span-5 bento-card overflow-hidden">
           <CardContent className="p-6 md:p-10 h-[520px] flex flex-col">
@@ -439,6 +475,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
           </CardContent>
         </Card>
       </div>
+    </div>
   );
 }
 

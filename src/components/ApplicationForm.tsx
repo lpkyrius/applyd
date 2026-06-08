@@ -25,7 +25,7 @@ const FEEL_OPTIONS = ['😊', '😃', '😐', '🙁', '❌'];
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-6 mb-2 col-span-2 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">
+    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-6 mb-2 col-span-2 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100 dark:bg-slate-800">
       {children}
     </h3>
   );
@@ -34,14 +34,14 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function FieldInput({ field, label, placeholder, type = 'text' }: any) {
   return (
     <FormItem className="space-y-1.5">
-      <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">{label}</FormLabel>
+      <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">{label}</FormLabel>
       <FormControl>
         <Input
           {...field}
           type={type}
           placeholder={placeholder}
           value={field.value ?? ''}
-          className="h-12 text-sm rounded-md border-slate-100 bg-slate-50/30 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 transition-all focus:bg-white"
+          className="h-12 text-sm rounded-md border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 transition-all focus:bg-white dark:bg-slate-950"
         />
       </FormControl>
       <FormMessage />
@@ -52,12 +52,12 @@ function FieldInput({ field, label, placeholder, type = 'text' }: any) {
 function FieldSelect({ field, label, options }: any) {
   return (
     <FormItem className="space-y-1.5">
-      <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">{label}</FormLabel>
+      <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">{label}</FormLabel>
       <FormControl>
         <select
           {...field}
           value={field.value ?? ''}
-          className="h-12 w-full rounded-md border border-slate-100 bg-slate-50/30 px-4 py-1 text-sm transition-all focus:outline-none focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/5 appearance-none focus:bg-white"
+          className="h-12 w-full rounded-md border border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 px-4 py-1 text-sm transition-all focus:outline-none focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/5 appearance-none focus:bg-white dark:bg-slate-950"
         >
           <option value="">— Select —</option>
           {options.map((o: string) => (
@@ -73,14 +73,14 @@ function FieldSelect({ field, label, options }: any) {
 function FieldTextarea({ field, label, placeholder }: any) {
   return (
     <FormItem className="col-span-2 space-y-1.5">
-      <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">{label}</FormLabel>
+      <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">{label}</FormLabel>
       <FormControl>
         <textarea
           {...field}
           placeholder={placeholder}
           value={field.value ?? ''}
           rows={4}
-          className="w-full rounded-md border border-slate-100 bg-slate-50/30 px-4 py-3 text-sm transition-all focus:outline-none focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/5 resize-none focus:bg-white"
+          className="w-full rounded-md border border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 px-4 py-3 text-sm transition-all focus:outline-none focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/5 resize-none focus:bg-white dark:bg-slate-950"
         />
       </FormControl>
       <FormMessage />
@@ -227,17 +227,17 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           <div className="grid grid-cols-2 gap-3">
             <FormField control={form.control} name="grossSalFrom" render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gross From</FormLabel>
+                <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">Gross From</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-12 text-sm rounded-md border-slate-100 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 bg-slate-50/30 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-12 text-sm rounded-md border-slate-100 dark:border-slate-800 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 bg-slate-50/30 dark:bg-slate-900/30 focus:bg-white dark:bg-slate-950" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
             <FormField control={form.control} name="grossSalTo" render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gross To</FormLabel>
+                <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">Gross To</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-12 text-sm rounded-md border-slate-100 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 bg-slate-50/30 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-12 text-sm rounded-md border-slate-100 dark:border-slate-800 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/5 bg-slate-50/30 dark:bg-slate-900/30 focus:bg-white dark:bg-slate-950" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -246,17 +246,17 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           <div className="grid grid-cols-2 gap-3">
             <FormField control={form.control} name="netSalFrom" render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Net From</FormLabel>
+                <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">Net From</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="From" className="h-11 text-sm rounded-xl border-slate-200 dark:border-slate-800 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/10 bg-white dark:bg-slate-950/50 focus:bg-white dark:bg-slate-950" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
             <FormField control={form.control} name="netSalTo" render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Net To</FormLabel>
+                <FormLabel className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">Net To</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/10 bg-white/50 focus:bg-white" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
+                  <Input {...field} value={field.value ?? 0} type="number" placeholder="To" className="h-11 text-sm rounded-xl border-slate-200 dark:border-slate-800 focus:border-[#8B5CF6] focus:ring-[#8B5CF6]/10 bg-white dark:bg-slate-950/50 focus:bg-white dark:bg-slate-950" onChange={e => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                 </FormControl>
               </FormItem>
             )} />
@@ -319,13 +319,13 @@ export function ApplicationForm({ initData, id, onSuccess }: {
           <SectionTitle>Job Description File (PDF/Word)</SectionTitle>
           <div className="col-span-2">
             {initData?.attachmentPath && !shouldRemoveExisting ? (
-              <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100/60 rounded-xl">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100/60 dark:border-slate-800/60 rounded-xl">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#8B5CF6]">
                     <FileText size={20} />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-slate-800 truncate max-w-[250px]" title={initData.attachmentName || ''}>
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate max-w-[250px]" title={initData.attachmentName || ''}>
                       {initData.attachmentName}
                     </span>
                     <a
@@ -354,7 +354,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
                     <FileText size={20} />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-slate-800 truncate max-w-[250px]" title={selectedFile.name}>
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate max-w-[250px]" title={selectedFile.name}>
                       {selectedFile.name}
                     </span>
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
@@ -366,13 +366,13 @@ export function ApplicationForm({ initData, id, onSuccess }: {
                   type="button"
                   variant="ghost"
                   onClick={() => setSelectedFile(null)}
-                  className="h-9 w-9 p-0 rounded-full hover:bg-slate-100 text-slate-400 transition-colors"
+                  className="h-9 w-9 p-0 rounded-full hover:bg-slate-100 dark:bg-slate-800 text-slate-400 transition-colors"
                 >
                   <X size={16} />
                 </Button>
               </div>
             ) : (
-              <label className="border border-dashed border-slate-200 hover:border-[#8B5CF6] bg-slate-50/30 hover:bg-white rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group">
+              <label className="border border-dashed border-slate-200 dark:border-slate-800 hover:border-[#8B5CF6] bg-slate-50/30 dark:bg-slate-900/30 hover:bg-white dark:bg-slate-950 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group">
                 <input
                   type="file"
                   accept=".pdf,.docx,.doc,.txt,image/*"
@@ -386,7 +386,7 @@ export function ApplicationForm({ initData, id, onSuccess }: {
                   }}
                 />
                 <UploadCloud className="h-8 w-8 text-slate-400 group-hover:text-[#8B5CF6] transition-colors mb-2" />
-                <span className="text-xs font-bold text-slate-600 group-hover:text-slate-800">
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:text-slate-200">
                   Click to upload job description
                 </span>
                 <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-1">

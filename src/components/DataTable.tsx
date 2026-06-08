@@ -102,7 +102,7 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
         onClick={() => setOpen(true)}
         className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.15em] text-[#8B5CF6] hover:text-white transition-all bg-[#8B5CF6]/5 hover:bg-[#8B5CF6] border border-[#8B5CF6]/10 rounded-md px-4 py-2.5 w-full mb-8 group shadow-sm"
       >
-        <div className="w-6 h-6 rounded-md bg-white/80 flex items-center justify-center border border-purple-100 group-hover:bg-white transition-colors">
+        <div className="w-6 h-6 rounded-md bg-white dark:bg-slate-950/80 flex items-center justify-center border border-purple-100 group-hover:bg-white dark:bg-slate-950 transition-colors">
           <Plus size={12} className="text-[#8B5CF6]" />
         </div>
         Add New Activity Entry
@@ -111,15 +111,15 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
   }
 
   return (
-    <div className="bg-white border-none rounded-xl p-8 mb-10 premium-shadow space-y-6 animate-in fade-in zoom-in duration-300">
+    <div className="bg-white dark:bg-slate-950 border-none rounded-xl p-8 mb-10 premium-shadow space-y-6 animate-in fade-in zoom-in duration-300">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
           <div className="w-1 h-3.5 bg-[#8B5CF6] rounded-full" />
-          <span className="text-[11px] font-black text-slate-900 uppercase tracking-widest">New Journal Entry</span>
+          <span className="text-[11px] font-black text-slate-900 dark:text-slate-100 uppercase tracking-widest">New Journal Entry</span>
         </div>
         <button
           onClick={() => setOpen(false)}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50 border border-transparent hover:border-slate-100 text-slate-400 hover:text-slate-900 transition-all shadow-sm hover:shadow-md"
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50 dark:bg-slate-900 border border-transparent hover:border-slate-100 dark:border-slate-800 text-slate-400 hover:text-slate-900 dark:text-slate-100 transition-all shadow-sm hover:shadow-md"
         >
           <X size={18} strokeWidth={3} />
         </button>
@@ -127,13 +127,13 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
       <div className="flex p-1 bg-slate-100/80 rounded-lg gap-1">
         <button
           onClick={() => setType('STEP')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'STEP' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'STEP' ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300'}`}
         >
           <FileText size={12} className={type === 'STEP' ? 'text-[#8B5CF6]' : ''} /> Interview Step
         </button>
         <button
           onClick={() => setType('CONTACT')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'CONTACT' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'CONTACT' ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300'}`}
         >
           <MessageSquare size={12} className={type === 'CONTACT' ? 'text-[#8B5CF6]' : ''} /> Contact / Note
         </button>
@@ -144,7 +144,7 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
           type="date"
           value={date}
           onChange={e => setDate(e.target.value)}
-          className="w-full h-9 rounded-lg border border-slate-100 bg-slate-50/50 px-3 text-[13px] font-bold text-slate-700 focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+          className="w-full h-9 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 px-3 text-[13px] font-bold text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-950 focus:border-indigo-300 focus:outline-none transition-all"
         />
       </div>
       <div className="space-y-1.5">
@@ -154,7 +154,7 @@ function AddTimelineEntry({ appId, onSaved }: { appId: string; onSaved: () => vo
           value={description}
           onChange={e => setDescription(e.target.value)}
           rows={3}
-          className="w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-medium focus:bg-white focus:border-[#8B5CF6] focus:outline-none transition-all resize-none min-h-[80px]"
+          className="w-full rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm font-medium focus:bg-white dark:bg-slate-950 focus:border-[#8B5CF6] focus:outline-none transition-all resize-none min-h-[80px]"
         />
       </div>
       <Button
@@ -188,26 +188,26 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
 
   if (isEditing) {
     return (
-      <div className="bg-white border border-indigo-200 rounded-[2rem] p-6 mb-8 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
+      <div className="bg-white dark:bg-slate-950 border border-indigo-200 rounded-[2rem] p-6 mb-8 shadow-xl space-y-4 animate-in fade-in zoom-in duration-300">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-4 bg-[#8B5CF6] rounded-full" />
-            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Edit Journal Entry</span>
+            <span className="text-[10px] font-black text-slate-900 dark:text-slate-100 uppercase tracking-widest">Edit Journal Entry</span>
           </div>
-          <button onClick={() => setIsEditing(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
+          <button onClick={() => setIsEditing(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors">
             <X size={16} />
           </button>
         </div>
         <div className="flex p-1 bg-slate-100/50 rounded-xl gap-1">
           <button
             onClick={() => setType('STEP')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'STEP' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'STEP' ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300'}`}
           >
             <FileText size={12} className={type === 'STEP' ? 'text-[#8B5CF6]' : ''} /> Interview Step
           </button>
           <button
             onClick={() => setType('CONTACT')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'CONTACT' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${type === 'CONTACT' ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300'}`}
           >
             <MessageSquare size={12} className={type === 'CONTACT' ? 'text-[#8B5CF6]' : ''} /> Contact / Note
           </button>
@@ -218,7 +218,7 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="w-full h-9 rounded-lg border border-slate-100 bg-slate-50/50 px-3 text-[13px] font-bold text-slate-700 focus:bg-white focus:border-indigo-300 focus:outline-none transition-all"
+            className="w-full h-9 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 px-3 text-[13px] font-bold text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-950 focus:border-indigo-300 focus:outline-none transition-all"
           />
         </div>
         <div className="space-y-1.5">
@@ -228,7 +228,7 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={3}
-            className="w-full rounded-[1.25rem] border border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
+            className="w-full rounded-[1.25rem] border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 px-4 py-4 text-sm font-medium focus:bg-white dark:bg-slate-950 focus:border-indigo-300 focus:outline-none transition-all resize-none min-h-[100px]"
           />
         </div>
         <div className="flex gap-3">
@@ -242,7 +242,7 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
           <Button
             variant="outline"
             onClick={() => setIsEditing(false)}
-            className="flex-1 h-11 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] border-slate-200 text-slate-500 hover:bg-slate-50"
+            className="flex-1 h-11 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900"
           >
             Cancel
           </Button>
@@ -256,7 +256,7 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
   return (
     <div className="relative group/step pl-10 pb-8 last:pb-0">
       {/* Timeline line connector */}
-      <div className="absolute left-[15px] top-[32px] bottom-0 w-px bg-slate-100 group-last/step:hidden" />
+      <div className="absolute left-[15px] top-[32px] bottom-0 w-px bg-slate-100 dark:bg-slate-800 group-last/step:hidden" />
 
       {/* Icon Node */}
       <div className={cn(
@@ -266,17 +266,17 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
         {isStep ? <FileText size={14} strokeWidth={2.5} /> : <MessageSquare size={14} strokeWidth={2.5} />}
       </div>
 
-      <div className="bg-white p-5 rounded-xl border border-slate-50 shadow-[0_4px_12px_rgba(0,0,0,0.02)] group-hover/step:border-purple-100/30 transition-all duration-300 relative">
+      <div className="bg-white dark:bg-slate-950 p-5 rounded-xl border border-slate-50 shadow-[0_4px_12px_rgba(0,0,0,0.02)] dark:shadow-none group-hover/step:border-purple-100/30 transition-all duration-300 relative">
         <div className="flex items-start justify-between gap-5 mb-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-[11px] font-bold text-slate-500">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
                 {format(new Date(step.date), 'MMMM d, yyyy')}
               </span>
-              <div className="w-1 h-1 rounded-full bg-slate-100" />
+              <div className="w-1 h-1 rounded-full bg-slate-100 dark:bg-slate-800" />
               <span className={cn(
                 "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded",
-                isStep ? "bg-purple-50 text-[#8B5CF6]" : "bg-slate-50 text-slate-500"
+                isStep ? "bg-purple-50 text-[#8B5CF6]" : "bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400"
               )}>
                 {isStep ? 'Interview' : 'Log'}
               </span>
@@ -311,11 +311,11 @@ function TimelineItem({ appId, step, idx, onDelete }: { appId: string; step: Ste
 const renderStatusIcon = (status: string) => {
   const s = (status || '').toLowerCase();
   let icon = <Bell size={12} />;
-  let bgColor = "bg-slate-100 text-slate-600 border-slate-200";
+  let bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800";
 
   if (s.includes('applied')) {
     icon = <Bell size={12} />;
-    bgColor = "bg-slate-100 text-slate-600 border-slate-200";
+    bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800";
   } else if (s.includes('screening')) {
     icon = <Search size={12} />;
     bgColor = "bg-indigo-100 text-indigo-600 border-indigo-200";
@@ -531,7 +531,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     const base = "text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border shadow-sm transition-all duration-300"
 
     if (s.includes('applied') || s.includes('prospec'))
-      return cn(base, "bg-slate-50 text-slate-500 border-slate-200/60")
+      return cn(base, "bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200/60 dark:border-slate-800/60")
 
     if (s.includes('interview') || s.includes('screening') || s.includes('test'))
       return cn(base, "bg-indigo-50 text-indigo-600 border-indigo-100/80")
@@ -542,7 +542,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
     if (s.includes('offer') || s.includes('accepted') || s.includes('negotiat'))
       return cn(base, "bg-emerald-50 text-emerald-600 border-emerald-100/80")
 
-    return cn(base, "bg-slate-50 text-slate-400 border-slate-200/60")
+    return cn(base, "bg-slate-50 dark:bg-slate-900 text-slate-400 border-slate-200/60 dark:border-slate-800/60")
   }
 
 
@@ -583,12 +583,12 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
   return (
     <div className="w-full space-y-4">
       {/* ─── Search & Filters ─── */}
-      <div className="bg-white p-2 rounded-xl border border-slate-100 flex flex-col md:flex-row gap-3 items-center shadow-sm">
+      <div className="bg-white dark:bg-slate-950 p-2 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row gap-3 items-center shadow-sm">
         <div className="relative flex-1 w-full group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-[#8B5CF6] transition-colors" />
           <Input
             placeholder="Search applications..."
-            className="pl-11 h-11 bg-slate-50/30 border-transparent focus:bg-white focus:border-[#8B5CF6] transition-all rounded-md w-full"
+            className="pl-11 h-11 bg-slate-50/30 dark:bg-slate-900/30 border-transparent focus:bg-white dark:bg-slate-950 focus:border-[#8B5CF6] transition-all rounded-md w-full"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -597,7 +597,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         <div className="flex flex-wrap gap-2 w-full md:w-auto px-1">
           <DropdownMenu>
             <DropdownMenuTrigger render={
-              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 flex-1 md:min-w-[130px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
+              <button className="h-11 px-4 font-semibold bg-slate-50/50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex-1 md:min-w-[130px] flex items-center justify-between rounded-md hover:bg-white dark:bg-slate-950 transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
                 <div className="flex items-center gap-2 overflow-hidden">
                   <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                   <span className="truncate text-[10px]">
@@ -608,7 +608,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </div>
               </button>
             } />
-            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 premium-shadow border-slate-100">
+            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 premium-shadow border-slate-100 dark:border-slate-800">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Filter Status</DropdownMenuLabel>
               </DropdownMenuGroup>
@@ -639,7 +639,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
           <DropdownMenu>
             <DropdownMenuTrigger render={
-              <button className="h-11 px-4 font-semibold bg-slate-50/50 border border-slate-100 text-slate-700 flex-1 md:min-w-[120px] flex items-center justify-between rounded-md hover:bg-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
+              <button className="h-11 px-4 font-semibold bg-slate-50/50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex-1 md:min-w-[120px] flex items-center justify-between rounded-md hover:bg-white dark:bg-slate-950 transition-all outline-none focus-visible:ring-2 focus-visible:ring-purple-500/10 text-xs">
                 <span className="truncate text-[10px]">
                   {typeFilter.length === 0 ? "All Types" :
                     typeFilter.length === 1 ? typeFilter[0] :
@@ -647,7 +647,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </span>
               </button>
             } />
-            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 premium-shadow border-slate-100">
+            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 premium-shadow border-slate-100 dark:border-slate-800">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="text-xs uppercase tracking-widest text-slate-400 font-bold px-3 py-2">Job Type</DropdownMenuLabel>
               </DropdownMenuGroup>
@@ -699,7 +699,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
           <Button
             variant="ghost"
             size="icon"
-            className="h-11 w-11 text-slate-400 hover:text-[#8B5CF6] hover:bg-slate-50 transition-all rounded-md"
+            className="h-11 w-11 text-slate-400 hover:text-[#8B5CF6] hover:bg-slate-50 dark:bg-slate-900 transition-all rounded-md"
             onClick={resetFilters}
             title="Reset filters & sort"
           >
@@ -710,10 +710,10 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
 
       {/* ─── Applications Table ─── */}
-      <div className="bg-white rounded-xl border border-slate-100 premium-shadow overflow-hidden group/table">
+      <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-slate-800 premium-shadow overflow-hidden group/table">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200">
           <Table className="table-fixed w-full min-w-[1000px] border-collapse">
-            <TableHeader className="bg-slate-50/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200">
+            <TableHeader className="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200 dark:border-slate-800">
               <TableRow className="hover:bg-transparent">
                 <TableHead
                   style={{ width: columnWidths.statusIcon }}
@@ -723,7 +723,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableHead>
                 <TableHead
                   style={{ width: columnWidths.recruiterCo }}
-                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] py-5 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                   onClick={() => handleSort('recruiterCo')}
                 >
                   <div className="flex items-center truncate">Recruiter Co. {renderSortIndicator("recruiterCo")}</div>
@@ -735,7 +735,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableHead>
                 <TableHead
                   style={{ width: columnWidths.company }}
-                  className="font-semibold text-slate-900 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  className="font-semibold text-slate-900 dark:text-slate-100 cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                   onClick={() => handleSort('company')}
                 >
                   <div className="flex items-center truncate">Company {renderSortIndicator("company")}</div>
@@ -746,7 +746,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableHead>
                 <TableHead
                   style={{ width: columnWidths.role }}
-                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                   onClick={() => handleSort('role')}
                 >
                   <div className="flex items-center truncate">Role {renderSortIndicator("role")}</div>
@@ -757,7 +757,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableHead>
                 <TableHead
                   style={{ width: columnWidths.status }}
-                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
+                  className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors relative"
                   onClick={() => handleSort('status')}
                 >
                   <div className="flex items-center truncate">Status {renderSortIndicator("status")}</div>
@@ -768,7 +768,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableHead>
                 <TableHead
                   style={{ width: columnWidths.applicationDate }}
-                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
+                  className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                   onClick={() => handleSort('applicationDate')}
                 >
                   <div className="flex items-center truncate">Date Applied {renderSortIndicator("applicationDate")}</div>
@@ -779,7 +779,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </TableHead>
                 <TableHead
                   style={{ width: columnWidths.latestActivityDate }}
-                  className="font-bold text-slate-500 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
+                  className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] cursor-pointer select-none hover:bg-slate-100/50 transition-colors whitespace-nowrap relative"
                   onClick={() => handleSort('latestActivityDate')}
                 >
                   <div className="flex items-center truncate">Latest Activity {renderSortIndicator("latestActivityDate")}</div>
@@ -788,7 +788,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                     className={`absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-400/50 transition-colors ${resizing === 'latestActivityDate' ? 'bg-indigo-500' : ''}`}
                   />
                 </TableHead>
-                <TableHead style={{ width: columnWidths._actions }} className="font-bold text-slate-500 uppercase tracking-widest text-[10px] text-right pr-8 relative">
+                <TableHead style={{ width: columnWidths._actions }} className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] text-right pr-8 relative">
                   Actions
                 </TableHead>
 
@@ -797,7 +797,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
             <TableBody>
               {paginatedApplications.length > 0 ? (
                 paginatedApplications.map((app) => (
-                  <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 last:border-0 relative overflow-hidden">
+                  <TableRow key={app.id} className="hover:bg-indigo-50/30 transition-all group cursor-pointer border-b border-slate-100 dark:border-slate-800 last:border-0 relative overflow-hidden">
                     <TableCell
                       style={{ width: columnWidths.statusIcon }}
                       className="pl-4 py-3"
@@ -813,13 +813,13 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                         {renderStatusIcon(app.status)}
                       </div>
                     </TableCell>
-                    <TableCell style={{ width: columnWidths.recruiterCo }} className="text-sm font-medium text-slate-600 truncate" onClick={() => setSelectedApp(app)}>
+                    <TableCell style={{ width: columnWidths.recruiterCo }} className="text-sm font-medium text-slate-600 dark:text-slate-400 truncate" onClick={() => setSelectedApp(app)}>
                       {app.recruiterCo && app.recruiterCo !== '#NotInformed' ? app.recruiterCo : <span className="text-slate-300 font-medium italic">Not specified</span>}
                     </TableCell>
                     <TableCell style={{ width: columnWidths.company }} className="text-sm text-slate-400 font-medium truncate" onClick={() => setSelectedApp(app)}>
                       {app.company && app.company !== '#NotInformed' ? app.company : <span className="text-slate-300 italic">Not specified</span>}
                     </TableCell>
-                    <TableCell style={{ width: columnWidths.role }} className="text-sm text-slate-600 font-medium truncate" onClick={() => setSelectedApp(app)} title={app.role}>
+                    <TableCell style={{ width: columnWidths.role }} className="text-sm text-slate-600 dark:text-slate-400 font-medium truncate" onClick={() => setSelectedApp(app)} title={app.role}>
                       <div className="flex items-center gap-2 truncate">
                         <span className="truncate">{app.role && app.role !== '#NotInformed' ? app.role : <span className="text-slate-300 font-medium italic">Not specified</span>}</span>
                         {app.attachmentPath && (
@@ -845,8 +845,8 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                     <TableCell style={{ width: columnWidths._actions }} className="text-right pr-8">
                       <DropdownMenu>
                         <DropdownMenuTrigger render={
-                          <button className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-all bg-white border border-slate-200 rounded-lg premium-shadow-sm flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
-                            <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
+                          <button className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-all bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg premium-shadow-sm flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20">
+                            <MoreHorizontal className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
                           </button>
                         } />
 
@@ -875,7 +875,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="h-32 text-center text-slate-500 italic">
+                  <TableCell colSpan={8} className="h-32 text-center text-slate-500 dark:text-slate-400 italic">
                     No applications found matching your criteria.
                   </TableCell>
                 </TableRow>
@@ -885,17 +885,17 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
         </div>
 
         {/* ─── Pagination ─── */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/30">
-          <div className="flex-1 text-sm text-slate-500">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30">
+          <div className="flex-1 text-sm text-slate-500 dark:text-slate-400">
             {filteredApplications.length > 0 ? (
-              <>Showing <span className="font-semibold text-slate-900">{((currentPage - 1) * rowsPerPage) + 1}</span> to <span className="font-semibold text-slate-900">{Math.min(currentPage * rowsPerPage, filteredApplications.length)}</span> of <span className="font-semibold text-slate-900">{filteredApplications.length}</span> entries</>
+              <>Showing <span className="font-semibold text-slate-900 dark:text-slate-100">{((currentPage - 1) * rowsPerPage) + 1}</span> to <span className="font-semibold text-slate-900 dark:text-slate-100">{Math.min(currentPage * rowsPerPage, filteredApplications.length)}</span> of <span className="font-semibold text-slate-900 dark:text-slate-100">{filteredApplications.length}</span> entries</>
             ) : (
               "No entries to show"
             )}
           </div>
           <div className="flex items-center space-x-6 lg:space-x-8">
             <div className="flex items-center space-x-2">
-              <p className="text-sm font-medium text-slate-700">Rows per page</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Rows per page</p>
               <Select
                 value={`${rowsPerPage}`}
                 onValueChange={(value) => {
@@ -903,7 +903,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                   setCurrentPage(1)
                 }}
               >
-                <SelectTrigger className="h-9 w-[70px] bg-white border-slate-200">
+                <SelectTrigger className="h-9 w-[70px] bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800">
                   <SelectValue placeholder={rowsPerPage} />
                 </SelectTrigger>
                 <SelectContent side="top">
@@ -915,13 +915,13 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex w-[100px] items-center justify-center text-sm font-medium text-slate-700">
+            <div className="flex w-[100px] items-center justify-center text-sm font-medium text-slate-700 dark:text-slate-300">
               Page {currentPage} of {Math.ceil(filteredApplications.length / rowsPerPage) || 1}
             </div>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
-                className="hidden h-9 w-9 p-0 lg:flex bg-white border-slate-200 hover:bg-slate-50"
+                className="hidden h-9 w-9 p-0 lg:flex bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900"
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
               >
@@ -930,7 +930,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               </Button>
               <Button
                 variant="outline"
-                className="h-9 w-9 p-0 bg-white border-slate-200 hover:bg-slate-50"
+                className="h-9 w-9 p-0 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900"
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
               >
@@ -939,7 +939,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               </Button>
               <Button
                 variant="outline"
-                className="h-9 w-9 p-0 bg-white border-slate-200 hover:bg-slate-50"
+                className="h-9 w-9 p-0 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900"
                 onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredApplications.length / rowsPerPage), prev + 1))}
                 disabled={currentPage === Math.ceil(filteredApplications.length / rowsPerPage) || filteredApplications.length === 0}
               >
@@ -948,7 +948,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
               </Button>
               <Button
                 variant="outline"
-                className="hidden h-9 w-9 p-0 lg:flex bg-white border-slate-200 hover:bg-slate-50"
+                className="hidden h-9 w-9 p-0 lg:flex bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900"
                 onClick={() => setCurrentPage(Math.ceil(filteredApplications.length / rowsPerPage))}
                 disabled={currentPage === Math.ceil(filteredApplications.length / rowsPerPage) || filteredApplications.length === 0}
               >
@@ -962,11 +962,11 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
 
       {/* ─── Detail Sheet ─── */}
       <Sheet open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>
-        <SheetContent className="w-[35%] sm:max-w-none data-[side=right]:sm:max-w-[35%] border-l border-slate-200 bg-white p-0 shadow-2xl flex flex-col h-full overflow-hidden">
+        <SheetContent className="w-[35%] sm:max-w-none data-[side=right]:sm:max-w-[35%] border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-0 shadow-2xl flex flex-col h-full overflow-hidden">
           {selectedApp && (
             <>
               {/* Header */}
-              <div className="p-8 pb-8 border-b border-slate-100 bg-slate-50/30 shrink-0 backdrop-blur-xl sticky top-0 z-10">
+              <div className="p-8 pb-8 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 shrink-0 backdrop-blur-xl sticky top-0 z-10">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 text-slate-400 text-[10px] font-bold tracking-[0.1em] uppercase">
                     <Building2 size={12} className="text-indigo-500" />
@@ -980,14 +980,14 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       initData={selectedApp}
                       nativeButton={true}
                       trigger={
-                        <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 px-3 py-1.5 rounded-xl transition-all premium-shadow-sm hover:scale-105 active:scale-95">
+                        <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-slate-300 px-3 py-1.5 rounded-xl transition-all premium-shadow-sm hover:scale-105 active:scale-95">
                           <Edit size={12} strokeWidth={2.5} /> Edit
                         </button>
                       }
                     />
                     <button
                       onClick={() => deleteApp(selectedApp.id)}
-                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-red-400 hover:text-red-600 bg-white border border-slate-200 hover:border-red-100 px-3 py-1.5 rounded-xl transition-all premium-shadow-sm hover:scale-105 active:scale-95"
+                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-red-400 hover:text-red-600 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-red-100 px-3 py-1.5 rounded-xl transition-all premium-shadow-sm hover:scale-105 active:scale-95"
                     >
                       <Trash2 size={12} strokeWidth={2.5} /> Delete
                     </button>
@@ -995,7 +995,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 </div>
                 <SheetTitle className="flex items-start justify-between gap-4">
                   <div className="flex flex-col">
-                    <span className="text-3xl font-black text-slate-900 tracking-tight leading-none group flex items-center gap-2 mb-2">
+                    <span className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-none group flex items-center gap-2 mb-2">
                       {selectedApp.company}
                       {selectedApp.companyUrl && (
                         <a href={selectedApp.companyUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-indigo-600 transition-all hover:scale-110">
@@ -1009,7 +1009,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                     {selectedApp.status}
                   </Badge>
                 </SheetTitle>
-                <SheetDescription render={<div className="flex flex-col gap-3 text-slate-600 mt-1 text-base" />}>
+                <SheetDescription render={<div className="flex flex-col gap-3 text-slate-600 dark:text-slate-400 mt-1 text-base" />}>
                   <div className="flex items-center gap-2 font-medium">
                     <Briefcase size={17} className="text-slate-400" />
                     {selectedApp.role}
@@ -1034,42 +1034,42 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                 <div className="p-8 pt-6 pb-20">
                   <Tabs defaultValue="details" className="w-full">
                     <TabsList className="mb-10 bg-slate-100/40 p-1 w-full justify-start h-11 rounded-md border-none">
-                      <TabsTrigger value="details" className="px-10 h-9 data-[state=active]:bg-white data-[state=active]:text-[#8B5CF6] data-[state=active]:shadow-sm rounded-md text-[10px] font-black uppercase tracking-widest transition-all">Details</TabsTrigger>
-                      <TabsTrigger value="timeline" className="px-10 h-9 data-[state=active]:bg-white data-[state=active]:text-[#8B5CF6] data-[state=active]:shadow-sm rounded-md text-[10px] font-black uppercase tracking-widest transition-all">Timeline</TabsTrigger>
+                      <TabsTrigger value="details" className="px-10 h-9 data-[state=active]:bg-white dark:bg-slate-950 data-[state=active]:text-[#8B5CF6] data-[state=active]:shadow-sm rounded-md text-[10px] font-black uppercase tracking-widest transition-all">Details</TabsTrigger>
+                      <TabsTrigger value="timeline" className="px-10 h-9 data-[state=active]:bg-white dark:bg-slate-950 data-[state=active]:text-[#8B5CF6] data-[state=active]:shadow-sm rounded-md text-[10px] font-black uppercase tracking-widest transition-all">Timeline</TabsTrigger>
                     </TabsList>
 
                     {/* ── DETAILS ── */}
                     <TabsContent value="details" className="space-y-8">
 
                       <section>
-                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">Job Specifications</h4>
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100 dark:bg-slate-800">Job Specifications</h4>
                         <div className="grid grid-cols-2 gap-y-6 gap-x-10 text-sm">
-                          <div className="col-span-2 bg-slate-50/50 p-5 rounded-2xl border border-slate-100/60 flex justify-between items-center mb-2">
+                          <div className="col-span-2 bg-slate-50/50 dark:bg-slate-900/50 p-5 rounded-2xl border border-slate-100/60 dark:border-slate-800/60 flex justify-between items-center mb-2">
                             <div className="space-y-1">
                               <span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Candidate</span>
-                              <span className="font-bold text-slate-900 text-lg">{selectedApp.name || '—'}</span>
+                              <span className="font-bold text-slate-900 dark:text-slate-100 text-lg">{selectedApp.name || '—'}</span>
                             </div>
-                            <div className="text-3xl bg-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm border border-slate-100">{selectedApp.feel || '—'}</div>
+                            <div className="text-3xl bg-white dark:bg-slate-950 w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">{selectedApp.feel || '—'}</div>
                           </div>
-                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Job Type</span><span className="font-bold text-slate-700">{selectedApp.jobType || '—'}</span></div>
-                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Location Type</span><span className="font-bold text-slate-700">{selectedApp.locationType || '—'}</span></div>
-                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Duration</span><span className="font-bold text-slate-700">{selectedApp.duration || '—'}</span></div>
-                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Company Location</span><span className="font-bold text-slate-700">{selectedApp.companyLocation || '—'}</span></div>
-                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Initiator</span><span className="font-bold text-slate-700">{selectedApp.initiator || '—'}</span></div>
-                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Feel</span><span className="font-bold text-slate-700">{selectedApp.feel || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Job Type</span><span className="font-bold text-slate-700 dark:text-slate-300">{selectedApp.jobType || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Location Type</span><span className="font-bold text-slate-700 dark:text-slate-300">{selectedApp.locationType || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Duration</span><span className="font-bold text-slate-700 dark:text-slate-300">{selectedApp.duration || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Company Location</span><span className="font-bold text-slate-700 dark:text-slate-300">{selectedApp.companyLocation || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Initiator</span><span className="font-bold text-slate-700 dark:text-slate-300">{selectedApp.initiator || '—'}</span></div>
+                          <div className="space-y-1"><span className="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Feel</span><span className="font-bold text-slate-700 dark:text-slate-300">{selectedApp.feel || '—'}</span></div>
                         </div>
                       </section>
 
                       {selectedApp.attachmentPath && (
                         <section>
-                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100">Job Description Attachment</h4>
-                          <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100/70 rounded-2xl hover:border-purple-100/60 transition-colors">
+                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3 after:h-px after:flex-1 after:bg-slate-100 dark:bg-slate-800">Job Description Attachment</h4>
+                          <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100/70 dark:border-slate-800/70 rounded-2xl hover:border-purple-100/60 transition-colors">
                             <div className="flex items-center gap-3">
                               <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#8B5CF6]">
                                 <FileText size={22} />
                               </div>
                               <div className="flex flex-col min-w-0">
-                                <span className="text-sm font-bold text-slate-800 truncate max-w-[250px]" title={selectedApp.attachmentName}>
+                                <span className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate max-w-[250px]" title={selectedApp.attachmentName}>
                                   {selectedApp.attachmentName}
                                 </span>
                                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
@@ -1090,33 +1090,33 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                       )}
 
                       <section>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Compensation</h4>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">Compensation</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Gross Salary</span>
-                            <span className="font-medium text-slate-900">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Gross Salary</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100">
                               {formatSalary(selectedApp.grossSalFrom, selectedApp.grossSalTo, selectedApp.salaryCurrency)}
                               {selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}
                             </span>
                           </div>
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Net Salary</span>
-                            <span className="font-medium text-slate-900">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Net Salary</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100">
                               {formatSalary(selectedApp.netSalFrom, selectedApp.netSalTo, selectedApp.salaryCurrency)}
                               {selectedApp.salaryPeriod ? ` / ${selectedApp.salaryPeriod}` : ''}
                             </span>
                           </div>
-                          <div><span className="text-slate-500 block mb-0.5">Salary Period</span><span className="font-medium text-slate-900">{selectedApp.salaryPeriod || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Range informed by</span><span className="font-medium text-slate-900">{selectedApp.salaryRangeSource || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Salary Period</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.salaryPeriod || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Range informed by</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.salaryRangeSource || '—'}</span></div>
                         </div>
                       </section>
 
                       <section>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Recruitment Contact</h4>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">Recruitment Contact</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Recruiting Co.</span>
-                            <span className="font-medium text-slate-900 flex items-center gap-1.5">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Recruiting Co.</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                               {selectedApp.recruiterCo || '—'}
                               {selectedApp.recruiterCoUrl && (
                                 <a href={selectedApp.recruiterCoUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-colors">
@@ -1125,65 +1125,65 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                               )}
                             </span>
                           </div>
-                          <div><span className="text-slate-500 block mb-0.5">Main Recruiter</span><span className="font-medium text-slate-900">{selectedApp.mainRecruiter || '—'}</span></div>
-                          <div className="col-span-2"><span className="text-slate-500 block mb-0.5">Contact</span><span className="font-medium text-slate-900">{selectedApp.recruiterContact || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Main Recruiter</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.mainRecruiter || '—'}</span></div>
+                          <div className="col-span-2"><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Contact</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.recruiterContact || '—'}</span></div>
                         </div>
                       </section>
 
                       <section>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Dates & Progress</h4>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">Dates & Progress</h4>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm">
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Application Date</span>
-                            <span className="font-medium text-slate-900">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Application Date</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100">
                               {selectedApp.applicationDate ? format(new Date(selectedApp.applicationDate), 'MMM d, yyyy') : '—'}
                             </span>
                           </div>
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Deadline</span>
-                            <span className="font-medium text-slate-900">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Deadline</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100">
                               {selectedApp.deadline ? format(new Date(selectedApp.deadline), 'MMM d, yyyy') : '—'}
                             </span>
                           </div>
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Date Found</span>
-                            <span className="font-medium text-slate-900">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Date Found</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100">
                               {selectedApp.dateFound ? format(new Date(selectedApp.dateFound), 'MMM d, yyyy') : '—'}
                             </span>
                           </div>
                           <div>
-                            <span className="text-slate-500 block mb-0.5">Step Date</span>
-                            <span className="font-medium text-slate-900">
+                            <span className="text-slate-500 dark:text-slate-400 block mb-0.5">Step Date</span>
+                            <span className="font-medium text-slate-900 dark:text-slate-100">
                               {selectedApp.stepDate ? format(new Date(selectedApp.stepDate), 'MMM d, yyyy') : '—'}
                             </span>
                           </div>
-                          <div><span className="text-slate-500 block mb-0.5">Current Step</span><span className="font-medium text-slate-900">{selectedApp.currentStep || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Next Action</span><span className="font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">{selectedApp.nextAction || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Interview Type</span><span className="font-medium text-slate-900">{selectedApp.interviewType || '—'}</span></div>
-                          <div><span className="text-slate-500 block mb-0.5">Current Interviewer</span><span className="font-medium text-slate-900">{selectedApp.currentInterviewer || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Current Step</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.currentStep || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Next Action</span><span className="font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">{selectedApp.nextAction || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Interview Type</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.interviewType || '—'}</span></div>
+                          <div><span className="text-slate-500 dark:text-slate-400 block mb-0.5">Current Interviewer</span><span className="font-medium text-slate-900 dark:text-slate-100">{selectedApp.currentInterviewer || '—'}</span></div>
                         </div>
                       </section>
 
                       {(selectedApp.notes || selectedApp.finalFeedback) && (
                         <section>
-                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4">Notes & Feedback</h4>
+                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">Notes & Feedback</h4>
                           <div className="space-y-4 text-sm">
                             {selectedApp.currentStepNotes && (
                               <div>
-                                <span className="text-slate-500 block mb-1">Current Step Notes</span>
-                                <p className="text-slate-800 bg-slate-50 p-3 rounded-md border border-slate-100 whitespace-pre-wrap leading-relaxed">{selectedApp.currentStepNotes}</p>
+                                <span className="text-slate-500 dark:text-slate-400 block mb-1">Current Step Notes</span>
+                                <p className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 p-3 rounded-md border border-slate-100 dark:border-slate-800 whitespace-pre-wrap leading-relaxed">{selectedApp.currentStepNotes}</p>
                               </div>
                             )}
                             {selectedApp.notes && (
                               <div>
-                                <span className="text-slate-500 block mb-1">General Notes</span>
-                                <p className="text-slate-800 bg-slate-50 p-3 rounded-md border border-slate-100 whitespace-pre-wrap leading-relaxed">{selectedApp.notes}</p>
+                                <span className="text-slate-500 dark:text-slate-400 block mb-1">General Notes</span>
+                                <p className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 p-3 rounded-md border border-slate-100 dark:border-slate-800 whitespace-pre-wrap leading-relaxed">{selectedApp.notes}</p>
                               </div>
                             )}
                             {selectedApp.finalFeedback && (
                               <div>
-                                <span className="text-slate-500 block mb-1">Final Feedback</span>
-                                <p className="text-slate-800 bg-slate-100 p-3 rounded-md border border-slate-200 whitespace-pre-wrap leading-relaxed font-medium">{selectedApp.finalFeedback}</p>
+                                <span className="text-slate-500 dark:text-slate-400 block mb-1">Final Feedback</span>
+                                <p className="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 p-3 rounded-md border border-slate-200 dark:border-slate-800 whitespace-pre-wrap leading-relaxed font-medium">{selectedApp.finalFeedback}</p>
                               </div>
                             )}
                           </div>
@@ -1215,7 +1215,7 @@ export function DataTable({ applications: initialApps }: { applications: any[] }
                             />
                           ))
                         ) : (
-                          <div className="flex flex-col items-center justify-center py-12 px-6 bg-slate-50/50 rounded-[2.5rem] border border-dashed border-slate-200">
+                          <div className="flex flex-col items-center justify-center py-12 px-6 bg-slate-50/50 dark:bg-slate-900/50 rounded-[2.5rem] border border-dashed border-slate-200 dark:border-slate-800">
                             <History size={32} className="text-slate-300 mb-4" />
                             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">
                               No activity logged yet

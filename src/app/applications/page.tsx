@@ -15,7 +15,7 @@ export default async function ApplicationsPage() {
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mt-16 md:mt-0">
         <div className="space-y-1">
           <div className="flex items-center gap-4">
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Applications</h1>
+            <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Applications</h1>
             <div className="bg-[#8B5CF6] text-white px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm">
               {applications.length} Active
             </div>

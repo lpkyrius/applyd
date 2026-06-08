@@ -207,12 +207,12 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
   if (applications.length === 0) {
     return (
       <div className="h-[70vh] flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-700">
-        <div className="w-24 h-24 bg-slate-50 rounded-xl flex items-center justify-center mb-8 border border-slate-100/50 shadow-sm">
+        <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center mb-8 border border-slate-100/50 dark:border-slate-800/50 shadow-sm">
           <Briefcase size={40} className="text-slate-300" />
         </div>
         <div className="space-y-3">
-          <h3 className="text-3xl font-black text-slate-900 tracking-tight">No applications yet</h3>
-          <p className="text-slate-500 max-w-sm mx-auto text-base leading-relaxed">
+          <h3 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">No applications yet</h3>
+          <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto text-base leading-relaxed">
             Your career dashboard is waiting for its first entry. Start tracking your journey today!
           </p>
         </div>
@@ -236,11 +236,11 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
       {/* ── TOP NAV / FILTERS ── */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mt-16 lg:mt-0">
         <div className="space-y-1">
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Dashboard</h1>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Dashboard</h1>
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">Recruit Intelligence Engine</p>
         </div>
         
-        <div className="bg-white p-2 rounded-xl border border-slate-100/80 flex flex-col md:flex-row md:items-center gap-4 pr-5 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-950 p-2 rounded-xl border border-slate-100/80 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center gap-4 pr-5 shadow-sm overflow-hidden">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-md bg-slate-950 text-white shrink-0 shadow-md shadow-slate-900/10">
               <Filter size={18} />
@@ -253,18 +253,18 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">From</span>
               <div className="flex items-center gap-2">
                 <Select value={startYear} onValueChange={(v) => setStartYear(v ?? "")}>
-                  <SelectTrigger className="h-10 w-full sm:w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[95px] rounded-md border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 focus:bg-white dark:bg-slate-950 text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-md p-1 border-slate-100">
+                  <SelectContent className="rounded-md p-1 border-slate-100 dark:border-slate-800">
                     {years.map(y => <SelectItem key={y} value={y} className="rounded-sm">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={startMonth} onValueChange={(v) => setStartMonth(v ?? "")}>
-                  <SelectTrigger className="h-10 w-full sm:w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[105px] rounded-md border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 focus:bg-white dark:bg-slate-950 text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-md p-1 border-slate-100">
+                  <SelectContent className="rounded-md p-1 border-slate-100 dark:border-slate-800">
                     {months.map(m => <SelectItem key={m} value={m} className="rounded-sm">{m}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -277,18 +277,18 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">To</span>
               <div className="flex items-center gap-2">
                 <Select value={endYear} onValueChange={(v) => setEndYear(v ?? "")}>
-                  <SelectTrigger className="h-10 w-full sm:w-[95px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[95px] rounded-md border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 focus:bg-white dark:bg-slate-950 text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-md p-1 border-slate-100">
+                  <SelectContent className="rounded-md p-1 border-slate-100 dark:border-slate-800">
                     {years.map(y => <SelectItem key={y} value={y} className="rounded-sm">{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={endMonth} onValueChange={(v) => setEndMonth(v ?? "")}>
-                  <SelectTrigger className="h-10 w-full sm:w-[105px] rounded-md border-slate-100 bg-slate-50/50 focus:bg-white text-[11px] font-black uppercase tracking-tight" size="sm">
+                  <SelectTrigger className="h-10 w-full sm:w-[105px] rounded-md border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 focus:bg-white dark:bg-slate-950 text-[11px] font-black uppercase tracking-tight" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-md p-1 border-slate-100">
+                  <SelectContent className="rounded-md p-1 border-slate-100 dark:border-slate-800">
                     {months.map(m => <SelectItem key={m} value={m} className="rounded-sm">{m}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -393,9 +393,9 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <div className="bg-white/95 backdrop-blur-md border border-slate-100 px-3 py-2 rounded-lg shadow-xl z-[100]">
+                          <div className="bg-white dark:bg-slate-950/95 backdrop-blur-md border border-slate-100 dark:border-slate-800 px-3 py-2 rounded-lg shadow-xl z-[100]">
                             <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{payload[0].payload.name}</p>
-                            <p className="text-sm font-black text-slate-900">{payload[0].value} Applications</p>
+                            <p className="text-sm font-black text-slate-900 dark:text-slate-100">{payload[0].value} Applications</p>
                           </div>
                         );
                       }
@@ -422,7 +422,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
             </div>
             <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Volume</span>
-              <span className="text-xl font-black text-slate-900">{stats.total}</span>
+              <span className="text-xl font-black text-slate-900 dark:text-slate-100">{stats.total}</span>
             </div>
           </CardContent>
         </Card>
@@ -438,7 +438,7 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Submissions</span>
+                        <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Submissions</span>
                     </div>
                 </div>
             </div>
@@ -465,8 +465,18 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
                     tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
                   />
                   <Tooltip 
-                    cursor={{ fill: '#f8fafc', radius: 4 }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 30px rgba(0,0,0,0.06)', padding: '16px' }}
+                    cursor={{ fill: 'rgba(148, 163, 184, 0.1)', radius: 4 }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-white dark:bg-slate-950/95 backdrop-blur-md border border-slate-100 dark:border-slate-800 px-3 py-2 rounded-lg shadow-xl z-[100]">
+                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{payload[0].payload.name}</p>
+                            <p className="text-sm font-black text-slate-900 dark:text-slate-100">{payload[0].value} Submissions</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
                   <Bar dataKey="count" fill="url(#barGradient)" radius={[4, 4, 0, 0]} barSize={40} />
                 </BarChart>
@@ -481,13 +491,13 @@ export function DashboardOverview({ applications }: { applications: any[] }) {
 
 function MetricCard({ title, value, trend, trendLabel, color, gradient, data, isNegativeTrend, description, trendDescription }: any) {
   return (
-    <Card className="rounded-xl border-none premium-shadow bg-white hover:scale-[1.01] transition-all duration-500 group overflow-hidden relative">
+    <Card className="rounded-xl border-none premium-shadow bg-white dark:bg-slate-950 hover:scale-[1.01] transition-all duration-500 group overflow-hidden relative">
       <CardContent className="p-8 relative">
         {/* Card Info Tooltip */}
         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
            <div className="relative flex items-center justify-center">
-              <div className="peer/cardinfo cursor-help p-1 rounded-full hover:bg-slate-50 transition-colors">
-                <Info size={14} className="text-slate-300 hover:text-slate-600 transition-colors" />
+              <div className="peer/cardinfo cursor-help p-1 rounded-full hover:bg-slate-50 dark:bg-slate-900 transition-colors">
+                <Info size={14} className="text-slate-300 hover:text-slate-600 dark:text-slate-400 transition-colors" />
               </div>
               <div className="absolute right-0 top-7 w-48 p-3 bg-slate-900 backdrop-blur-sm text-white text-[10px] font-medium rounded-lg shadow-xl opacity-0 peer-hover/cardinfo:opacity-100 translate-y-1 peer-hover/cardinfo:translate-y-0 transition-all duration-300 pointer-events-none z-50 leading-relaxed border border-white/10">
                 <div className="absolute -top-1 right-2 w-2 h-2 bg-slate-900 rotate-45" />
@@ -499,7 +509,7 @@ function MetricCard({ title, value, trend, trendLabel, color, gradient, data, is
         <div className="flex justify-between items-start mb-1">
           <div>
             <h4 className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.15em] mb-3">{title}</h4>
-            <div className="text-4xl font-black text-slate-900 leading-tight tracking-tight mb-2">
+            <div className="text-4xl font-black text-slate-900 dark:text-slate-100 leading-tight tracking-tight mb-2">
                 {value}
             </div>
             <div className="flex items-center gap-2">
@@ -511,7 +521,7 @@ function MetricCard({ title, value, trend, trendLabel, color, gradient, data, is
                         )}>
                             {isNegativeTrend ? "↘" : "↗"} {trend}
                         </span>
-                        <Info size={8} className="text-slate-300 group-hover/trend:text-slate-500 transition-colors" />
+                        <Info size={8} className="text-slate-300 group-hover/trend:text-slate-500 dark:text-slate-400 transition-colors" />
                     </div>
                     <div className="absolute bottom-full left-0 mb-2 w-48 p-3 bg-slate-900 backdrop-blur-sm text-white text-[10px] font-medium rounded-lg shadow-xl opacity-0 group-hover/trend:opacity-100 translate-y-1 group-hover/trend:translate-y-0 transition-all duration-300 pointer-events-none z-50 leading-relaxed border border-white/10">
                         <div className="absolute -bottom-1 left-4 w-2 h-2 bg-slate-900 rotate-45" />

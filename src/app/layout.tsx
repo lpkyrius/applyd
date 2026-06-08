@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 
 
 import { Sidebar } from "@/components/Sidebar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -29,12 +30,20 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased font-sans`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex overflow-hidden bg-white antialiased">
-        <Sidebar />
-        <div className="flex-1 overflow-y-auto h-screen relative z-0">
-          {children}
-        </div>
+      <body className="min-h-full flex overflow-hidden antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Sidebar />
+          <div className="flex-1 overflow-y-auto h-screen relative z-0">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

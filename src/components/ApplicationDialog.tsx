@@ -32,19 +32,19 @@ export function ApplicationDialog({
           </Button>
         )}
       />
-      <DialogContent showCloseButton={false} className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto rounded-xl border-none p-0 shadow-[0_20px_70px_rgba(0,0,0,0.15)] bg-white">
-        <div className="bg-slate-50/40 p-10 border-b border-slate-100/60 backdrop-blur-xl sticky top-0 z-20 flex justify-between items-start">
+      <DialogContent showCloseButton={false} className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto rounded-xl border-none p-0 shadow-[0_20px_70px_rgba(0,0,0,0.15)] dark:shadow-none bg-white dark:bg-slate-950">
+        <div className="bg-slate-50/40 dark:bg-slate-900/40 p-10 border-b border-slate-100/60 dark:border-slate-800/60 backdrop-blur-xl sticky top-0 z-20 flex justify-between items-start">
           <div>
             <div className="flex items-center gap-3 mb-2">
                <div className="w-1 h-3.5 bg-[#8B5CF6] rounded-full" />
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Application Management</span>
             </div>
-            <DialogTitle className="text-4xl font-black text-slate-900 tracking-tight">
+            <DialogTitle className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
               {mode === 'create' ? 'Create Application' : 'Refine Application'}
             </DialogTitle>
           </div>
           <DialogClose render={
-            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-white hover:shadow-sm transition-all text-slate-400 hover:text-slate-900 shrink-0 mt-1">
+            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-white dark:bg-slate-950 hover:shadow-sm transition-all text-slate-400 hover:text-slate-900 dark:text-slate-100 shrink-0 mt-1">
               <X size={20} strokeWidth={3} />
             </Button>
           } />

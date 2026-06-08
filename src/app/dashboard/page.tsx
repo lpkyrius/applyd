@@ -14,10 +14,10 @@ export default async function DashboardPage() {
     <main className="p-8 pb-20 max-w-7xl mx-auto space-y-10">
       <header className="flex justify-between items-start">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
             Insights
           </h1>
-          <p className="text-slate-500 font-medium text-lg">
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
             A birds-eye view of your career progression and market value.
           </p>
         </div>
